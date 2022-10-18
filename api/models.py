@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime  
 
 # Create your models here.
+# Class Author shouldn't be used, use use in api.user.models instead
 class Author(models.Model):
     type = models.CharField(max_length = 50)
     id = models.CharField(max_length = 200, primary_key=True)

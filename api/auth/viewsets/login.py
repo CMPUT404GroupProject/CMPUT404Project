@@ -21,3 +21,5 @@ class LoginViewSet(ViewSet):
             raise InvalidToken(e.args[0])
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
