@@ -48,7 +48,9 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    id = models.CharField(max_length=128, primary_key=True, default=generate_id)
+    num = generate_id()
+    id = models.CharField(max_length=128, primary_key=True, default=num)
+    url = models.CharField(max_length=255, default = "http://127.0.0.1:8000/authors/"+num)
     username = models.CharField(db_index=True, max_length=255, unique=True)
     displayName = models.CharField(max_length=255, default="")
     email = models.EmailField(db_index=True, unique=True,  null=True, blank=True)
