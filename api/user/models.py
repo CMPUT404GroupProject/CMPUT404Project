@@ -12,7 +12,7 @@ class UserManager(BaseUserManager):
         if email is None:
             raise TypeError('Users must have an email.')
 
-        user = self.model(username=username, email=self.normalize_email(email))
+        user = self.model(username=username, displayName=username, email=self.normalize_email(email))
         user.set_password(password)
         user.save(using=self._db)
 
@@ -39,6 +39,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(db_index=True, max_length=255, unique=True)
+    displayName = models.CharField(max_length=255, default="")
     email = models.EmailField(db_index=True, unique=True,  null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
