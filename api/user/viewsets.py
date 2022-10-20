@@ -3,9 +3,11 @@ from api.user.models import User
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
+from api.user.pageAuthorList import AuthorListPagination
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    pagination_class = AuthorListPagination
     http_method_names = ['get']
     serializer_class = UserSerializer
     #permission_classes = (IsAuthenticated,)
