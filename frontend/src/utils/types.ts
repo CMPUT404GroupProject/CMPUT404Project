@@ -1,6 +1,6 @@
 export interface UserResponse {
     email: string;
-    username: string;
+    displayName: string;
     is_active: string;
     created: Date;
     updated: Date;
