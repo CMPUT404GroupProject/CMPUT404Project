@@ -1,7 +1,17 @@
 from django.db import models
-
+import secrets
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+def generate_id():
+    length = 32
+    id = secrets.token_hex(32)
+    """ #TODO - check if id already exists in database
+    while True:
+        id = secrets.token_hex(32)
+        if User.objects.filter(id=code).count() == 0:
+            break
+    """
+    return id
 
 class UserManager(BaseUserManager):
 
@@ -38,6 +48,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    id = models.CharField(max_length=128, primary_key=True, default=generate_id)
     username = models.CharField(db_index=True, max_length=255, unique=True)
     displayName = models.CharField(max_length=255, default="")
     email = models.EmailField(db_index=True, unique=True,  null=True, blank=True)

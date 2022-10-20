@@ -10,6 +10,7 @@ routes.register(r'api/auth/refresh', RefreshViewSet, basename='auth-refresh')
 
 # SERVICE ENDPOINTS REQUIRED
 # /service/authors/
+routes.register(r'authors', UserViewSet, basename='user')
 # /service/authors/{AUTHOR_ID}/
 # /service/authors/{AUTHOR_ID}/followers
 # /service/authors/{AUTHOR_ID}/followers/{FOREIGN_AUTHOR_ID}
