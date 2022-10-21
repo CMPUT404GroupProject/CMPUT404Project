@@ -12,9 +12,10 @@ function Login() {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleLogin = (email: string, password: string) => {
+  const handleLogin = (github: string, password: string) => {
+    console.log(github);
     axios
-      .post(`${process.env.REACT_APP_API_URL}/auth/login/`, { email, password })
+      .post(`${process.env.REACT_APP_API_URL}/api/auth/login/`, { github, password })
       .then((res) => {
         dispatch(
           authSlice.actions.setAuthTokens({
@@ -35,15 +36,15 @@ function Login() {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
+      github: "",
       password: "",
     },
     onSubmit: (values) => {
       setLoading(true);
-      handleLogin(values.email, values.password);
+      handleLogin(values.github, values.password);
     },
     validationSchema: Yup.object({
-      email: Yup.string().trim().required("?"),
+      github: Yup.string().trim().required("?"),
       password: Yup.string().trim().required("?"),
     }),
   });
@@ -58,15 +59,15 @@ function Login() {
           <div className="space-y-4">
             <input
               className="border-b border-gray-300 w-full px-2 h-8 rounded focus:border-blue-500"
-              id="email"
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={formik.values.email}
+              id="github"
+              type="text"
+              placeholder="GitHub Link"
+              name="github"
+              value={formik.values.github}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
-            {formik.errors.email ? <div>{formik.errors.email} </div> : null}
+            {formik.errors.github ? <div>{formik.errors.github} </div> : null}
             <input
               className="border-b border-gray-300 w-full px-2 h-8 rounded focus:border-blue-500"
               id="password"

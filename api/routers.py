@@ -4,12 +4,31 @@ from api.auth.viewsets import LoginViewSet, RegistrationViewSet, RefreshViewSet
 
 routes = SimpleRouter()
 # AUTHENTICATION
-routes.register(r'auth/login', LoginViewSet, basename='auth-login')
-routes.register(r'auth/register', RegistrationViewSet, basename='auth-register')
-routes.register(r'auth/refresh', RefreshViewSet, basename='auth-refresh')
+routes.register(r'api/auth/login', LoginViewSet, basename='auth-login')
+routes.register(r'api/auth/register', RegistrationViewSet, basename='auth-register')
+routes.register(r'api/auth/refresh', RefreshViewSet, basename='auth-refresh')
+
+# SERVICE ENDPOINTS REQUIRED
+# /service/authors/
+routes.register(r'authors', UserViewSet, basename='user')
+# /service/authors/{AUTHOR_ID}/
+# /service/authors/{AUTHOR_ID}/followers
+# /service/authors/{AUTHOR_ID}/followers/{FOREIGN_AUTHOR_ID}
+
+# /service/authors/{AUTHOR_ID}/posts/
+# /service/authors/{AUTHOR_ID}/posts/{POST_ID}
+
+# /service/authors/{AUTHOR_ID}/posts/{POST_ID}/image
+# /service/authors/{AUTHOR_ID}/posts/{POST_ID}/comments
+
+# service/authors/{AUTHOR_ID}/inbox/
+# /service/authors/{AUTHOR_ID}/posts/{POST_ID}/likes
+# /service/authors/{AUTHOR_ID}/posts/{POST_ID}/comments/{COMMENT_ID}/likes
+# /service/authors/{AUTHOR_ID}/liked
+
 
 # USER
-routes.register(r'user', UserViewSet, basename='user')
+routes.register(r'api/user', UserViewSet, basename='user')
 
 urlpatterns = [
     *routes.urls

@@ -19,8 +19,8 @@ const Profile = () => {
   // @ts-ignore
   const userId = account?.id;
 
-  const user = useSWR<UserResponse>(`/user/${userId}/`, fetcher)
-
+  const user = useSWR<UserResponse>(`/authors/${userId}/`, fetcher)
+  console.log(user.data)
   const handleLogout = () => {
     dispatch(authSlice.actions.setLogout());
     history.push("/login");
@@ -38,7 +38,7 @@ const Profile = () => {
         {
             user.data ?
                 <div className="w-full h-full text-center items-center">
-                    <p className="self-center my-auto">Welcome, {user.data?.username}</p>
+                    <p className="self-center my-auto">Welcome, {user.data?.displayName}</p>
                 </div>
                 :
                 <p className="text-center items-center">Loading ...</p>
