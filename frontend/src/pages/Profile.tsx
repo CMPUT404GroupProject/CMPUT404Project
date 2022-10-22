@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import {fetcher} from "../utils/axios";
 import {UserResponse} from "../utils/types";
 import {RootState} from "../store";
+import Post from "../components/Post";
 
 interface LocationState {
     userId: string;
@@ -26,23 +27,16 @@ const Profile = () => {
     history.push("/login");
   };
   return (
-    <div className="w-full h-screen">
-      <div className="w-full p-6">
-        <button
-          onClick={handleLogout}
-          className="rounded p-2 w-32 bg-red-700 text-white"
-        >
-          Log out
-        </button>
-      </div>
+    <div className="w-full h-full flex flex-col content-center">
         {
             user.data ?
-                <div className="w-full h-full text-center items-center">
+                <div className="w-full text-center items-center">
                     <p className="self-center my-auto">Welcome, {user.data?.displayName}</p>
                 </div>
                 :
                 <p className="text-center items-center">Loading ...</p>
         }
+        <Post></Post>
     </div>
   );
 };

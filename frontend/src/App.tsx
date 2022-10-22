@@ -5,6 +5,7 @@ import store, { persistor } from "./store";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import Navbar from "./components/Navbar";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
       <PersistGate persistor={persistor} loading={null}>
         <Router>
           <div>
+            <Navbar></Navbar>
             <Switch>
               <Route exact path="/login" component={Login} />
               <ProtectedRoute exact path="/" component={Profile} />
