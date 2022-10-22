@@ -1,7 +1,7 @@
 from django.db import models
 import secrets
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-
+curId = ""
 def generate_id():
     length = 32
     id = secrets.token_hex(32)
@@ -11,6 +11,7 @@ def generate_id():
         if User.objects.filter(id=code).count() == 0:
             break
     """
+    curId = str(id)
     return id
 
 class UserManager(BaseUserManager):
@@ -48,10 +49,9 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    num = generate_id()
     type = models.CharField(max_length=32, default="author")
-    id = models.CharField(max_length=128, primary_key=True, default=num)
-    url = models.CharField(max_length=255, default = "http://127.0.0.1:8000/authors/"+num)
+    id = models.CharField(max_length=128, primary_key=True, default=generate_id)
+    url = models.CharField(max_length=255, default = "")
     host = models.CharField(max_length=255, default= "http://127.0.0.1:8000/")
     username = models.CharField(db_index=True, max_length=255, unique=True)
     displayName = models.CharField(max_length=255, default="")
@@ -70,3 +70,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.github}"
+
+    def save(self, *args, **kwargs):
+        self.url = "http://127.0.0.1:8000/authors/" + self.id
+        return super(User, self).save(*args, **kwargs)

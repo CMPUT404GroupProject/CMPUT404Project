@@ -12,31 +12,16 @@ function Register() {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleLogin = (github: string, password: string, username: string, email: string) => {
-    // axios
-    //   .post(`${process.env.REACT_APP_API_URL}/api/auth/register/`, { github, password, username, email })
-    //   .catch((err) => {
-    //     // setMessage(err.response.data.detail.toString());
-    //     console.log(err)
-    //   });
-    const response = fetch((`${process.env.REACT_APP_API_URL}/api/auth/register/`), {
-        method: 'POST',
-        headers: { 
-            'Accept': 'application/json',
-            'Content-Type': 'application/json' 
-        },
-        body: JSON.stringify({
-            "email": email,
-            "password": password,
-            "username": username,
-            "github": github
-        }),
-    })
-    .then((response) => console.log(response))
-    .catch(error => {
-        console.log(error);
-    })
-
+  const handleLogin = (github: string, password: string, username: string) => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/api/auth/register/`, { github, password, username})
+      .then((res) => {
+        console.log(res)
+        setMessage("Account created successfully");
+      })
+      .catch((err) => {
+        setMessage("Error creating account");
+      });
   };
 
   const formik = useFormik({
@@ -44,17 +29,15 @@ function Register() {
       github: "",
       password: "",
       username: "",
-      email:"",
     },
     onSubmit: (values) => {
       setLoading(true);
-      handleLogin(values.github, values.password, values.username, values.email);
+      handleLogin(values.github, values.password, values.username);
     },
     validationSchema: Yup.object({
       github: Yup.string().trim().required("?"),
       password: Yup.string().trim().required("?"),
       username: Yup.string().trim().required("?"),
-      email: Yup.string().trim().required("?"),
     }),
   });
 
@@ -94,16 +77,6 @@ function Register() {
               placeholder="Create username"
               name="username"
               value={formik.values.username}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <input
-              className="border-b border-gray-300 w-full px-2 h-8 rounded focus:border-blue-500"
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              name="email"
-              value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
