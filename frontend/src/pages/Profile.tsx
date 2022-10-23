@@ -18,6 +18,7 @@ const Profile = () => {
   const history = useHistory();
   // @ts-ignore
   const userId = account?.id;
+  console.log(userId)
 
   const user = useSWR<UserResponse>(`/authors/${userId}/`, fetcher)
   console.log(user.data)
@@ -34,6 +35,13 @@ const Profile = () => {
         >
           Log out
         </button>
+        <a href="/profile">
+          <button 
+            className="w-full p-6 profilePage">
+              User Profile
+          </button>
+        </a>
+        
       </div>
         {
             user.data ?
