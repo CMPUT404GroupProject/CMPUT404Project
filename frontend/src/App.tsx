@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { LoginPage, Profile } from "./pages";
+import { LoginPage, Profile, UserProfile } from "./pages";
 import store, { persistor } from "./store";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
@@ -13,9 +13,9 @@ export default function App() {
         <Router>
           <div>
                 <Route exact path="/login" component={LoginPage} />
-              <div>
                 <ProtectedRoute exact path="/" component={Profile} />
-              </div>
+                <ProtectedRoute exact path="/profile" component={UserProfile} />
+
           </div>
         </Router>
 
