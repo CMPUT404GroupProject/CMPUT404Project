@@ -13,7 +13,7 @@ routes.register(r'auth/refresh', RefreshViewSet, basename='auth-refresh')
 routes.register(r'user', UserViewSet, basename='user')
 
 # POST
-routes.register(r'post', PostViewSet, basename = 'post')
+routes.register(r'authors/(?P<authorID>\d+)/posts/(?P<postID>\d+)', PostViewSet, basename = 'post')
 
 urlpatterns = [
     *routes.urls

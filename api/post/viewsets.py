@@ -1,13 +1,16 @@
 from http.client import HTTPResponse
-from api.user.serializers import UserSerializer
 from rest_framework import viewsets
 from django.http import HttpResponse
-from api.user.models import User
+from api.models import Post
+from api.post.serializers.posts import PostSerializer
+from rest_framework.permissions import IsAuthenticated
 
 class PostViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
-    serializer_class = UserSerializer
+    serializer_class = PostSerializer
+    # permission_classes = (IsAuthenticated,)
+
 
     def get_queryset(self):
-
-        return User.objects.all()
+        querySet = Post.objects.filter(author_id = self.kwargs.get('authorID')).filter(id=self.kwargs.get('postID'))
+        return querySet
