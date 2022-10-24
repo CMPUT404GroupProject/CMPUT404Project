@@ -8,11 +8,11 @@ import {UserResponse} from "../utils/types";
 import {RootState} from "../store";
 import '../css/UserProfile.scss'
 import { FaPencilAlt } from "react-icons/fa";
+import axios from "axios";
 
 interface LocationState {
     userId: string;
 }
-
 
 const UserProfile = () => {
   const account = useSelector((state: RootState) => state.auth.account);
@@ -25,12 +25,7 @@ const UserProfile = () => {
   const [usernameSwitch, toggleUsernameSwitch] = useState(false);
   const [githubLinkSwitch, toggleGithubLinkSwitch] = useState(false);
   const [passwordSwitch, togglePasswordSwitch] = useState(false);
-
-
-
-
-
-
+  const [inputUserName, setInputUserName] = useState("");
 
   const handleLogout = () => {
     dispatch(authSlice.actions.setLogout());
@@ -49,14 +44,11 @@ const UserProfile = () => {
 
   const handleUsernameUpdate = () => {
     // UPDATE USERNAME HERE
+    console.log(inputUserName);
+    console.log(userId);
+    setInputUserName("");
     toggleUsernameSwitch(false);
   }
-
-
-
-
-
-
 
   return (
     <div className="ProfilePageContainer">
@@ -76,7 +68,11 @@ const UserProfile = () => {
                 </div>
                 <div className="UsernameText Text">
                     {(usernameSwitch) ?
-                        <input placeholder="Enter new username" type="text"/>:
+                        <input 
+                            value={inputUserName} 
+                            placeholder="Enter new username" 
+                            type="text"
+                            onChange={(e)=>setInputUserName(e.target.value)}/>:
                         <p>{user.data?.displayName}</p>
                     }
                 </div>
@@ -85,11 +81,12 @@ const UserProfile = () => {
                         <button className="changeUsernameSwitch Switch SwitchOff" onClick={()=> toggleUsernameSwitch(true)}> <FaPencilAlt /> </button>
                     </div>:
                     <div className="updatePassword">
-                        <button className="updateUsernameSwitch Switch SwitchOn" onClick={handleUsernameUpdate}> Update Username </button>
+                        <button 
+                            className="updateUsernameSwitch Switch SwitchOn" 
+                            onClick={handleUsernameUpdate}> Update Username </button>
                     </div>
                 }  
             </div>
-            
             <div className="GitHubLinkContainer Container">
                 <div className="GitHubLinkTitle Title">
                     Github Link
@@ -101,7 +98,6 @@ const UserProfile = () => {
                         <p>{user.data?.github}</p>
                     }
                 </div>
-                
                 {(!githubLinkSwitch) ?
                     <div className="changePassword">
                         <button className="changeGithubSwitch Switch SwitchOff" onClick={()=> toggleGithubLinkSwitch(true)}> <FaPencilAlt /> </button>
@@ -111,7 +107,6 @@ const UserProfile = () => {
                     </div>
                 }     
             </div>
-            
             <div className="PasswordContainer Container">   
                 <div className="PasswordTitle Title">
                     Password
@@ -124,7 +119,6 @@ const UserProfile = () => {
                         <p> ********* </p>
                     }
                 </div>
-
                 {(!passwordSwitch) ?
                     <div className="changePassword">
                         <button className="changePasswordSwitch Switch SwitchOff" onClick={()=> togglePasswordSwitch(true)}> <FaPencilAlt /> </button>
@@ -132,8 +126,7 @@ const UserProfile = () => {
                     <div className="updatePassword">
                         <button className="updatePasswordSwitch Switch SwitchOn" onClick={handlePasswordUpdate}> Update Password </button>
                     </div>
-                }
-                              
+                }         
             </div>
         </div>
 
