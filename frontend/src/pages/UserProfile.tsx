@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, useLocation} from "react-router";
 import authSlice from "../store/slices/auth";
@@ -20,12 +20,24 @@ const UserProfile = () => {
   const history = useHistory();
   // @ts-ignore
   const userId = account?.id;
+  
   const user = useSWR<UserResponse>(`/authors/${userId}/`, fetcher)
   // Here we have the update switches
   const [displayNameSwitch, toggleDisplayNameSwitch] = useState(false);
   const [githubLinkSwitch, toggleGithubLinkSwitch] = useState(false);
   const [passwordSwitch, togglePasswordSwitch] = useState(false);
   const [inputDisplayName, setInputDisplayName] = useState("");
+  const [displayName, setDisplayName] = useState(user.data?.displayName);
+  const [inputGithubLink, setInputGithubLink] = useState("");
+  const [githubLink, setGithubLink] = useState(user.data?.github);
+
+  useEffect(() => {
+    setDisplayName(user.data?.displayName);
+    }, [user.data?.displayName]);
+
+  useEffect(() => {
+    setGithubLink(user.data?.github);
+    }, [user.data?.github]);
 
   const handleLogout = () => {
     dispatch(authSlice.actions.setLogout());
@@ -39,15 +51,29 @@ const UserProfile = () => {
 
   const handleGithubUpdate = () => {
     // UPDATE GITHUB HERE
-    toggleGithubLinkSwitch(false);
+    axios
+        .put(`${process.env.REACT_APP_API_URL}/authors/${userId}/`, { displayName: displayName, github: inputGithubLink })
+        .then((res) => {        
+            setGithubLink(inputGithubLink);
+            setInputGithubLink("");
+            toggleGithubLinkSwitch(false);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
   }
-
   const handleDisplayNameUpdate = () => {
     // UPDATE Display Name HERE
-    console.log(inputDisplayName);
-    console.log(userId);
-    setInputDisplayName("");
-    toggleDisplayNameSwitch(false);
+    axios
+        .put(`${process.env.REACT_APP_API_URL}/authors/${userId}/`, { displayName: inputDisplayName })
+        .then((res) => {
+            setDisplayName(inputDisplayName);
+            setInputDisplayName("");
+            toggleDisplayNameSwitch(false);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
   }
 
   return (
@@ -57,7 +83,7 @@ const UserProfile = () => {
                 <img src={user.data?.profileImage}></img>
             </div>
             <div className="ProfileName">
-                {user.data?.displayName}
+                {displayName}
             </div>
         </div>
         <div className="RightPanel">    
@@ -70,10 +96,10 @@ const UserProfile = () => {
                     {(displayNameSwitch) ?
                         <input 
                             value={inputDisplayName} 
-                            placeholder="Enter new display name" 
+                            placeholder={"Enter new display name" }
                             type="text"
                             onChange={(e)=>setInputDisplayName(e.target.value)}/>:
-                        <p>{user.data?.displayName}</p>
+                        <p>{displayName}</p>
                     }
                 </div>
                 {(!displayNameSwitch) ?
@@ -94,8 +120,12 @@ const UserProfile = () => {
                 </div>
                 <div className="GitHubLinkText Text">
                     {(githubLinkSwitch) ?
-                        <input placeholder="Enter new link" type="text"/>:
-                        <p>{user.data?.github}</p>
+                        <input 
+                            value={inputGithubLink}
+                            placeholder="Enter new link" 
+                            type="text"
+                            onChange={(e)=>setInputGithubLink(e.target.value)}/>:
+                        <p>{githubLink}</p>
                     }
                 </div>
                 {(!githubLinkSwitch) ?
