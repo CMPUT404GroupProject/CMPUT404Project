@@ -25,7 +25,7 @@ class RegisterSerializer(UserSerializer):
 
     class Meta:
         model = User
-        fields = ['type', 'id', 'username', 'displayName', 'url', 'host','github', 'profileImage', 'password', 'is_active', 'created', 'updated']
+        fields = ['type', 'id', 'displayName', 'url', 'host','github', 'profileImage', 'password', 'is_active', 'created', 'updated']
     def create(self, validated_data):
         try:
             user = User.objects.get(github=validated_data['github'])
