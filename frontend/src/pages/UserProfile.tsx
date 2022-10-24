@@ -22,10 +22,10 @@ const UserProfile = () => {
   const userId = account?.id;
   const user = useSWR<UserResponse>(`/authors/${userId}/`, fetcher)
   // Here we have the update switches
-  const [usernameSwitch, toggleUsernameSwitch] = useState(false);
+  const [displayNameSwitch, toggleDisplayNameSwitch] = useState(false);
   const [githubLinkSwitch, toggleGithubLinkSwitch] = useState(false);
   const [passwordSwitch, togglePasswordSwitch] = useState(false);
-  const [inputUserName, setInputUserName] = useState("");
+  const [inputDisplayName, setInputDisplayName] = useState("");
 
   const handleLogout = () => {
     dispatch(authSlice.actions.setLogout());
@@ -42,12 +42,12 @@ const UserProfile = () => {
     toggleGithubLinkSwitch(false);
   }
 
-  const handleUsernameUpdate = () => {
-    // UPDATE USERNAME HERE
-    console.log(inputUserName);
+  const handleDisplayNameUpdate = () => {
+    // UPDATE Display Name HERE
+    console.log(inputDisplayName);
     console.log(userId);
-    setInputUserName("");
-    toggleUsernameSwitch(false);
+    setInputDisplayName("");
+    toggleDisplayNameSwitch(false);
   }
 
   return (
@@ -61,29 +61,29 @@ const UserProfile = () => {
             </div>
         </div>
         <div className="RightPanel">    
-            <div className="UsernameContainer Container">
-                <div className="UsernameTitle Title">
-                    Username
+            <div className="DisplayNameContainer Container">
+                <div className="DisplayNameTitle Title">
+                    Display Name
                     <hr />
                 </div>
-                <div className="UsernameText Text">
-                    {(usernameSwitch) ?
+                <div className="DisplayNameText Text">
+                    {(displayNameSwitch) ?
                         <input 
-                            value={inputUserName} 
-                            placeholder="Enter new username" 
+                            value={inputDisplayName} 
+                            placeholder="Enter new display name" 
                             type="text"
-                            onChange={(e)=>setInputUserName(e.target.value)}/>:
+                            onChange={(e)=>setInputDisplayName(e.target.value)}/>:
                         <p>{user.data?.displayName}</p>
                     }
                 </div>
-                {(!usernameSwitch) ?
+                {(!displayNameSwitch) ?
                     <div className="changePassword">
-                        <button className="changeUsernameSwitch Switch SwitchOff" onClick={()=> toggleUsernameSwitch(true)}> <FaPencilAlt /> </button>
+                        <button className="changeDisplayNameSwitch Switch SwitchOff" onClick={()=> toggleDisplayNameSwitch(true)}> <FaPencilAlt /> </button>
                     </div>:
                     <div className="updatePassword">
                         <button 
-                            className="updateUsernameSwitch Switch SwitchOn" 
-                            onClick={handleUsernameUpdate}> Update Username </button>
+                            className="updateDisplayNameSwitch Switch SwitchOn" 
+                            onClick={handleDisplayNameUpdate}> Update Display Name </button>
                     </div>
                 }  
             </div>
