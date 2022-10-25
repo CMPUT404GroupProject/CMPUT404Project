@@ -13,9 +13,9 @@ const Logout = () => {
     };
 
     return (
-        <div className="p-6">
+        <div>
             <button onClick={handleLogout} 
-                className="rounded p-2 w-32 bg-red-700 text-white">
+                className="rounded-lg p-3 bg-red-700 text-white text-lg">
                 Log out
             </button>
         </div>

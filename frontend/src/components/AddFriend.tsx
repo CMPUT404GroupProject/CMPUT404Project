@@ -6,10 +6,10 @@ import authSlice from "../store/slices/auth";
 const AddFriend = () => {
 
     return (
-        <div className="p-6">
+        <div>
             <button 
-                className="rounded p-2 w-32 bg-emerald-400 text-white">
-                Add Friend
+                className="rounded-lg p-3 bg-green-700 text-white text-lg">
+                Add friend
             </button>
         </div>
     ) 
