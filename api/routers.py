@@ -31,9 +31,9 @@ routes.register(r'authors', UserViewSet, basename='user')
 # USER
 routes.register(r'api/user', UserViewSet, basename='user')
 
-# POST
+# POSTS
 routes.register(r'authors/(?P<authorID>\d+)/posts/(?P<postID>\d+)', PostViewSet, basename = 'post')
-
+routes.register(r'authors/(?P<authorID>\d+)/posts', PostViewSet, basename = 'post')
 urlpatterns = [
     *routes.urls
 ]
