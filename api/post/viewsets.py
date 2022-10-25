@@ -23,5 +23,6 @@ class PostViewSet(viewsets.ModelViewSet):
         if self.kwargs.get('postID'):
             querySet = Post.objects.filter(id = self.kwargs.get('id')).filter(id=self.kwargs.get('postID'))
         else:
-            querySet = Post.objects.filter(id = self.kwargs.get('id'))
+            print(self.kwargs.get('id'))
+            querySet = Post.objects.filter(author_id = self.kwargs.get('id'))
         return querySet
