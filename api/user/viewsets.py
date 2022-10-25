@@ -8,7 +8,7 @@ from api.user.pageAuthorList import AuthorListPagination
 
 class UserViewSet(viewsets.ModelViewSet):
     pagination_class = AuthorListPagination
-    http_method_names = ['get']
+    http_method_names = ['get', 'post', 'put', 'delete']
     serializer_class = UserSerializer
     #permission_classes = (IsAuthenticated,)
     filter_backends = [filters.OrderingFilter]

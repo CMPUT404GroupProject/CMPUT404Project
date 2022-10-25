@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Login, Profile } from "./pages";
+import { LoginPage, Profile, UserProfile } from "./pages";
 import store, { persistor } from "./store";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
@@ -13,12 +13,26 @@ export default function App() {
       <PersistGate persistor={persistor} loading={null}>
         <Router>
           <div className="bg-gray-900 w-full h-full">
-            <Switch>
-              <Route exact path="/login" component={Login} />
-              <ProtectedRoute exact path="/" component={Profile} />
-            </Switch>
+                <Route exact path="/login" component={LoginPage} />
+                <ProtectedRoute exact path="/" component={Profile} />
+                <ProtectedRoute exact path="/profile" component={UserProfile} />
           </div>
         </Router>
+
+         {/* <div className="AppContainer">
+          <div className="LogoContainer">
+              INSERT IMAGE HERE
+              <div className="AppName">
+                NAME
+              </div>
+          </div>
+          
+
+
+          <div className="LoginBox">
+            <Login />
+          </div>
+        </div> */}
       </PersistGate>
     </Provider>
   );

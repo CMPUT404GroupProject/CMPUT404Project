@@ -1,7 +1,8 @@
 from django.db import models
 import secrets
+import random
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-
+curId = ""
 def generate_id():
     length = 32
     id = secrets.token_hex(32)
@@ -11,24 +12,27 @@ def generate_id():
         if User.objects.filter(id=code).count() == 0:
             break
     """
+    curId = str(id)
     return id
+def generate_id_int():
+    return random.randint(0,10000)
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, username, github, profileImage="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", password=None, **kwargs):
+    def create_user(self, displayName, github, profileImage="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", password=None, **kwargs):
         """Create and return a `User` with an email, phone number, username and password."""
-        if username is None:
-            raise TypeError('Users must have a username.')
+        if displayName is None:
+            raise TypeError('Users must have a display name.')
         if github is None:
             raise TypeError('Users must have an github.')
 
-        user = self.model(username=username, displayName=username, github=github, profileImage=profileImage)
+        user = self.model(displayName=displayName, github=github, profileImage=profileImage)
         user.set_password(password)
         user.save(using=self._db)
 
         return user
 
-    def create_superuser(self, username, github, password):
+    def create_superuser(self, displayName, github, password):
         """
         Create and return a `User` with superuser (admin) permissions.
         """
@@ -36,10 +40,10 @@ class UserManager(BaseUserManager):
             raise TypeError('Superusers must have a password.')
         if github is None:
             raise TypeError('Superusers must have github.')
-        if username is None:
+        if displayName is None:
             raise TypeError('Superusers must have an username.')
 
-        user = self.create_user(username, github, password)
+        user = self.create_user(displayName, github, password)
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self._db)
@@ -48,13 +52,11 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    num = generate_id()
     type = models.CharField(max_length=32, default="author")
-    id = models.CharField(max_length=128, primary_key=True, default=num)
-    url = models.CharField(max_length=255, default = "http://127.0.0.1:8000/authors/"+num)
+    id = models.CharField(max_length=128, primary_key=True, default=generate_id)
+    url = models.CharField(max_length=255, default = "")
     host = models.CharField(max_length=255, default= "http://127.0.0.1:8000/")
-    username = models.CharField(db_index=True, max_length=255, unique=True)
-    displayName = models.CharField(max_length=255, default="")
+    displayName = models.CharField(db_index=True, max_length=255, unique=True)
     #email = models.EmailField(db_index=True, unique=True,  null=True, blank=True)
     github = models.URLField(db_index=True, unique=True,  null=True, blank=True)
     profileImage = models.URLField(max_length=500, default="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
@@ -63,10 +65,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
 
-    USERNAME_FIELD = 'github'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = 'displayName'
+    REQUIRED_FIELDS = ['github']
 
     objects = UserManager()
 
     def __str__(self):
         return f"{self.github}"
+
+    def save(self, *args, **kwargs):
+        self.url = "http://127.0.0.1:8000/authors/" + str(self.id)
+        return super(User, self).save(*args, **kwargs)

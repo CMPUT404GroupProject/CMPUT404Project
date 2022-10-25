@@ -5,4 +5,6 @@ export interface UserResponse {
     created: Date;
     updated: Date;
     id: string;
+    profileImage: string;
+    github: string;
 }

@@ -1,0 +1,139 @@
+.ProfilePageContainer {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.LeftPanel {
+    width: 400px;
+    height: 100vh;
+    float:left;
+    position: relative;
+}
+
+
+.ProfilePhoto{
+    position: absolute;
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+    border: 4px solid black;
+    left: 75px;
+    top: 75px;
+}
+
+.ProfilePhoto img{
+    border-radius: 50%;
+}
+
+.ProfileName{
+    position: absolute;
+    top:350px;
+    width: 200px;
+    text-align: center;
+    left: 100px;
+    font-size: 40px;
+}
+
+/* RIGHT PANEL WORK */
+.RightPanel {
+    height: 100vh;
+    float:left;
+    width: calc(100% - 400px);
+    background-color: #e9e9e9;
+    position: relative;
+
+    .Title{
+        font-size: 30px;
+    }
+
+    .Container{
+        width: 500px;
+
+        hr{
+            background-color: black;
+            height: 2px;
+        }
+    }
+
+    .DisplayNameContainer{
+        position: absolute;
+        top: 150px;
+        left: 300px;
+    }
+    
+    .GitHubLinkContainer{
+        position: absolute;
+        top: 350px;
+        left: 300px;
+    }
+    
+    .PasswordContainer{
+        position: absolute;
+        top: 550px;
+        left: 300px;
+    }
+    
+    .Text{
+        margin-top: 20px;
+        font-size: 20px;
+        font-style:italic;
+        width: 400px;
+        float: left;
+    }
+
+    .Switch{
+        margin-top: 20px;
+    }
+
+    .SwitchOff{
+        border: 2px solid black;
+        width: 30px;
+        height: 30px;
+        border-radius: 25%;
+        text-align: center;
+
+        svg{
+            height: 20px;
+            width: 20px;
+            padding-left: 5px;
+        }
+
+    }
+
+    .SwitchOn {
+        width: 200px;
+        border: 2px solid black;
+        border-radius: 5px;
+        color: white;
+        background-color: red;
+        transition: 0.2s;
+    }
+
+    .SwitchOn:hover{
+        background-color: black;
+    }
+
+    .SwitchOff:hover{
+        color: white;
+        background-color: black;
+        transition: 0.2s;
+    }
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
