@@ -1,7 +1,8 @@
 from urllib import request
 from rest_framework import serializers
-from api.models import Author, Post
+from api.models import Post
 import uuid
+from api.user.models import User
 
 class PostSerializer(serializers.ModelSerializer):
 
@@ -14,7 +15,7 @@ class CreatePostSerializer(serializers.Serializer):
     def save(self, **kwargs):
         test = uuid.uuid4()
 
-        author = Author.objects.get(id = self.context['authorID'])
+        author = User.objects.get(id = self.context['id'])
         request = self.context['request']
         type = request.data["type"]
         title = request.data["title"]

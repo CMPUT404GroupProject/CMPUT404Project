@@ -1,5 +1,6 @@
 from django.db import models
 import secrets
+import random
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 curId = ""
 def generate_id():
@@ -13,6 +14,8 @@ def generate_id():
     """
     curId = str(id)
     return id
+def generate_id_int():
+    return random.randint(0,10000)
 
 class UserManager(BaseUserManager):
 
@@ -71,5 +74,5 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.github}"
 
     def save(self, *args, **kwargs):
-        self.url = "http://127.0.0.1:8000/authors/" + self.id
+        self.url = "http://127.0.0.1:8000/authors/" + str(self.id)
         return super(User, self).save(*args, **kwargs)

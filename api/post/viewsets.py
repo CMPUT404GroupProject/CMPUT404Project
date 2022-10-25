@@ -16,12 +16,12 @@ class PostViewSet(viewsets.ModelViewSet):
         return PostSerializer
 
     def get_serializer_context(self):
-        return {'authorID': self.kwargs.get('authorID'),
+        return {'id': self.kwargs.get('id'),
         'request': self.request}
         
     def get_queryset(self):
         if self.kwargs.get('postID'):
-            querySet = Post.objects.filter(author_id = self.kwargs.get('authorID')).filter(id=self.kwargs.get('postID'))
+            querySet = Post.objects.filter(id = self.kwargs.get('id')).filter(id=self.kwargs.get('postID'))
         else:
-            querySet = Post.objects.filter(author_id = self.kwargs.get('authorID'))
+            querySet = Post.objects.filter(id = self.kwargs.get('id'))
         return querySet
