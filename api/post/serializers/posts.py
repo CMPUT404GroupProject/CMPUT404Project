@@ -13,7 +13,7 @@ class PostSerializer(serializers.ModelSerializer):
 class CreatePostSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
-        test = uuid.uuid4()
+        id = uuid.uuid4()
 
         author = User.objects.get(id = self.context['id'])
         request = self.context['request']
@@ -30,4 +30,5 @@ class CreatePostSerializer(serializers.Serializer):
 
         Post.objects.create(author = author, type = type, title = title,
         source = source, origin = origin, description = description, contentType = contentType,
-        categories = categories, count = count, id = test, comments = comments, visibility = visibility)
+        categories = categories, count = count, id = id, comments = comments, visibility = visibility)
+
