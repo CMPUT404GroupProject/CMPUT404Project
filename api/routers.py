@@ -1,7 +1,8 @@
 from rest_framework.routers import SimpleRouter
 from api.user.viewsets import UserViewSet
 from api.auth.viewsets import LoginViewSet, RegistrationViewSet, RefreshViewSet
-from api.post.viewsets import PostViewSet
+# from api.post.viewsets import PostViewSet
+from api.post.viewsets.viewsets import CreatePostViewSet, UpdatePostViewSet
 
 routes = SimpleRouter()
 # AUTHENTICATION
@@ -32,8 +33,8 @@ routes.register(r'authors', UserViewSet, basename='user')
 routes.register(r'api/user', UserViewSet, basename='user')
 
 # POSTS
-routes.register(r'authors/(?P<id>\w+)/posts/(?P<postID>\d+)', PostViewSet, basename = 'post')
-routes.register(r'authors/(?P<id>\w+)/posts', PostViewSet, basename = 'post')
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)', UpdatePostViewSet, basename = 'post')
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts', CreatePostViewSet, basename = 'post')
 urlpatterns = [
     *routes.urls
 ]

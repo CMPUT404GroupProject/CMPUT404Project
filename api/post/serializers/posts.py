@@ -1,8 +1,10 @@
 from urllib import request
+from urllib.error import HTTPError
 from rest_framework import serializers
 from api.models import Post
 import uuid
 from api.user.models import User
+from django.http import Http404
 
 class PostSerializer(serializers.ModelSerializer):
 
@@ -31,4 +33,30 @@ class CreatePostSerializer(serializers.Serializer):
         Post.objects.create(author = author, type = type, title = title,
         source = source, origin = origin, description = description, contentType = contentType,
         categories = categories, count = count, id = id, comments = comments, visibility = visibility)
+
+class UpdatePostSerializer(serializers.Serializer):
+
+    def save(self, **kwargs):
+
+        id = self.context['postID']
+        author = User.objects.get(id = self.context['id'])
+        request = self.context['request']
+        type = request.data["type"]
+        title = request.data["title"]
+        source = request.data["source"]
+        origin = request.data["origin"]
+        description = request.data["description"]
+        contentType = request.data["contentType"]
+        categories = request.data["categories"]
+        count = request.data["count"]
+        comments = request.data["comments"]
+        visibility = request.data["visibility"]
+        if (Post.objects.filter(author_id = self.context['id']).filter(id=id).first()) == None:
+            raise Http404
+
+        Post.objects.update(author = author, type = type, title = title,
+        source = source, origin = origin, description = description, contentType = contentType,
+        categories = categories, count = count, comments = comments, visibility = visibility)
+
+
 
