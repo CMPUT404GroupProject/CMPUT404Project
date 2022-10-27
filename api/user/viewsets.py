@@ -74,5 +74,12 @@ class FollowersDetailedViewSet(viewsets.ModelViewSet):
         object = User.objects.get(id=kwargs['id'])
         actor = User.objects.get(id=kwargs['foreign_author_id'])
         
-        Followers.objects.create(id=id, type=type, object=object, actor=actor)
+        if object.id == actor.id:
+            raise ValidationError("Users cannot follow themselves")
+        
+        if Followers.objects.filter(object=self.kwargs.get('id')).filter(actor=self.kwargs.get('foreign_author_id')):
+            raise ValidationError("User already follows you")
+            
+        Followers.objects.get_or_create(id=id, type=type, object=object, actor=actor)
+        
         return Response(status=200)
