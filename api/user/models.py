@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import timezone
+from datetime import datetime
 from django.core.exceptions import ValidationError
 import secrets
 import random
@@ -78,13 +78,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         self.url = "http://127.0.0.1:8000/authors/" + str(self.id)
         return super(User, self).save(*args, **kwargs)
-    
-class FollowRequest(models.Model):
-    type = models.CharField(max_length=32, default="Follow")
-    actor = models.ForeignKey(User, related_name='actor', on_delete=models.CASCADE)
-    object = models.ForeignKey(User, related_name='object', on_delete=models.CASCADE)
-    summary = models.CharField(max_length=500, default=f"Follow request")
+
     
 class Followers(models.Model):
-    followed_user = models.CharField(max_length=255, default = "")
-    follower = models.CharField(max_length=255, default = "")
+    type = models.CharField(max_length=50)
+    id = models.CharField(max_length=200, primary_key=True)
+    actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="actor")
+    object = models.ForeignKey(User, on_delete=models.CASCADE, related_name="object")
+    created = models.DateTimeField(default=datetime.now, blank=True)
