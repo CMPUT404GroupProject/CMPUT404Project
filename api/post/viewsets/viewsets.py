@@ -5,9 +5,11 @@ from api.models import Post, User
 from api.post.serializers.posts import CreatePostSerializer, PostSerializer, UpdatePostSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
+from django.http import Http404
+
 
 class CreatePostViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'post', 'delete']
+    http_method_names = ['get', 'put', 'post', 'delete', 'patch', 'head', 'options', 'trace']
     # serializer_class = PostSerializer
     # permission_classes = (IsAuthenticated,)
 
@@ -26,16 +28,13 @@ class CreatePostViewSet(viewsets.ModelViewSet):
         return querySet
 
 class UpdatePostViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'put', 'post', 'delete' 'patch', 'head', 'options', 'trace']
+    http_method_names = ['get', 'put', 'post', 'delete', 'patch', 'head', 'options', 'trace']
     serializer_class = PostSerializer
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
             print("this post")
             return UpdatePostSerializer
-        if self.request.method == 'DELETE':
-            print("yes")
-            return PostSerializer
         return PostSerializer
 
 
@@ -48,6 +47,10 @@ class UpdatePostViewSet(viewsets.ModelViewSet):
         querySet = Post.objects.filter(author_id = self.kwargs.get('id')).filter(id=self.kwargs.get('postID'))
         return querySet
 
-    def delete(self):
-        print("dengestha nenu")
+    def delete(self, *args, **kwargs):
+        querySet = self.get_queryset().first()
+        if not querySet:
+            raise Http404
+        querySet.delete()
+        return Response(status=204)
     
