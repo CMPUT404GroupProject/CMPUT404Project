@@ -1,4 +1,4 @@
-from api.user.serializers import UserSerializer
+from api.user.serializers import FollowersSerializer, UserSerializer
 from api.user.models import User, Followers
 from rest_framework import viewsets
 from django.core.exceptions import ValidationError
@@ -32,7 +32,7 @@ class UserViewSet(viewsets.ModelViewSet):
     
 class FollowersViewSet(viewsets.ModelViewSet):
     pagination_class = FollowersListPagination
-    http_method_names = ['get']
+    http_method_names = ['get', 'put', 'delete']
     serializer_class = UserSerializer
     
     def get_queryset(self):
@@ -50,10 +50,15 @@ class FollowersDetailedViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     
     def get_queryset(self):
-        if self.request.method != 'PUT':
+        if self.request.method == 'DELETE':
             querySet = Followers.objects.filter(object=self.kwargs.get('id')).filter(actor=self.kwargs.get('foreign_author_id'))
-        else:
+        elif self.request.method == 'PUT':
             querySet = Followers.objects.filter(object=self.kwargs.get('id'))
+        else:
+            if Followers.objects.filter(object=self.kwargs.get('id')).filter(actor=self.kwargs.get('foreign_author_id')):
+                querySet = User.objects.filter(id=self.kwargs.get('foreign_author_id'))
+            else:
+                raise Http404
         return querySet
     
     def delete(self, *args, **kwargs):

@@ -38,8 +38,8 @@ routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts', CreatePostViewSet, basename
 
 
 # FOLLOWERS
-routes.register(r'authors/(?P<id>[0-9a-f-]+)/followers', FollowersViewSet, basename = 'followers')
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/followers/(?P<foreign_author_id>[0-9a-f-]+)', FollowersDetailedViewSet, basename = 'followers')
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/followers', FollowersViewSet, basename = 'followers')
 
 urlpatterns = [
     *routes.urls

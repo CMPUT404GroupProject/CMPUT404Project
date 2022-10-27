@@ -11,3 +11,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['type', 'id', 'url', 'host', 'displayName', 'github', 'profileImage']
         read_only_field = ['is_active', 'created', 'updated']
+
+class FollowersSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Followers
+        fields = ['id', 'type', 'object', 'actor', 'created']
