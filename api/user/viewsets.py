@@ -1,12 +1,14 @@
-from api.user.serializers import CreateFollowerSerializer, FollowersSerializer, UserSerializer
+from api.user.serializers import FollowersSerializer, UserSerializer
 from api.user.models import User, Followers
 from rest_framework import viewsets
 from django.core.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
+from django.http import Http404
+import uuid
 from rest_framework.response import Response
 from api.user.pagination import AuthorListPagination, FollowersListPagination
-from django.http import Http404
+
 
 class UserViewSet(viewsets.ModelViewSet):
     pagination_class = AuthorListPagination
@@ -30,38 +32,34 @@ class UserViewSet(viewsets.ModelViewSet):
     
 class FollowersViewSet(viewsets.ModelViewSet):
     pagination_class = FollowersListPagination
-    http_method_names = ['get', 'post', 'put', 'delete']
+    http_method_names = ['get', 'put', 'delete']
     serializer_class = UserSerializer
     
     def get_queryset(self):
-        user_id = self.kwargs.get('id')
+        id = self.kwargs.get('id')
         followers = []
-        for f in Followers.objects.filter(followed_user=user_id):
-            follower_id = f.follower
-            followers.append(follower_id)
+        for f in Followers.objects.filter(object_id=id):
+            follower = f.actor_id
+            followers.append(follower)
             
         return User.objects.filter(id__in=followers)
 
 class FollowersDetailedViewSet(viewsets.ModelViewSet):
     pagination_class = FollowersListPagination
     http_method_names = ['get', 'post', 'put', 'delete']
-    
-    def get_serializer_class(self):
-        if self.request.method == 'PUT':
-            return CreateFollowerSerializer
-        else:
-            return UserSerializer
-    
-    def get_serializer_context(self):
-        return {'user_id': self.kwargs.get('id'),
-        'follower_id': self.kwargs.get('foreign_author_id')}
+    serializer_class = UserSerializer
     
     def get_queryset(self):
-        
-        user_id = self.kwargs.get('id')
-        follower_id = self.kwargs.get('foreign_author_id')
-        
-        return Followers.objects.filter(followed_user=user_id).filter(follower=follower_id)
+        if self.request.method == 'DELETE':
+            querySet = Followers.objects.filter(object=self.kwargs.get('id')).filter(actor=self.kwargs.get('foreign_author_id'))
+        elif self.request.method == 'PUT':
+            querySet = Followers.objects.filter(object=self.kwargs.get('id'))
+        else:
+            if Followers.objects.filter(object=self.kwargs.get('id')).filter(actor=self.kwargs.get('foreign_author_id')):
+                querySet = User.objects.filter(id=self.kwargs.get('foreign_author_id'))
+            else:
+                raise Http404
+        return querySet
     
     def delete(self, *args, **kwargs):
         querySet = self.get_queryset().first()
@@ -69,3 +67,12 @@ class FollowersDetailedViewSet(viewsets.ModelViewSet):
             raise Http404
         querySet.delete()
         return Response(status=204)
+    
+    def put(self, request, *args, **kwargs):
+        id = uuid.uuid4()
+        type = "follower"
+        object = User.objects.get(id=kwargs['id'])
+        actor = User.objects.get(id=kwargs['foreign_author_id'])
+        
+        Followers.objects.create(id=id, type=type, object=object, actor=actor)
+        return Response(status=200)
