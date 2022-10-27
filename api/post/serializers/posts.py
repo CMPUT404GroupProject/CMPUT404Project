@@ -37,35 +37,26 @@ class CreatePostSerializer(serializers.Serializer):
 class UpdatePostSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
-
         id = self.context['postID']
-        author = User.objects.get(id = self.context['id'])
-        request = self.context['request']
-        type = request.data["type"]
-        title = request.data["title"]
-        source = request.data["source"]
-        origin = request.data["origin"]
-        description = request.data["description"]
-        contentType = request.data["contentType"]
-        categories = request.data["categories"]
-        count = request.data["count"]
-        comments = request.data["comments"]
-        visibility = request.data["visibility"]
         if (Post.objects.filter(author_id = self.context['id']).filter(id=id).first()) == None:
             raise Http404
 
         post = Post.objects.get(author_id = self.context['id'], id = id)
-        post.author = author
-        post.type = type
-        post.title = title
-        post.source = source
-        post.origin = origin
-        post.description = description
-        post.contentType = contentType
-        post.categories = categories
-        post.count = count
-        post.comments = comments
-        post.visibility = visibility
+
+        post.id = self.context['postID']
+        post.author = User.objects.get(id = self.context['id'])
+        request = self.context['request']
+        post.type = request.data["type"]
+        post.title = request.data["title"]
+        post.source = request.data["source"]
+        post.origin = request.data["origin"]
+        post.description = request.data["description"]
+        post.contentType = request.data["contentType"]
+        post.categories = request.data["categories"]
+        post.count = request.data["count"]
+        post.comments = request.data["comments"]
+        post.visibility = request.data["visibility"]
+
         post.save()
 
 

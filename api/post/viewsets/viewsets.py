@@ -54,3 +54,7 @@ class UpdatePostViewSet(viewsets.ModelViewSet):
         querySet.delete()
         return Response(status=204)
     
+    def put(self, *args, **kwargs):
+        print("will this be called?")
+        return Response("ok")
+    
