@@ -1,8 +1,10 @@
 from urllib import request
+from urllib.error import HTTPError
 from rest_framework import serializers
 from api.models import Post
 import uuid
 from api.user.models import User
+from django.http import Http404
 
 class PostSerializer(serializers.ModelSerializer):
 
@@ -13,7 +15,7 @@ class PostSerializer(serializers.ModelSerializer):
 class CreatePostSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
-        test = uuid.uuid4()
+        id = uuid.uuid4()
 
         author = User.objects.get(id = self.context['id'])
         request = self.context['request']
@@ -30,4 +32,32 @@ class CreatePostSerializer(serializers.Serializer):
 
         Post.objects.create(author = author, type = type, title = title,
         source = source, origin = origin, description = description, contentType = contentType,
-        categories = categories, count = count, id = test, comments = comments, visibility = visibility)
+        categories = categories, count = count, id = id, comments = comments, visibility = visibility)
+
+class UpdatePostSerializer(serializers.Serializer):
+
+    def save(self, **kwargs):
+        id = self.context['postID']
+        if (Post.objects.filter(author_id = self.context['id']).filter(id=id).first()) == None:
+            raise Http404
+
+        post = Post.objects.get(author_id = self.context['id'], id = id)
+
+        post.id = self.context['postID']
+        post.author = User.objects.get(id = self.context['id'])
+        request = self.context['request']
+        post.type = request.data["type"]
+        post.title = request.data["title"]
+        post.source = request.data["source"]
+        post.origin = request.data["origin"]
+        post.description = request.data["description"]
+        post.contentType = request.data["contentType"]
+        post.categories = request.data["categories"]
+        post.count = request.data["count"]
+        post.comments = request.data["comments"]
+        post.visibility = request.data["visibility"]
+
+        post.save()
+
+
+
