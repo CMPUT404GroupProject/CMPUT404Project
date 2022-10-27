@@ -54,9 +54,19 @@ class UpdatePostSerializer(serializers.Serializer):
         if (Post.objects.filter(author_id = self.context['id']).filter(id=id).first()) == None:
             raise Http404
 
-        Post.objects.update(author = author, type = type, title = title,
-        source = source, origin = origin, description = description, contentType = contentType,
-        categories = categories, count = count, comments = comments, visibility = visibility)
+        post = Post.objects.get(author_id = self.context['id'], id = id)
+        post.author = author
+        post.type = type
+        post.title = title
+        post.source = source
+        post.origin = origin
+        post.description = description
+        post.contentType = contentType
+        post.categories = categories
+        post.count = count
+        post.comments = comments
+        post.visibility = visibility
+        post.save()
 
 
 
