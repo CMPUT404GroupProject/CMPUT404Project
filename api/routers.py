@@ -1,5 +1,5 @@
 from rest_framework.routers import SimpleRouter
-from api.user.viewsets import UserViewSet
+from api.user.viewsets import FollowersViewSet, UserViewSet, FollowersDetailedViewSet
 from api.auth.viewsets import LoginViewSet, RegistrationViewSet, RefreshViewSet
 from api.post.viewsets import PostViewSet
 
@@ -34,6 +34,10 @@ routes.register(r'api/user', UserViewSet, basename='user')
 # POSTS
 routes.register(r'authors/(?P<id>\w+)/posts/(?P<postID>\d+)', PostViewSet, basename = 'post')
 routes.register(r'authors/(?P<id>\w+)/posts', PostViewSet, basename = 'post')
+
+# FOLLOWERS
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/followers', FollowersViewSet, basename = 'followers')
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/followers/(?P<foreign_author_id>[0-9a-f-]+)', FollowersDetailedViewSet, basename = 'followers')
 urlpatterns = [
     *routes.urls
 ]
