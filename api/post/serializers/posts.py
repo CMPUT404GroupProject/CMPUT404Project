@@ -36,6 +36,7 @@ class CreatePostSerializer(serializers.Serializer):
 
 class UpdatePostSerializer(serializers.Serializer):
 
+
     def save(self, **kwargs):
         id = self.context['postID']
         if (Post.objects.filter(author_id = self.context['id']).filter(id=id).first()) == None:
