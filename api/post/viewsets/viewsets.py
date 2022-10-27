@@ -7,12 +7,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
 class CreatePostViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'post']
+    http_method_names = ['get', 'post', 'delete']
     # serializer_class = PostSerializer
     # permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
+            print("that post")
             return CreatePostSerializer
         return PostSerializer
 
@@ -21,17 +22,20 @@ class CreatePostViewSet(viewsets.ModelViewSet):
         'request': self.request}
         
     def get_queryset(self):
-        print(self.kwargs)
         querySet = Post.objects.filter(author_id = self.kwargs.get('id'))
         return querySet
 
 class UpdatePostViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'post']
+    http_method_names = ['get', 'put', 'post', 'delete' 'patch', 'head', 'options', 'trace']
     serializer_class = PostSerializer
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
+            print("this post")
             return UpdatePostSerializer
+        if self.request.method == 'DELETE':
+            print("yes")
+            return PostSerializer
         return PostSerializer
 
 
@@ -44,4 +48,6 @@ class UpdatePostViewSet(viewsets.ModelViewSet):
         querySet = Post.objects.filter(author_id = self.kwargs.get('id')).filter(id=self.kwargs.get('postID'))
         return querySet
 
+    def delete(self):
+        print("dengestha nenu")
     
