@@ -1,0 +1,43 @@
+.page {
+    position: relative;
+}
+
+.popUpPost {
+    position: absolute;
+    z-index: 2;
+    width: 99vw;
+    height: 700px;
+    top: 15vh;
+    text-align: center;
+
+    .popUpBox{
+        margin:auto;
+        border: 5px solid blue;
+        width: 800px;
+        height: 700px;
+        text-align: left;
+        background: black;
+            .InputField{
+                .InputHeader{
+                    color:white;
+                }
+                margin-bottom: 10px;
+                margin-left: 100px;
+                margin-top: 50px;
+            }
+            .submitPost{
+                color: white;
+            }
+    }
+
+}
+
+
+
+
+.content {
+    z-index: 1;
+    position: absolute;
+    background-color: rgb(17,24,39);
+}
+
