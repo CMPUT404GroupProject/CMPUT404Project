@@ -12,11 +12,11 @@
 
     .popUpBox{
         margin:auto;
-        border: 5px solid blue;
+        border: 5px solid; 
         width: 800px;
         height: 700px;
         text-align: left;
-        background: black;
+        background: rgb(18,23,39);
             .InputField{
                 .InputHeader{
                     color:white;
@@ -31,9 +31,6 @@
     }
 
 }
-
-
-
 
 .content {
     z-index: 1;
