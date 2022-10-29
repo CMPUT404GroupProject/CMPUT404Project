@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from datetime import datetime
 from django.core.exceptions import ValidationError
@@ -83,6 +84,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Followers(models.Model):
     type = models.CharField(max_length=50)
     id = models.CharField(max_length=200, primary_key=True)
+    followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followed")
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
+    created = models.DateTimeField(default=datetime.now, blank=True)
+    
+
+class FollowRequest(models.Model):
+    id = models.CharField(max_length=200, primary_key=True)
+    type = models.CharField(max_length=50, default="Follow")
     actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="actor")
     object = models.ForeignKey(User, on_delete=models.CASCADE, related_name="object")
+    summary = models.CharField(max_length=500, default=f"You have a follow request")
     created = models.DateTimeField(default=datetime.now, blank=True)

@@ -1,5 +1,5 @@
 from api.user.serializers import FollowersSerializer, UserSerializer
-from api.user.models import User, Followers
+from api.user.models import User, Followers, FollowRequest
 from rest_framework import viewsets
 from django.core.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -38,8 +38,8 @@ class FollowersViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         id = self.kwargs.get('id')
         followers = []
-        for f in Followers.objects.filter(object_id=id):
-            follower = f.actor_id
+        for f in Followers.objects.filter(followed_id=id):
+            follower = f.follower_id
             followers.append(follower)
             
         return User.objects.filter(id__in=followers)
@@ -51,11 +51,11 @@ class FollowersDetailedViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         if self.request.method == 'DELETE':
-            querySet = Followers.objects.filter(object=self.kwargs.get('id')).filter(actor=self.kwargs.get('foreign_author_id'))
+            querySet = Followers.objects.filter(followed=self.kwargs.get('id')).filter(follower=self.kwargs.get('foreign_author_id'))
         elif self.request.method == 'PUT':
-            querySet = Followers.objects.filter(object=self.kwargs.get('id'))
+            querySet = Followers.objects.filter(followed=self.kwargs.get('id'))
         else:
-            if Followers.objects.filter(object=self.kwargs.get('id')).filter(actor=self.kwargs.get('foreign_author_id')):
+            if Followers.objects.filter(followed=self.kwargs.get('id')).filter(follower=self.kwargs.get('foreign_author_id')):
                 querySet = User.objects.filter(id=self.kwargs.get('foreign_author_id'))
             else:
                 raise Http404
@@ -70,16 +70,17 @@ class FollowersDetailedViewSet(viewsets.ModelViewSet):
     
     def put(self, request, *args, **kwargs):
         id = uuid.uuid4()
-        type = "follower"
+        type = "Follow"
         object = User.objects.get(id=kwargs['id'])
         actor = User.objects.get(id=kwargs['foreign_author_id'])
+        summary = f"{actor.id} wants to follow {object.id}"
         
         if object.id == actor.id:
             raise ValidationError("Users cannot follow themselves")
         
-        if Followers.objects.filter(object=self.kwargs.get('id')).filter(actor=self.kwargs.get('foreign_author_id')):
-            raise ValidationError("User already follows you")
+        if Followers.objects.filter(followed=self.kwargs.get('id')).filter(follower=self.kwargs.get('foreign_author_id')):
+            raise ValidationError(f"You already follow {object.displayName}")
             
-        Followers.objects.get_or_create(id=id, type=type, object=object, actor=actor)
+        FollowRequest.objects.get_or_create(id=id, type=type, object=object, actor=actor, summary=summary)
         
         return Response(status=200)
