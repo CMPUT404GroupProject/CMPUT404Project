@@ -68,11 +68,12 @@ const ProfileOutline = () => {
             axios.get(item)
             .then((res)=>{
                 res.data.forEach((post: any)=>{
-                    tempPostsArray.push(post)
+                    tempPostsArray.push(post);
                 })
+                setPostArray({posts: tempPostsArray});
             })
         })
-        setPostArray({posts: tempPostsArray})
+        
     }, [authorPostLink])
 
     useEffect(()=> {
