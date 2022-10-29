@@ -5,6 +5,7 @@ import {useHistory} from "react-router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import React, { useState } from "react";
+import axios from "axios";
 
 
 
@@ -13,6 +14,7 @@ const PostPopup = () => {
     const account = useSelector((state: RootState) => state.auth.account);
     const dispatch = useDispatch();
     const history = useHistory();
+    const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
     // @ts-ignore
@@ -27,27 +29,25 @@ const PostPopup = () => {
     const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
 
     const handlePostSubmit = (type: string, title: string, source: string, origin: string, 
-        description: string, content_type: string, author: string, categories: string, count: number,
+        description: string, contentType: string, author: string, categories: string, count: number,
         comments: string, published: string, visibility: string, unlisted: boolean) => {
-            console.log(type);
-            console.log(title);
-            console.log(source);
-            console.log(origin);
-            console.log(description);
-            console.log(content_type);
-            console.log(author);
-            console.log(categories);
-            console.log(count);
-            console.log(comments);
-            console.log(published);
-            console.log(visibility);
-            console.log(unlisted);
-            setLoading(false);
+        const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/'
+        console.log(post_link)
+
+        axios.post(post_link, {type, title, source, origin, description, contentType, author, categories, count, comments, published, visibility, unlisted})
+        .then((res) => {
+            console.log(res)
+            setMessage("Account created successfully");
+          })
+          .catch((err) => {
+            setMessage("Error creating account");
+          });
+        setLoading(false)
     }
 
     const formik = useFormik({
         initialValues: {
-          post_type: "ASDASDASD",
+          post_type: "",
           post_title: "",
           source: userId,
           origin: userId,
