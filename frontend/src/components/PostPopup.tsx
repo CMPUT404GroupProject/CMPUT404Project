@@ -151,22 +151,19 @@ const PostPopup = () => {
                             onBlur={formik.handleBlur} 
                         />
                     </div>
-
-                    THIS IS FOR POST VISIBILITY
                     <div className="InputField">
                         <div className="InputHeader">
                             Visibility
                         </div>
-                        <select 
-                            id="visibility" 
+                        <input 
+                            id="visibility"
+                            type="text"
+                            placeholder="Enter visibility: PUBLIC or PRIVATE"
                             name="visibility"
                             value={formik.values.visibility}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur} 
-                        >
-                            <option value="public"> PUBLIC </option>
-                            <option value="private"> PRIVATE </option>
-                        </select>
+                        />
                     </div>
                     <div className="submitPost">
                         <button
