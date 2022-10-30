@@ -4,18 +4,40 @@ import PostCard from "./PostCard";
 import PostSingular from "./PostSingular";
 import PostCardWithPhoto from "./PostCardWithPhoto";
 import UserSidebar from "./UserSidebar";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PostPopup from "./PostPopup";
 import axios from "axios";
-import {useHistory, useLocation} from "react-router";
-import { withRouter } from 'react-router-dom';
+
+import {UserResponse} from "../utils/types";
+import {RootState} from "../store";
+import {useSelector} from "react-redux";
+import useSWR from 'swr';
+import {fetcher} from "../utils/axios";
+import '../css/ProfileOutline.scss'
 
 const ProfileOutline = () => {
+    // This is for the button that does the popup work
     const [postPopupClicked, setPostPopup] = useState(false);
+    function handleChange(newValue: any) {
+        setPostPopup(!postPopupClicked)
+    }
+
     const [message, setMessage] = useState("");
     const [forceRender, setForceRender] = useState(false) 
+    
+    // This is for the button for seeing own posts
+    const [allPosts, setAllPosts] = useState(true)
+    function handlePostVisibility(newValue: any){
+        setAllPosts(!allPosts)
+    }
+
+    // THIS IS TO GET CURRENT AUTHOR ID
+    const account = useSelector((state: RootState) => state.auth.account);
+    // @ts-ignore
+    const userId = account?.id;
+
     interface PostState {
-        posts: {type: string, title: string, source: string, origin: string, 
+        posts: {type: string, title: string, id:string, source: string, origin: string, 
             description: string, contentType: string, author: string, categories: string, count: number,
             comments: string, published: string, visibility: string, unlisted: boolean}[];
     }
@@ -33,9 +55,7 @@ const ProfileOutline = () => {
     })
     const postLinks: string[] = []
 
-    function handleChange(newValue: any) {
-        setPostPopup(!postPopupClicked)
-    }    
+      
     // THIS WILL GET ALL THE POSTS FROM EACH AUTHOR
     useEffect(()=>{
         // THIS PART GETS THE POST LINK FOR EACH AUTHOR
@@ -61,7 +81,7 @@ const ProfileOutline = () => {
     })
 
     useEffect(()=>{
-        let tempPostsArray: {type: string, title: string, source: string, origin: string, 
+        let tempPostsArray: {type: string, title: string, id: string, source: string, origin: string, 
             description: string, contentType: string, author: string, categories: string, count: number,
             comments: string, published: string, visibility: string, unlisted: boolean}[] = [];
         authorPostLink.myArray.forEach((item) =>{
@@ -76,19 +96,6 @@ const ProfileOutline = () => {
         
     }, [authorPostLink])
 
-    useEffect(()=> {
-        console.log(postArray.posts)
-        console.log("I AM RERENDERING NOW")
-        setForceRender(true)
-    }, [postArray.posts])
-
-
-
-    function returnPost(item: any) {
-        return <PostSingular post_type={item.type} post_title={item.title} source={item.source} origin={item.origin} post_description={item.description} 
-        post_content_type={item.contentType} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
-        visibility={item.visibility} unlisted={item.unlisted}/>
-    }
     return (
         <div className="page">
             {(postPopupClicked) ?
@@ -99,20 +106,29 @@ const ProfileOutline = () => {
             
             <div className="content grid grid-cols-12 gap-2">
                 <div className="user-sidebar-left col-span-3">
-                    <UserSidebar></UserSidebar>
+                    <UserSidebar onChange={handlePostVisibility} postVisibility={allPosts}/>
                 </div>
-                {(postArray.posts) ?
+                {(allPosts) ?
                     <div className="main-content-middle col-span-6">
-                    
-                    {postArray.posts.map((item) =>
-                        <PostSingular post_type={item.type} post_title={item.title} source={item.source} origin={item.origin} post_description={item.description} 
-                        post_content_type={item.contentType} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
-                        visibility={item.visibility} unlisted={item.unlisted}/>
-                    )}
-
+                        {postArray.posts.map((item) =>
+                            <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
+                            post_content_type={item.contentType} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
+                            visibility={item.visibility} unlisted={item.unlisted} editSwitch={false} />
+                        )}
                     </div>:
-                    null 
+                     <div className="main-content-middle col-span-6">
+                        {postArray.posts.map((item) =>
+                            {if(item.author === userId) {
+                                return <div>
+                                            <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
+                                            post_content_type={item.contentType} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
+                                            visibility={item.visibility} unlisted={item.unlisted} editSwitch={true}/>
+                                        </div>
+                            }}
+                        )}
+                    </div>
                 }
+
                 
                 <div className="friend-sidebar-right col-span-3">
                     <FriendSidebar

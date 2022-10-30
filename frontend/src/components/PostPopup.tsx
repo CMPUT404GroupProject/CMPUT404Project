@@ -32,7 +32,6 @@ const PostPopup = () => {
         description: string, contentType: string, author: string, categories: string, count: number,
         comments: string, published: string, visibility: string, unlisted: boolean) => {
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/'
-        console.log(post_link)
 
         axios.post(post_link, {type, title, source, origin, description, contentType, author, categories, count, comments, published, visibility, unlisted})
         .then((res) => {
@@ -151,22 +150,19 @@ const PostPopup = () => {
                             onBlur={formik.handleBlur} 
                         />
                     </div>
-
-                    THIS IS FOR POST VISIBILITY
                     <div className="InputField">
                         <div className="InputHeader">
                             Visibility
                         </div>
-                        <select 
-                            id="visibility" 
+                        <input 
+                            id="visibility"
+                            type="text"
+                            placeholder="Enter visibility: PUBLIC or PRIVATE"
                             name="visibility"
                             value={formik.values.visibility}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur} 
-                        >
-                            <option value="public"> PUBLIC </option>
-                            <option value="private"> PRIVATE </option>
-                        </select>
+                        />
                     </div>
                     <div className="submitPost">
                         <button

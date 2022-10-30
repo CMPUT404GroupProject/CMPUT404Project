@@ -13,7 +13,6 @@ function Login() {
   const history = useHistory();
 
   const handleLogin = (displayName: string, password: string) => {
-    console.log(displayName);
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/auth/login/`, { displayName, password })
       .then((res) => {

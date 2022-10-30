@@ -6,7 +6,14 @@ import {RootState} from "../store";
 import {useSelector} from "react-redux";
 import { Link } from "react-router-dom";
 
-const UserSidebar = () => {
+interface OwnProps {
+    onChange: (newValue: any)=> void;
+    postVisibility: boolean;
+}
+
+
+
+const UserSidebar = ({onChange, postVisibility}: OwnProps) => {
     const account = useSelector((state: RootState) => state.auth.account);
     // @ts-ignore
     const userId = account?.id;
@@ -27,7 +34,16 @@ const UserSidebar = () => {
             <button className="profile-button row-start-4 col-start-3 col-span-8 text-white text-lg rounded-lg justify-self-center bg-gray-700 p-3 m-3">
                 <Link to="/Profile">My profile</Link>
             </button>
-            <div className="logout-button row-start-5 col-start-3 col-span-8 justify-self-center m-3 p-2">
+            {(postVisibility) ? 
+                <button className="see-posts row-start-5 col-start-3 col-span-8 text-white text-lg rounded-lg justify-self-center bg-gray-700 p-3 m-3" onClick={onChange}>
+                    See my posts
+                </button>:
+                <button className="see-posts row-start-5 col-start-3 col-span-8 text-white text-lg rounded-lg justify-self-center bg-gray-700 p-3 m-3" onClick={onChange}>
+                    See all posts
+                </button>
+            }
+            
+            <div className="logout-button row-start-6 col-start-3 col-span-8 justify-self-center m-3 p-2">
                 <Logout></Logout>
             </div>
         </div>
