@@ -80,10 +80,6 @@ const ProfileOutline = () => {
         });
     })
 
-    // useEffect(() => {  
-    //     console.log(postArray.posts[0].id)
-    // },[postArray.posts])
-
     useEffect(()=>{
         let tempPostsArray: {type: string, title: string, id: string, source: string, origin: string, 
             description: string, contentType: string, author: string, categories: string, count: number,
@@ -117,7 +113,7 @@ const ProfileOutline = () => {
                         {postArray.posts.map((item) =>
                             <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
                             post_content_type={item.contentType} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
-                            visibility={item.visibility} unlisted={item.unlisted} editSwitch={false}/>
+                            visibility={item.visibility} unlisted={item.unlisted} editSwitch={false} />
                         )}
                     </div>:
                      <div className="main-content-middle col-span-6">

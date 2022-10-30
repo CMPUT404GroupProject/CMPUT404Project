@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useFormik } from "formik";
 import '../css/PostSingular.scss'
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../store";
 
 interface OwnProps {
     post_type: string,
@@ -29,6 +31,10 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     const [message, setMessage] = useState("");
     const [editMode, setEditMode] = useState(false)
     const [loading, setLoading] = useState(false);
+
+    const account = useSelector((state: RootState) => state.auth.account);
+    // @ts-ignore
+    const userId = account?.id
     
     const handlePostSubmit = (type: string, title: string, source: string, origin: string, 
         description: string, contentType: string, author: string, categories: string, count: number,
@@ -68,6 +74,25 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
           handlePostSubmit(values.post_type, values.post_title, values.source, values.origin, values.post_description, values.post_content_type, values.author, values.post_categories, values.count, values.comments, values.published, values.visibility, values.unlisted);
         },
       });
+
+    function sharePost(){
+        const post_link = `${process.env.REACT_APP_API_URL}/authors/` + userId.toString() + '/posts/'
+        axios.post(post_link, {type: post_type, title: post_title, source: userId.toString(), origin: origin, description: post_description, 
+            contentType: post_content_type, author: userId.toString(), categories: post_categories, 
+            count: count, comments: comments, published: published, visibility: visibility, unlisted: unlisted})
+        .then((res) => {
+            console.log(res)
+            setMessage("Post shared successfully");
+          })
+          .catch((err) => {
+            setMessage("Error sharing post");
+          });
+        setLoading(false)
+    }
+
+    function deletePost(){
+        console.log("HERE WE WILL DELETE")
+    }
 
 
     // We'll make a get request for the author id and get some stuff such as displayName and github URL that we will use for each of these posts
@@ -124,9 +149,13 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                     <div className="like-count row-start-5 col-start-3 col-span-2 justify-self-start self-center text-white text-sm bg-indigo-500 rounded-lg m-5 p-2">327 Likes</div>
                     <button className="post-like-button row-start-5 col-start-5 text-md rounded-lg text-white bg-green-600 place-self-center m-5 p-3">Like</button>
                     <button className="post-comment-button row-start-5 col-start-7 text-md rounded-lg text-white bg-gray-700 place-self-center m-5 p-3">Comment</button>
-                    <button className="post-share-button row-start-5 col-start-9 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Share</button>
+                    <button onClick={sharePost} className="post-share-button row-start-5 col-start-9 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Share</button>
                     {editSwitch ? 
                         <button onClick={() => setEditMode(true)} className="edit-button row-start-5 col-start-11 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Edit Post</button>:
+                        null
+                    }
+                    {editSwitch ? 
+                        <button onClick={deletePost} className="edit-button row-start-5 col-start-13 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Delete Post</button>:
                         null
                     }
                 </div>:
