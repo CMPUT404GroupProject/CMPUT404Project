@@ -21,14 +21,14 @@ def generate_id_int():
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, displayName, github, profileImage="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", password=None, **kwargs):
+    def create_user(self, displayName, github, is_staff,is_superuser, password=None, profileImage="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", **kwargs):
         """Create and return a `User` with an email, phone number, username and password."""
         if displayName is None:
             raise TypeError('Users must have a display name.')
         if github is None:
             raise TypeError('Users must have an github.')
 
-        user = self.model(displayName=displayName, github=github, profileImage=profileImage)
+        user = self.model(displayName=displayName, github=github, profileImage=profileImage, is_staff=is_staff, is_superuser=is_superuser, password=password)
         user.set_password(password)
         user.save(using=self._db)
 
@@ -38,27 +38,15 @@ class UserManager(BaseUserManager):
         """
         Create and return a `User` with superuser (admin) permissions.
         """
-        if password is None:
-            raise TypeError('Superusers must have a password.')
-        if github is None:
-            raise TypeError('Superusers must have github.')
-        if displayName is None:
-            raise TypeError('Superusers must have an username.')
-
-        user = self.create_user(displayName, github, password)
-        user.is_superuser = True
-        user.is_staff = True
-        user.save(using=self._db)
-
-        return user
+        return self.create_user(displayName, github, True, True, password)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    type = models.CharField(max_length=32, default="author")
-    id = models.CharField(max_length=128, primary_key=True, default=generate_id)
-    url = models.CharField(max_length=255, default = "")
-    host = models.CharField(max_length=255, default= "http://127.0.0.1:8000/")
-    displayName = models.CharField(db_index=True, max_length=255, unique=True)
+    type = models.CharField(max_length=500, default="author")
+    id = models.CharField(max_length=500, primary_key=True, default=generate_id)
+    url = models.CharField(max_length=500, default = "")
+    host = models.CharField(max_length=500, default= "http://127.0.0.1:8000/")
+    displayName = models.CharField(db_index=True, max_length=500, unique=True)
     #email = models.EmailField(db_index=True, unique=True,  null=True, blank=True)
     github = models.URLField(db_index=True, unique=True,  null=True, blank=True)
     profileImage = models.URLField(max_length=500, default="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
