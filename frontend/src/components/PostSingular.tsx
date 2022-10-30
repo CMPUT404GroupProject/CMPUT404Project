@@ -31,6 +31,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     const [message, setMessage] = useState("");
     const [editMode, setEditMode] = useState(false)
     const [loading, setLoading] = useState(false);
+    const [deleted, setDeleted] = useState(false);
 
     const account = useSelector((state: RootState) => state.auth.account);
     // @ts-ignore
@@ -91,9 +92,15 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     }
 
     function deletePost(){
-        console.log("HERE WE WILL DELETE")
+        const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/' + post_id + '/'
+        axios.delete(post_link)
+        .then((res) => {
+            if (res.status == 204){
+                console.log("POST DELETED")
+                setDeleted(true)
+            }
+        })
     }
-
 
     // We'll make a get request for the author id and get some stuff such as displayName and github URL that we will use for each of these posts
     useEffect(() =>{
@@ -109,173 +116,182 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     }, [author])
 
     return (
-    
+        
         <div>
-            {!(editMode) ? 
-                <div className="post-card grid grid-rows-12 grid-cols-12 bg-gray-800 rounded-lg mb-2">
-                    <div className="author-profile-picture row-start-1 col-start-1 col-span-2 bg-black rounded-full h-20 w-20 place-self-center m-5"></div>
-                    <div className="author-name row-start-1 col-start-3 col-span-2 text-white text-lg justify-self-start self-center">Posted by: {authorDisplayName}</div>
-                    <div className="author-handle row-start-1 col-start-5 col-span-2 text-white text-md justify-self-start self-center">{authorGithub}</div>
-                    <div className="post-title row-start-2 col-start-3 col-span-8 text-white text-2xl mb-5">{post_title}</div>
-                    
-                    {(post_content_type == "commonmark") ?
-                        <div className="post-description row-start-3 col-start-3 col-span-9 text-white text-md mb-5">
-                            <p>
-                                <ReactMarkdown>
-                                    {post_description}
-                                </ReactMarkdown>
-                            </p>
+            {(!deleted) ? 
+                <div>
+                    {!(editMode) ? 
+                        <div className="post-card grid grid-rows-12 grid-cols-12 bg-gray-800 rounded-lg mb-2">
+                            <div className="author-profile-picture row-start-1 col-start-1 col-span-2 bg-black rounded-full h-20 w-20 place-self-center m-5"></div>
+                            <div className="author-name row-start-1 col-start-3 col-span-2 text-white text-lg justify-self-start self-center">Posted by: {authorDisplayName}</div>
+                            <div className="author-handle row-start-1 col-start-5 col-span-2 text-white text-md justify-self-start self-center">{authorGithub}</div>
+                            <div className="post-title row-start-2 col-start-3 col-span-8 text-white text-2xl mb-5">{post_title}</div>
+                            
+                            {(post_content_type == "commonmark") ?
+                                <div className="post-description row-start-3 col-start-3 col-span-9 text-white text-md mb-5">
+                                    <p>
+                                        <ReactMarkdown>
+                                            {post_description}
+                                        </ReactMarkdown>
+                                    </p>
+                                </div>:
+                                null
+                            }
+                            {(post_content_type == "image") ?
+                                <div className="post-description row-start-3 col-start-3 col-span-9 text-white text-md mb-5">
+                                    <p>
+                                        <img src={post_description} />
+                                    </p>
+                                </div>:
+                                null
+                            }
+                            {(post_content_type == "text/plain") ?
+                                <div className="post-description row-start-3 col-start-3 col-span-9 text-white text-md mb-5">
+                                    <p>
+                                        {post_description}
+                                    </p>
+                                </div>:
+                                null
+                            }
+                            
+                            <div className="post-comments row-start-4 col-start-9 col-span-3 text-white text-center text-sm place-content-start bg-gray-900 rounded-lg p-2 mb-5">{count} Comments...</div>
+                            <div className="like-count row-start-5 col-start-3 col-span-2 justify-self-start self-center text-white text-sm bg-indigo-500 rounded-lg m-5 p-2">327 Likes</div>
+                            <button className="post-like-button row-start-5 col-start-5 text-md rounded-lg text-white bg-green-600 place-self-center m-5 p-3">Like</button>
+                            <button className="post-comment-button row-start-5 col-start-7 text-md rounded-lg text-white bg-gray-700 place-self-center m-5 p-3">Comment</button>
+                            <button onClick={sharePost} className="post-share-button row-start-5 col-start-9 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Share</button>
+                            {editSwitch ? 
+                                <button onClick={() => setEditMode(true)} className="edit-button row-start-5 col-start-11 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Edit Post</button>:
+                                null
+                            }
+                            {editSwitch ? 
+                                <button onClick={deletePost} className="edit-button row-start-5 col-start-13 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Delete Post</button>:
+                                null
+                            }
                         </div>:
-                        null
-                    }
-                    {(post_content_type == "image") ?
-                        <div className="post-description row-start-3 col-start-3 col-span-9 text-white text-md mb-5">
-                            <p>
-                                <img src={post_description} />
-                            </p>
-                        </div>:
-                        null
-                    }
-                    {(post_content_type == "text/plain") ?
-                        <div className="post-description row-start-3 col-start-3 col-span-9 text-white text-md mb-5">
-                            <p>
-                                {post_description}
-                            </p>
-                        </div>:
-                        null
-                    }
-                    
-                    <div className="post-comments row-start-4 col-start-9 col-span-3 text-white text-center text-sm place-content-start bg-gray-900 rounded-lg p-2 mb-5">{count} Comments...</div>
-                    <div className="like-count row-start-5 col-start-3 col-span-2 justify-self-start self-center text-white text-sm bg-indigo-500 rounded-lg m-5 p-2">327 Likes</div>
-                    <button className="post-like-button row-start-5 col-start-5 text-md rounded-lg text-white bg-green-600 place-self-center m-5 p-3">Like</button>
-                    <button className="post-comment-button row-start-5 col-start-7 text-md rounded-lg text-white bg-gray-700 place-self-center m-5 p-3">Comment</button>
-                    <button onClick={sharePost} className="post-share-button row-start-5 col-start-9 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Share</button>
-                    {editSwitch ? 
-                        <button onClick={() => setEditMode(true)} className="edit-button row-start-5 col-start-11 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Edit Post</button>:
-                        null
-                    }
-                    {editSwitch ? 
-                        <button onClick={deletePost} className="edit-button row-start-5 col-start-13 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Delete Post</button>:
-                        null
+                        <div className="formContainer">
+                            <form onSubmit={formik.handleSubmit}>
+                                {/* THIS IS FOR POST TYPE */}
+                                <div className="InputField">
+                                    <div className="InputHeader">
+                                        Post Type:
+                                    </div>
+                                    <input
+                                        id="post_type" 
+                                        type="text" 
+                                        placeholder="Enter Post Type" 
+                                        name="post_type" 
+                                        value={formik.values.post_type} 
+                                        onChange={formik.handleChange} 
+                                        onBlur={formik.handleBlur}    
+                                    />
+                                </div>
+                                {/* THIS IS FOR POST TITLE */}
+                                <div className="InputField">
+                                    <div className="InputHeader">
+                                        Post Title:
+                                    </div>
+                                    <input 
+                                        id="post_title"
+                                        type="text"
+                                        placeholder="Enter Post Title"
+                                        name="post_title"
+                                        value={formik.values.post_title}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}   
+                                    />
+                                </div>
+        
+                                {/* THIS IS FOR POST DESCRIPTION */}
+                                <div className="InputField">
+                                    <div className="InputHeader">
+                                        Post Description:
+                                    </div>
+                                    <input 
+                                        id="post_description"
+                                        type="text"
+                                        placeholder="Enter Post Description"
+                                        name="post_description"
+                                        value={formik.values.post_description}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}   
+                                    />
+                                </div>
+        
+                                {/* THIS IS FOR POST CONTENT TYPE */}
+                                <div className="InputField">
+                                    <div className="InputHeader">
+                                        Content-type
+                                    </div>
+                                    <input 
+                                        id="post_content_type"
+                                        type="text"
+                                        placeholder="Enter Post Content Type"
+                                        name="post_content_type"
+                                        value={formik.values.post_content_type}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur} 
+                                    />
+                                </div>
+        
+                                {/* THIS IS FOR POST CATEGORIES */}
+                                <div className="InputField">
+                                    <div className="InputHeader">
+                                        Categories
+                                    </div>
+                                    <input 
+                                        id="post_categories"
+                                        type="text"
+                                        placeholder="Enter Post Categories"
+                                        name="post_categories"
+                                        value={formik.values.post_categories}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur} 
+                                    />
+                                </div>
+                                <div className="InputField">
+                                    <div className="InputHeader">
+                                        Visibility
+                                    </div>
+                                    <input 
+                                        id="visibility"
+                                        type="text"
+                                        placeholder="Enter visibility: PUBLIC or PRIVATE"
+                                        name="visibility"
+                                        value={formik.values.visibility}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur} 
+                                    />
+                                </div>
+                                <div className="submitPost">
+                                    <button
+                                        className="submitCancel"
+                                        type="submit"
+                                        disabled={loading}
+                                    >
+                                        Edit Post
+                                    </button>
+                                    <button
+                                        className="submitCancel"
+                                        type="button"
+                                        onClick={() => setEditMode(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+        
+        
+                        </div>
+                        
                     }
                 </div>:
-                <div className="formContainer">
-                    <form onSubmit={formik.handleSubmit}>
-                        {/* THIS IS FOR POST TYPE */}
-                        <div className="InputField">
-                            <div className="InputHeader">
-                                Post Type:
-                            </div>
-                            <input
-                                id="post_type" 
-                                type="text" 
-                                placeholder="Enter Post Type" 
-                                name="post_type" 
-                                value={formik.values.post_type} 
-                                onChange={formik.handleChange} 
-                                onBlur={formik.handleBlur}    
-                            />
-                        </div>
-                        {/* THIS IS FOR POST TITLE */}
-                        <div className="InputField">
-                            <div className="InputHeader">
-                                Post Title:
-                            </div>
-                            <input 
-                                id="post_title"
-                                type="text"
-                                placeholder="Enter Post Title"
-                                name="post_title"
-                                value={formik.values.post_title}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}   
-                            />
-                        </div>
-
-                        {/* THIS IS FOR POST DESCRIPTION */}
-                        <div className="InputField">
-                            <div className="InputHeader">
-                                Post Description:
-                            </div>
-                            <input 
-                                id="post_description"
-                                type="text"
-                                placeholder="Enter Post Description"
-                                name="post_description"
-                                value={formik.values.post_description}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}   
-                            />
-                        </div>
-
-                        {/* THIS IS FOR POST CONTENT TYPE */}
-                        <div className="InputField">
-                            <div className="InputHeader">
-                                Content-type
-                            </div>
-                            <input 
-                                id="post_content_type"
-                                type="text"
-                                placeholder="Enter Post Content Type"
-                                name="post_content_type"
-                                value={formik.values.post_content_type}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur} 
-                            />
-                        </div>
-
-                        {/* THIS IS FOR POST CATEGORIES */}
-                        <div className="InputField">
-                            <div className="InputHeader">
-                                Categories
-                            </div>
-                            <input 
-                                id="post_categories"
-                                type="text"
-                                placeholder="Enter Post Categories"
-                                name="post_categories"
-                                value={formik.values.post_categories}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur} 
-                            />
-                        </div>
-                        <div className="InputField">
-                            <div className="InputHeader">
-                                Visibility
-                            </div>
-                            <input 
-                                id="visibility"
-                                type="text"
-                                placeholder="Enter visibility: PUBLIC or PRIVATE"
-                                name="visibility"
-                                value={formik.values.visibility}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur} 
-                            />
-                        </div>
-                        <div className="submitPost">
-                            <button
-                                className="submitCancel"
-                                type="submit"
-                                disabled={loading}
-                            >
-                                Edit Post
-                            </button>
-                            <button
-                                className="submitCancel"
-                                type="button"
-                                onClick={() => setEditMode(false)}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
-
-
-                </div>
-                
+                null
             }
+
+
+
         </div>
+        
         
     ) 
 }
