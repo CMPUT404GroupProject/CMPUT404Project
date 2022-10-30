@@ -1,5 +1,8 @@
 from django.db import models
+from datetime import datetime
+from django.core.exceptions import ValidationError
 import secrets
+import random
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 curId = ""
 def generate_id():
@@ -13,6 +16,8 @@ def generate_id():
     """
     curId = str(id)
     return id
+def generate_id_int():
+    return random.randint(0,10000)
 
 class UserManager(BaseUserManager):
 
@@ -71,5 +76,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.github}"
 
     def save(self, *args, **kwargs):
-        self.url = "http://127.0.0.1:8000/authors/" + self.id
+        self.url = "http://127.0.0.1:8000/authors/" + str(self.id)
         return super(User, self).save(*args, **kwargs)
+
+    
+class Followers(models.Model):
+    type = models.CharField(max_length=50)
+    id = models.CharField(max_length=200, primary_key=True)
+    actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="actor")
+    object = models.ForeignKey(User, on_delete=models.CASCADE, related_name="object")
+    created = models.DateTimeField(default=datetime.now, blank=True)
