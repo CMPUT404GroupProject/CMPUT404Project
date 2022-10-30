@@ -37,7 +37,7 @@ const ProfileOutline = () => {
     const userId = account?.id;
 
     interface PostState {
-        posts: {type: string, title: string, source: string, origin: string, 
+        posts: {type: string, title: string, id:string, source: string, origin: string, 
             description: string, contentType: string, author: string, categories: string, count: number,
             comments: string, published: string, visibility: string, unlisted: boolean}[];
     }
@@ -80,8 +80,12 @@ const ProfileOutline = () => {
         });
     })
 
+    // useEffect(() => {  
+    //     console.log(postArray.posts[0].id)
+    // },[postArray.posts])
+
     useEffect(()=>{
-        let tempPostsArray: {type: string, title: string, source: string, origin: string, 
+        let tempPostsArray: {type: string, title: string, id: string, source: string, origin: string, 
             description: string, contentType: string, author: string, categories: string, count: number,
             comments: string, published: string, visibility: string, unlisted: boolean}[] = [];
         authorPostLink.myArray.forEach((item) =>{
@@ -96,11 +100,6 @@ const ProfileOutline = () => {
         
     }, [authorPostLink])
 
-    // function returnPost(item: any) {
-    //     return <PostSingular post_type={item.type} post_title={item.title} source={item.source} origin={item.origin} post_description={item.description} 
-    //     post_content_type={item.contentType} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
-    //     visibility={item.visibility} unlisted={item.unlisted}/>
-    // }
     return (
         <div className="page">
             {(postPopupClicked) ?
@@ -116,7 +115,7 @@ const ProfileOutline = () => {
                 {(allPosts) ?
                     <div className="main-content-middle col-span-6">
                         {postArray.posts.map((item) =>
-                            <PostSingular post_type={item.type} post_title={item.title} source={item.source} origin={item.origin} post_description={item.description} 
+                            <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
                             post_content_type={item.contentType} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
                             visibility={item.visibility} unlisted={item.unlisted} editSwitch={false}/>
                         )}
@@ -125,7 +124,7 @@ const ProfileOutline = () => {
                         {postArray.posts.map((item) =>
                             {if(item.author === userId) {
                                 return <div>
-                                            <PostSingular post_type={item.type} post_title={item.title} source={item.source} origin={item.origin} post_description={item.description} 
+                                            <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
                                             post_content_type={item.contentType} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
                                             visibility={item.visibility} unlisted={item.unlisted} editSwitch={true}/>
                                         </div>

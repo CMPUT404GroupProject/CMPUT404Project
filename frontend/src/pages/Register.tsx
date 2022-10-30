@@ -11,7 +11,6 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
-  console.log("RERENDER")
 
   const handleLogin = (github: string, password: string, displayName: string) => {
     axios
