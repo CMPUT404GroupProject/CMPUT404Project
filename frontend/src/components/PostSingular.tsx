@@ -1,10 +1,11 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import ReactMarkdown from "react-markdown";
 import { useFormik } from "formik";
 import '../css/PostSingular.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
+import GlobalContext from "../context/GlobalContext";
 
 interface OwnProps {
     post_type: string,
@@ -32,8 +33,8 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     const [editMode, setEditMode] = useState(false)
     const [loading, setLoading] = useState(false);
     const [deleted, setDeleted] = useState(false);
-
     const account = useSelector((state: RootState) => state.auth.account);
+    const {showCommentModal, setShowCommentModal} = useContext(GlobalContext);
     // @ts-ignore
     const userId = account?.id
     
@@ -52,7 +53,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
           });
         setLoading(false)
     }
-
+    
     const formik = useFormik({
         initialValues: {
           post_type: "",
@@ -76,6 +77,9 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         },
       });
 
+    function openCommentModal() {
+        setShowCommentModal(true);
+    }
     function sharePost(){
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + userId.toString() + '/posts/'
         axios.post(post_link, {type: post_type, title: post_title, source: userId.toString(), origin: origin, description: post_description, 
@@ -90,7 +94,6 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
           });
         setLoading(false)
     }
-
     function deletePost(){
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/' + post_id + '/'
         axios.delete(post_link)
@@ -157,7 +160,17 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                             <div className="post-comments row-start-4 col-start-9 col-span-3 text-white text-center text-sm place-content-start bg-gray-900 rounded-lg p-2 mb-5">{count} Comments...</div>
                             <div className="like-count row-start-5 col-start-3 col-span-2 justify-self-start self-center text-white text-sm bg-indigo-500 rounded-lg m-5 p-2">327 Likes</div>
                             <button className="post-like-button row-start-5 col-start-5 text-md rounded-lg text-white bg-green-600 place-self-center m-5 p-3">Like</button>
-                            <button className="post-comment-button row-start-5 col-start-7 text-md rounded-lg text-white bg-gray-700 place-self-center m-5 p-3">Comment</button>
+                            <button 
+                                onClick={openCommentModal}
+                                className="post-comment-button 
+                                    row-start-5 col-start-7 
+                                    text-md rounded-lg 
+                                    text-white 
+                                    bg-gray-700 
+                                    place-self-center 
+                                    m-5 p-3">
+                                Comment
+                            </button>
                             <button onClick={sharePost} className="post-share-button row-start-5 col-start-9 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Share</button>
                             {editSwitch ? 
                                 <button onClick={() => setEditMode(true)} className="edit-button row-start-5 col-start-11 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Edit Post</button>:
