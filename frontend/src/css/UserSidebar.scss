@@ -1,0 +1,54 @@
+// .profile-card {
+//     position: relative;
+//     height: 700px;
+
+//     .profile-button {
+//         height: 50px;
+//     }
+// }
+
+.profile-card {
+    display: grid;
+    grid-template-rows: 8rem 4rem 4rem 4rem 4rem;
+    border-radius: 1.5rem;
+    position: sticky;
+    top: 1px;
+    background-color: rgb(31, 41, 55);
+    width: 20rem;
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
+    margin: 1rem 0rem 0rem 1rem;
+}
+.profile-picture {
+    grid-row-start: 1;
+    place-self: center;
+    overflow: hidden;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 5rem;
+}
+.username {
+    grid-row-start: 2;
+    text-align: center;
+    font-size: 1.5rem;
+    color: white;
+    place-self: center;
+}
+.profile-button {
+    grid-row-start: 3;
+    background-color: rgb(55, 65, 81);
+    color: white;
+    width: 7rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    place-self: center;
+}
+.see-posts-button {
+    grid-row-start: 4;
+    background-color: rgb(55, 65, 81);
+    color: white;
+    width: 8rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    place-self: center;
+}

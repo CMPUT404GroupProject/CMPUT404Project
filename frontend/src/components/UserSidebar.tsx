@@ -5,29 +5,45 @@ import {UserResponse} from "../utils/types";
 import {RootState} from "../store";
 import {useSelector} from "react-redux";
 import { Link } from "react-router-dom";
+import '../css/UserSidebar.scss'
 
-const UserSidebar = () => {
+interface OwnProps {
+    onChange: (newValue: any)=> void;
+    postVisibility: boolean;
+}
+
+
+
+const UserSidebar = ({onChange, postVisibility}: OwnProps) => {
     const account = useSelector((state: RootState) => state.auth.account);
     // @ts-ignore
     const userId = account?.id;
     const user = useSWR<UserResponse>(`/authors/${userId}/`, fetcher);
 
     return (
-        <div className="profile-card grid grid-rows-12 grid-cols-12 rounded-lg sticky top-0 bg-gray-800">
-            <div className="profile-picture row-start-1 col-start-6 col-span-2 m-4 self-center justify-self-center">
-                <div className="picture bg-black rounded-full h-40 w-40"></div>
+        <div className="profile-card bg-white">
+            <div className="profile-picture">
+                <img src="https://cdn.webfactorysite.co.uk/sr_695374_largeish.jpg" alt="profile-picture"></img>
             </div>
             {
                 user.data ?
-                <div className="user-name row-start-2 col-start-3 col-span-8 text-center text-2xl justify-self-center text-white p-4">{user.data?.displayName}</div>
+                <div className="username">{user.data?.displayName}</div>
                 :
-                <div className="user-name row-start-2 col-start-3 col-span-8 text-center text-2xl justify-self-center text-white p-4">Your Name</div>
+                <div className="username">Your Name</div>
             }
-            <div className="user-handle row-start-3 col-start-3 col-span-8 text-xl justify-self-center text-white p-4">@your_handle</div>
-            <button className="profile-button row-start-4 col-start-3 col-span-8 text-white text-lg rounded-lg justify-self-center bg-gray-700 p-3 m-3">
+            <button className="profile-button">
                 <Link to="/Profile">My profile</Link>
             </button>
-            <div className="logout-button row-start-5 col-start-3 col-span-8 justify-self-center m-3 p-2">
+            {(postVisibility) ? 
+                <button className="see-posts-button" onClick={onChange}>
+                    See my posts
+                </button>:
+                <button className="see-posts-button" onClick={onChange}>
+                    See all posts
+                </button>
+            }
+            
+            <div className="logout-button">
                 <Logout></Logout>
             </div>
         </div>

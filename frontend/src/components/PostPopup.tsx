@@ -8,9 +8,11 @@ import React, { useState } from "react";
 import axios from "axios";
 
 
+interface OwnProps {
+    onChange: (newValue: any)=> void;
+}
 
-
-const PostPopup = () => {
+const PostPopup = ({onChange}: OwnProps) => {
     const account = useSelector((state: RootState) => state.auth.account);
     const dispatch = useDispatch();
     const history = useHistory();
@@ -32,7 +34,6 @@ const PostPopup = () => {
         description: string, contentType: string, author: string, categories: string, count: number,
         comments: string, published: string, visibility: string, unlisted: boolean) => {
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/'
-        console.log(post_link)
 
         axios.post(post_link, {type, title, source, origin, description, contentType, author, categories, count, comments, published, visibility, unlisted})
         .then((res) => {
@@ -65,6 +66,7 @@ const PostPopup = () => {
           setLoading(true);
         //   console.log("submitPressed");
           handlePostSubmit(values.post_type, values.post_title, values.source, values.origin, values.post_description, values.post_content_type, values.author, values.post_categories, values.count, values.comments, values.published, values.visibility, values.unlisted);
+          onChange("Null");
         },
       });
 
@@ -109,9 +111,8 @@ const PostPopup = () => {
                         <div className="InputHeader">
                             Post Description:
                         </div>
-                        <input 
+                        <textarea 
                             id="post_description"
-                            type="text"
                             placeholder="Enter Post Description"
                             name="post_description"
                             value={formik.values.post_description}
@@ -125,15 +126,18 @@ const PostPopup = () => {
                         <div className="InputHeader">
                             Content-type
                         </div>
-                        <input 
+                        <select 
                             id="post_content_type"
-                            type="text"
                             placeholder="Enter Post Content Type"
                             name="post_content_type"
                             value={formik.values.post_content_type}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur} 
-                        />
+                        >
+                            <option value="commonmark">Markdown</option>
+                            <option value="image">Image</option>
+                            <option value="text/plain">Text</option>
+                        </select>
                     </div>
 
                     {/* THIS IS FOR POST CATEGORIES */}
@@ -151,29 +155,36 @@ const PostPopup = () => {
                             onBlur={formik.handleBlur} 
                         />
                     </div>
-
-                    THIS IS FOR POST VISIBILITY
                     <div className="InputField">
                         <div className="InputHeader">
                             Visibility
                         </div>
                         <select 
-                            id="visibility" 
+                            id="visibility"
+                            placeholder="Enter visibility: PUBLIC or PRIVATE"
                             name="visibility"
                             value={formik.values.visibility}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur} 
                         >
-                            <option value="public"> PUBLIC </option>
-                            <option value="private"> PRIVATE </option>
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
                         </select>
                     </div>
                     <div className="submitPost">
                         <button
+                            className="create-post-button"
                             type="submit"
                             disabled={loading}
                         >
-                            Create New Post
+                            Create Post
+                        </button>
+                        <button
+                            className="cancel-button"
+                            type="button"
+                            onClick={onChange}
+                        >
+                            Cancel
                         </button>
                     </div>
                 </form>

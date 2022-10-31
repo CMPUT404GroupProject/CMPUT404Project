@@ -6,28 +6,80 @@
     position: absolute;
     z-index: 2;
     width: 99vw;
-    height: 700px;
-    top: 15vh;
+    //height: 700px;
+    height: 100%;
+    //top: 15vh;
     text-align: center;
 
     .popUpBox{
-        margin:auto;
+        margin: auto;
         border: 5px solid; 
-        width: 800px;
-        height: 700px;
+        width: 70rem;
+        max-height: 100%;
         text-align: left;
         background: rgb(18,23,39);
-            .InputField{
-                .InputHeader{
-                    color:white;
-                }
-                margin-bottom: 10px;
-                margin-left: 100px;
-                margin-top: 50px;
+        border-radius: 1.5rem;
+        padding: 1rem;
+
+        .InputField{
+            //margin-bottom: 10px;
+            //margin-left: 100px;
+            //margin-top: 50px;
+
+            .InputHeader{
+                color:white;
             }
-            .submitPost{
-                color: white;
-            }
+        }
+        .submitPost{
+            color: white;
+            margin-bottom: 5rem;
+        }
+        #post_type { 
+            width: 8rem;
+            height: 2rem;
+            margin-bottom: 1rem;
+        }
+        #post_title {
+            width: 100%;
+            height: 2rem;
+            margin-bottom: 1rem;
+        }
+        #post_description {
+            width: 100%;
+            height: 15rem;
+            margin-bottom: 1rem;
+        }
+        #post_content_type {
+            width: 8rem;
+            height: 2rem;
+            margin-bottom: 1rem;
+        }
+        #post_categories {
+            width: 20rem;
+            height: 2rem;
+            margin-bottom: 1rem;
+        }
+        #visibility {
+            width: 8rem;
+            height: 2rem;
+            margin-bottom: 2rem;
+        }
+        .create-post-button {
+            background-color: rgb(36, 124, 21);
+            color: white;
+            width: 7rem;
+            height: 3rem;
+            border-radius: 0.5rem;
+            place-self: center;
+            margin-right: 2rem;
+        }  
+        .cancel-button {
+            background-color: rgb(172, 29, 21);
+            color: white;
+            width: 7rem;
+            height: 3rem;
+            border-radius: 0.5rem;
+        } 
     }
 
 }
