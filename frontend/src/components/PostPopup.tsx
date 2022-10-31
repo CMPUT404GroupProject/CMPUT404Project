@@ -8,9 +8,11 @@ import React, { useState } from "react";
 import axios from "axios";
 
 
+interface OwnProps {
+    onChange: (newValue: any)=> void;
+}
 
-
-const PostPopup = () => {
+const PostPopup = ({onChange}: OwnProps) => {
     const account = useSelector((state: RootState) => state.auth.account);
     const dispatch = useDispatch();
     const history = useHistory();
@@ -64,6 +66,7 @@ const PostPopup = () => {
           setLoading(true);
         //   console.log("submitPressed");
           handlePostSubmit(values.post_type, values.post_title, values.source, values.origin, values.post_description, values.post_content_type, values.author, values.post_categories, values.count, values.comments, values.published, values.visibility, values.unlisted);
+          onChange("Null");
         },
       });
 
@@ -179,6 +182,7 @@ const PostPopup = () => {
                         <button
                             className="cancel-button"
                             type="button"
+                            onClick={onChange}
                         >
                             Cancel
                         </button>

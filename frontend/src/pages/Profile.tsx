@@ -102,7 +102,7 @@ const Profile = () => {
 
   return (
     <div className="content">
-      {(postPopupClicked) ? <PostPopup /> : null}
+      {(postPopupClicked) ? <PostPopup onChange={handleChange}/> : null}
 
         <div className="sidebar-left">
             <div className="user-sidebar-card">
