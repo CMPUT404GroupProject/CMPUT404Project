@@ -1,10 +1,12 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import ReactMarkdown from "react-markdown";
 import { useFormik } from "formik";
 import '../css/PostSingular.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
+import GlobalContext from "../context/GlobalContext";
+
 
 interface OwnProps {
     post_type: string,
@@ -32,8 +34,9 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     const [editMode, setEditMode] = useState(false)
     const [loading, setLoading] = useState(false);
     const [deleted, setDeleted] = useState(false);
-
     const account = useSelector((state: RootState) => state.auth.account);
+    const {showCommentModal, setShowCommentModal} = useContext(GlobalContext);
+    
     // @ts-ignore
     const userId = account?.id
     
@@ -52,7 +55,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
           });
         setLoading(false)
     }
-
+    
     const formik = useFormik({
         initialValues: {
           post_type: "",
@@ -76,6 +79,9 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         },
       });
 
+    function openCommentModal() {
+        setShowCommentModal(true);
+    }
     function sharePost(){
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + userId.toString() + '/posts/'
         axios.post(post_link, {type: post_type, title: post_title, source: userId.toString(), origin: origin, description: post_description, 
@@ -90,7 +96,6 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
           });
         setLoading(false)
     }
-
     function deletePost(){
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/' + post_id + '/'
         axios.delete(post_link)
@@ -292,12 +297,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                 </div>:
                 null
             }
-
-
-
         </div>
-        
-        
     ) 
 }
 
