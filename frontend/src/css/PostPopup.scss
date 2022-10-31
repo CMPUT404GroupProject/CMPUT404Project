@@ -15,11 +15,11 @@
         margin: auto;
         border: 5px solid; 
         width: 70rem;
-        height: 56rem;
+        max-height: 100%;
         text-align: left;
         background: rgb(18,23,39);
         border-radius: 1.5rem;
-        padding: 2rem;
+        padding: 1rem;
 
         .InputField{
             //margin-bottom: 10px;
@@ -29,12 +29,10 @@
             .InputHeader{
                 color:white;
             }
-            input{
-                width: 500px;
-            }
         }
         .submitPost{
             color: white;
+            margin-bottom: 5rem;
         }
         #post_type { 
             width: 8rem;
@@ -48,7 +46,7 @@
         }
         #post_description {
             width: 100%;
-            height: 20rem;
+            height: 15rem;
             margin-bottom: 1rem;
         }
         #post_content_type {
