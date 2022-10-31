@@ -1,9 +1,17 @@
 from django.db import models
 from datetime import datetime  
 from api.user.models import User
-
+import secrets
 # Create your models here.
-
+def generate_id():
+    id = secrets.token_hex(32)
+    """ #TODO - check if id already exists in database
+    while True:
+        id = secrets.token_hex(32)
+        if User.objects.filter(id=code).count() == 0:
+            break
+    """
+    return id
 
 class Request(models.Model):
     # Friend or Follow
@@ -11,14 +19,6 @@ class Request(models.Model):
     summary = models.TextField()
     author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'request_author')
     object = models.ForeignKey(User, verbose_name= ("Object"), on_delete=models.CASCADE, related_name = 'request_object')
-
-class Comment(models.Model):
-    type = models.CharField(max_length = 50)
-    author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'comment_author')
-    comment = models.TextField()
-    contentType = models.CharField(max_length = 50)
-    published = models.DateTimeField(default=datetime.now, blank=True)
-    id = models.CharField(max_length = 200, primary_key=True)
 
 class Post(models.Model):
     type = models.CharField(max_length = 50)
@@ -37,6 +37,15 @@ class Post(models.Model):
     published = models.DateTimeField(default=datetime.now, blank=True)
     visibility = models.CharField(max_length = 50)
     unlisted = models.BooleanField(default = False)
+
+class Comment(models.Model):
+    type = models.CharField(max_length = 50, default="comment")
+    author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'comment_author')
+    comment = models.TextField()
+    contentType = models.CharField(max_length = 50)
+    published = models.DateTimeField(default=datetime.now, blank=True)
+    id = models.CharField(max_length = 200, primary_key=True, default=generate_id)
+    #post_id = models.CharField(max_length = 200, default="post_id")
 
 class Like(models.Model):
     #TODO not sure what @context means

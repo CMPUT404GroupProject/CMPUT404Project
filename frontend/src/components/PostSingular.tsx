@@ -170,7 +170,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                     <button onClick={() => setEditMode(true)} className="post-edit-button">Edit Post</button> : null
                                 }
                                 <button className="post-like-button">0 Likes</button>
-                                <button className="post-comment-button">Comment</button>
+                                <button onClick={openCommentModal} className="post-comment-button">Comment</button>
                                 <button onClick={sharePost} className="post-share-button">Share</button>
                             </div>
                         </div>:
