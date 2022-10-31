@@ -1,0 +1,51 @@
+.friend-card {
+    display: grid;
+    grid-template-rows: 4rem 4rem auto;
+    border-radius: 1.5rem;
+    position: sticky;
+    top: 0px;
+    background-color: rgb(31, 41, 55);
+    width: 19rem;
+    padding-top: 2rem;
+    padding-bottom: 1.5rem;
+    margin-top: 1rem;
+    margin-right: 1rem;
+}
+.create-post-button {
+    grid-row-start: 1;
+    background-color: rgb(57, 119, 218);
+    color: white;
+    width: 7rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    place-self: center;
+}
+.friend-button {
+    grid-row-start: 2;
+    place-self: center;
+}
+.friend-list-card {
+    grid-row-start: 3;
+    display: grid;
+    grid-template-columns: 2;
+    background-color: rgb(17, 24, 39);
+    border-radius: 1rem;
+    margin-top: 3rem;
+    margin-right: 2rem;
+    margin-left: 2rem;
+    padding: 0.5rem;
+
+    .friend-profile-picture {
+        grid-column-start: 1;
+        place-self: center;
+        overflow: hidden;
+        height: 3rem;
+        width: 3rem;
+        border-radius: 5rem;
+    }
+    .friend-username {
+        grid-column-start: 2;
+        place-self: center;
+        color: white;
+    }
+}
