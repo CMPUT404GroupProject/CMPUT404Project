@@ -1,17 +1,71 @@
-.submitPost{
-    button{
-        border: 2px solid white;
-        color: white;
-        margin-right: 30px;
-        margin-top: 30px
-    }
-}
-
 .formContainer {
-    margin-left: 50px;
-    padding-bottom: 50px
-}
+    display: grid;
+    grid-template-columns: auto;
+    background-color: rgb(31, 41, 55);
+    border-radius: 1.5rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    padding: 2rem;
 
+    .InputHeader {
+        color: white;
+    }
+    #post_type { 
+        grid-column-start: 2;
+        grid-row-start: 2;
+        width: 8rem;
+        height: 2rem;
+        margin-bottom: 1rem;
+    }
+    #post_title {
+        grid-column-start: 2;
+        grid-row-start: 2;
+        width: 100%;
+        height: 2rem;
+        margin-bottom: 1rem;
+    }
+    #post_description {
+        grid-column-start: 2;
+        grid-row-start: 3;
+        width: 100%;
+        height: 20rem;
+        margin-bottom: 1rem;
+    }
+    #post_content_type {
+        grid-column-start: 2;
+        grid-row-start: 4;
+        width: 8rem;
+        height: 2rem;
+        margin-bottom: 1rem;
+    }
+    #post_categories {
+        width: 20rem;
+        height: 2rem;
+        margin-bottom: 1rem;
+    }
+    #visibility {
+        width: 8rem;
+        height: 2rem;
+        margin-bottom: 2rem;
+    }
+    .edit-post-button-save {
+        background-color: rgb(34, 127, 158);
+        color: white;
+        width: 7rem;
+        height: 3rem;
+        border-radius: 0.5rem;
+        place-self: center;
+        margin-right: 2rem;
+    }   
+    .cancel-button {
+        background-color: rgb(172, 29, 21);
+        color: white;
+        width: 7rem;
+        height: 3rem;
+        border-radius: 0.5rem;
+        place-self: center;
+    }   
+}
 .post-card {
     display: grid;
     grid-template-columns: 9rem auto;

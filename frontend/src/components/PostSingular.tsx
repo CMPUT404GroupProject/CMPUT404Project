@@ -164,7 +164,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                 {editSwitch ? 
                                     <button onClick={() => setEditMode(true)} className="post-edit-button">Edit Post</button> : null
                                 }
-                                <button className="post-like-button">Like</button>
+                                <button className="post-like-button">0 Likes</button>
                                 <button className="post-comment-button">Comment</button>
                                 <button onClick={sharePost} className="post-share-button">Share</button>
                             </div>
@@ -177,13 +177,13 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                         Post Type:
                                     </div>
                                     <input
-                                        id="post_type" 
-                                        type="text" 
-                                        placeholder="Enter Post Type" 
-                                        name="post_type" 
-                                        value={formik.values.post_type} 
-                                        onChange={formik.handleChange} 
-                                        onBlur={formik.handleBlur}    
+                                    id="post_type"
+                                    type="text"
+                                    placeholder="Enter Post Type"
+                                    name="post_type"
+                                    value={formik.values.post_type}
+                                    onChange={formik.handleChange} 
+                                    onBlur={formik.handleBlur} 
                                     />
                                 </div>
                                 {/* THIS IS FOR POST TITLE */}
@@ -207,9 +207,8 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                     <div className="InputHeader">
                                         Post Description:
                                     </div>
-                                    <input 
+                                    <textarea 
                                         id="post_description"
-                                        type="text"
                                         placeholder="Enter Post Description"
                                         name="post_description"
                                         value={formik.values.post_description}
@@ -223,15 +222,18 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                     <div className="InputHeader">
                                         Content-type
                                     </div>
-                                    <input 
+                                    <select 
                                         id="post_content_type"
-                                        type="text"
                                         placeholder="Enter Post Content Type"
                                         name="post_content_type"
                                         value={formik.values.post_content_type}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur} 
-                                    />
+                                    >
+                                        <option value="commonmark">Markdown</option>
+                                        <option value="image">Image</option>
+                                        <option value="text/plain">Text</option>
+                                    </select>
                                 </div>
         
                                 {/* THIS IS FOR POST CATEGORIES */}
@@ -253,26 +255,28 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                     <div className="InputHeader">
                                         Visibility
                                     </div>
-                                    <input 
+                                    <select 
                                         id="visibility"
-                                        type="text"
                                         placeholder="Enter visibility: PUBLIC or PRIVATE"
                                         name="visibility"
                                         value={formik.values.visibility}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur} 
-                                    />
+                                    >
+                                        <option value="public">Public</option>
+                                        <option value="private">Private</option>
+                                    </select>
                                 </div>
                                 <div className="submitPost">
                                     <button
-                                        className="submitCancel"
+                                        className="edit-post-button-save"
                                         type="submit"
                                         disabled={loading}
                                     >
                                         Edit Post
                                     </button>
                                     <button
-                                        className="submitCancel"
+                                        className="cancel-button"
                                         type="button"
                                         onClick={() => setEditMode(false)}
                                     >
