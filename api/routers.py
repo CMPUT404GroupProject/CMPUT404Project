@@ -3,6 +3,7 @@ from api.user.viewsets import FollowersViewSet, UserViewSet, FollowersDetailedVi
 from api.auth.viewsets import LoginViewSet, RegistrationViewSet, RefreshViewSet
 # from api.post.viewsets import PostViewSet
 from api.post.viewsets.viewsets import CreatePostViewSet, UpdatePostViewSet
+from api import views
 
 routes = SimpleRouter()
 # AUTHENTICATION
@@ -36,6 +37,9 @@ routes.register(r'api/user', UserViewSet, basename='user')
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)', UpdatePostViewSet, basename = 'post')
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts', CreatePostViewSet, basename = 'post')
 
+# Comments
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)/comments', views.CommentView, basename = 'comment')
+#routes.register(r'authors/(?P<id>[0-9a-f-]+)/comments', views.CommentView, basename = 'comment')
 
 # FOLLOWERS
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/followers/(?P<foreign_author_id>[0-9a-f-]+)', FollowersDetailedViewSet, basename = 'followers')
