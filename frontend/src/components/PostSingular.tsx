@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
 import GlobalContext from "../context/GlobalContext";
 
+
 interface OwnProps {
     post_type: string,
     post_title: string,
@@ -35,6 +36,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     const [deleted, setDeleted] = useState(false);
     const account = useSelector((state: RootState) => state.auth.account);
     const {showCommentModal, setShowCommentModal} = useContext(GlobalContext);
+    
     // @ts-ignore
     const userId = account?.id
     
@@ -300,12 +302,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                 </div>:
                 null
             }
-
-
-
         </div>
-        
-        
     ) 
 }
 
