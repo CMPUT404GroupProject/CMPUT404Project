@@ -108,9 +108,8 @@ const PostPopup = () => {
                         <div className="InputHeader">
                             Post Description:
                         </div>
-                        <input 
+                        <textarea 
                             id="post_description"
-                            type="text"
                             placeholder="Enter Post Description"
                             name="post_description"
                             value={formik.values.post_description}
@@ -124,15 +123,18 @@ const PostPopup = () => {
                         <div className="InputHeader">
                             Content-type
                         </div>
-                        <input 
+                        <select 
                             id="post_content_type"
-                            type="text"
                             placeholder="Enter Post Content Type"
                             name="post_content_type"
                             value={formik.values.post_content_type}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur} 
-                        />
+                        >
+                            <option value="commonmark">Markdown</option>
+                            <option value="image">Image</option>
+                            <option value="text/plain">Text</option>
+                        </select>
                     </div>
 
                     {/* THIS IS FOR POST CATEGORIES */}
@@ -154,22 +156,31 @@ const PostPopup = () => {
                         <div className="InputHeader">
                             Visibility
                         </div>
-                        <input 
+                        <select 
                             id="visibility"
-                            type="text"
                             placeholder="Enter visibility: PUBLIC or PRIVATE"
                             name="visibility"
                             value={formik.values.visibility}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur} 
-                        />
+                        >
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                        </select>
                     </div>
                     <div className="submitPost">
                         <button
+                            className="create-post-button"
                             type="submit"
                             disabled={loading}
                         >
-                            Create New Post
+                            Create Post
+                        </button>
+                        <button
+                            className="cancel-button"
+                            type="button"
+                        >
+                            Cancel
                         </button>
                     </div>
                 </form>

@@ -126,14 +126,20 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
             {(!deleted) ? 
                 <div>
                     {!(editMode) ? 
-                        <div className="post-card grid grid-rows-12 grid-cols-12 bg-gray-800 rounded-lg mb-2">
-                            <div className="author-profile-picture row-start-1 col-start-1 col-span-2 bg-black rounded-full h-20 w-20 place-self-center m-5"></div>
-                            <div className="author-name row-start-1 col-start-3 col-span-2 text-white text-lg justify-self-start self-center">Posted by: {authorDisplayName}</div>
-                            <div className="author-handle row-start-1 col-start-5 col-span-2 text-white text-md justify-self-start self-center">{authorGithub}</div>
-                            <div className="post-title row-start-2 col-start-3 col-span-8 text-white text-2xl mb-5">{post_title}</div>
+                        <div className="post-card">
+                            <div className="author-profile-picture">
+                                <img src="https://cdn.webfactorysite.co.uk/sr_695374_largeish.jpg" alt="profile-picture"></img>
+                            </div>
+                            <div className="post-header">
+                                <div className="author-name">{authorDisplayName}</div>
+                                <div className="post-title">{post_title}</div>
+                                {editSwitch ? 
+                                    <button onClick={deletePost} className="post-delete-button">Delete Post</button> : null
+                                }
+                            </div>
                             
                             {(post_content_type == "commonmark") ?
-                                <div className="post-description row-start-3 col-start-3 col-span-9 text-white text-md mb-5">
+                                <div className="post-description">
                                     <p>
                                         <ReactMarkdown>
                                             {post_description}
@@ -143,7 +149,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                 null
                             }
                             {(post_content_type == "image") ?
-                                <div className="post-description row-start-3 col-start-3 col-span-9 text-white text-md mb-5">
+                                <div className="post-image">
                                     <p>
                                         <img src={post_description} />
                                     </p>
@@ -151,37 +157,22 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                 null
                             }
                             {(post_content_type == "text/plain") ?
-                                <div className="post-description row-start-3 col-start-3 col-span-9 text-white text-md mb-5">
+                                <div className="post-description">
                                     <p>
                                         {post_description}
                                     </p>
                                 </div>:
                                 null
                             }
-                            
-                            <div className="post-comments row-start-4 col-start-9 col-span-3 text-white text-center text-sm place-content-start bg-gray-900 rounded-lg p-2 mb-5">{count} Comments...</div>
-                            <div className="like-count row-start-5 col-start-3 col-span-2 justify-self-start self-center text-white text-sm bg-indigo-500 rounded-lg m-5 p-2">327 Likes</div>
-                            <button className="post-like-button row-start-5 col-start-5 text-md rounded-lg text-white bg-green-600 place-self-center m-5 p-3">Like</button>
-                            <button 
-                                onClick={openCommentModal}
-                                className="post-comment-button 
-                                    row-start-5 col-start-7 
-                                    text-md rounded-lg 
-                                    text-white 
-                                    bg-gray-700 
-                                    place-self-center 
-                                    m-5 p-3">
-                                Comment
-                            </button>
-                            <button onClick={sharePost} className="post-share-button row-start-5 col-start-9 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Share</button>
-                            {editSwitch ? 
-                                <button onClick={() => setEditMode(true)} className="edit-button row-start-5 col-start-11 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Edit Post</button>:
-                                null
-                            }
-                            {editSwitch ? 
-                                <button onClick={deletePost} className="edit-button row-start-5 col-start-13 text-md rounded-lg text-white bg-yellow-600 place-self-center m-5 p-3">Delete Post</button>:
-                                null
-                            }
+                            <div className="post-comments">{count} Comments...</div>
+                            <div className="post-interact">
+                                {editSwitch ? 
+                                    <button onClick={() => setEditMode(true)} className="post-edit-button">Edit Post</button> : null
+                                }
+                                <button className="post-like-button">0 Likes</button>
+                                <button className="post-comment-button">Comment</button>
+                                <button onClick={sharePost} className="post-share-button">Share</button>
+                            </div>
                         </div>:
                         <div className="formContainer">
                             <form onSubmit={formik.handleSubmit}>
@@ -191,13 +182,13 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                         Post Type:
                                     </div>
                                     <input
-                                        id="post_type" 
-                                        type="text" 
-                                        placeholder="Enter Post Type" 
-                                        name="post_type" 
-                                        value={formik.values.post_type} 
-                                        onChange={formik.handleChange} 
-                                        onBlur={formik.handleBlur}    
+                                    id="post_type"
+                                    type="text"
+                                    placeholder="Enter Post Type"
+                                    name="post_type"
+                                    value={formik.values.post_type}
+                                    onChange={formik.handleChange} 
+                                    onBlur={formik.handleBlur} 
                                     />
                                 </div>
                                 {/* THIS IS FOR POST TITLE */}
@@ -221,9 +212,8 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                     <div className="InputHeader">
                                         Post Description:
                                     </div>
-                                    <input 
+                                    <textarea 
                                         id="post_description"
-                                        type="text"
                                         placeholder="Enter Post Description"
                                         name="post_description"
                                         value={formik.values.post_description}
@@ -237,15 +227,18 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                     <div className="InputHeader">
                                         Content-type
                                     </div>
-                                    <input 
+                                    <select 
                                         id="post_content_type"
-                                        type="text"
                                         placeholder="Enter Post Content Type"
                                         name="post_content_type"
                                         value={formik.values.post_content_type}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur} 
-                                    />
+                                    >
+                                        <option value="commonmark">Markdown</option>
+                                        <option value="image">Image</option>
+                                        <option value="text/plain">Text</option>
+                                    </select>
                                 </div>
         
                                 {/* THIS IS FOR POST CATEGORIES */}
@@ -267,26 +260,28 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                     <div className="InputHeader">
                                         Visibility
                                     </div>
-                                    <input 
+                                    <select 
                                         id="visibility"
-                                        type="text"
                                         placeholder="Enter visibility: PUBLIC or PRIVATE"
                                         name="visibility"
                                         value={formik.values.visibility}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur} 
-                                    />
+                                    >
+                                        <option value="public">Public</option>
+                                        <option value="private">Private</option>
+                                    </select>
                                 </div>
                                 <div className="submitPost">
                                     <button
-                                        className="submitCancel"
+                                        className="edit-post-button-save"
                                         type="submit"
                                         disabled={loading}
                                     >
                                         Edit Post
                                     </button>
                                     <button
-                                        className="submitCancel"
+                                        className="cancel-button"
                                         type="button"
                                         onClick={() => setEditMode(false)}
                                     >

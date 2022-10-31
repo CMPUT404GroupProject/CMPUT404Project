@@ -14,7 +14,7 @@ export default function App() {
       <PersistGate persistor={persistor} loading={null}>
         <GlobalContextProvider>
         <Router>
-          <div className="bg-gray-900 w-full h-full">
+          <div className="bg-gray-900">
                 <Route exact path="/login" component={LoginPage} />
                 <ProtectedRoute exact path="/" component={Profile} />
                 <ProtectedRoute exact path="/profile" component={UserProfile} />
