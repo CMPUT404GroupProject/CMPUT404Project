@@ -1,17 +1,10 @@
+from uuid import uuid4
 from django.db import models
 from datetime import datetime  
 from api.user.models import User
 
 # Create your models here.
-
-
-class Request(models.Model):
-    # Friend or Follow
-    type = models.CharField(max_length = 50)
-    summary = models.TextField()
-    author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'request_author')
-    object = models.ForeignKey(User, verbose_name= ("Object"), on_delete=models.CASCADE, related_name = 'request_object')
-
+    
 class Comment(models.Model):
     type = models.CharField(max_length = 50)
     author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'comment_author')
@@ -19,6 +12,9 @@ class Comment(models.Model):
     contentType = models.CharField(max_length = 50)
     published = models.DateTimeField(default=datetime.now, blank=True)
     id = models.CharField(max_length = 200, primary_key=True)
+
+class Inbox(models.Model):
+    author = models.OneToOneField(User, default="author", on_delete=models.CASCADE, primary_key=True) 
 
 class Post(models.Model):
     type = models.CharField(max_length = 50)
@@ -37,6 +33,16 @@ class Post(models.Model):
     published = models.DateTimeField(default=datetime.now, blank=True)
     visibility = models.CharField(max_length = 50)
     unlisted = models.BooleanField(default = False)
+    inbox = models.ManyToManyField(Inbox)   
+
+class FollowRequest(models.Model):
+    id = models.CharField(max_length=200, primary_key=True)
+    type = models.CharField(max_length=50, default="Follow")
+    actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="actor")
+    object = models.ForeignKey(User, on_delete=models.CASCADE, related_name="object")
+    summary = models.CharField(max_length=500, default=f"You have a follow request")
+    created = models.DateTimeField(default=datetime.now, blank=True)
+    inbox = models.ForeignKey(Inbox, on_delete=models.CASCADE)
 
 class Like(models.Model):
     #TODO not sure what @context means

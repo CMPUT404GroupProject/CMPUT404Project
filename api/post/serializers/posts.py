@@ -1,7 +1,7 @@
 from urllib import request
 from urllib.error import HTTPError
 from rest_framework import serializers
-from api.models import Post
+from api.models import Post, Inbox
 import uuid
 from api.user.models import User
 from django.http import Http404
@@ -30,9 +30,16 @@ class CreatePostSerializer(serializers.Serializer):
         comments = request.data["comments"]
         visibility = request.data["visibility"]
 
-        Post.objects.create(author = author, type = type, title = title,
+        post = Post.objects.create(author = author, type = type, title = title,
         source = source, origin = origin, description = description, contentType = contentType,
         categories = categories, count = count, id = id, comments = comments, visibility = visibility)
+        
+        for user in User.objects.all():
+            if not Inbox.objects.filter(author=user):
+                Inbox.objects.create(author=user)
+            # Public posts
+            if user != author:
+                post.inbox.add(Inbox.objects.filter(author=user).first())
 
 class UpdatePostSerializer(serializers.Serializer):
 

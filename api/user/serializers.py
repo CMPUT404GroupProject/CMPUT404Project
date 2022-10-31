@@ -1,4 +1,6 @@
-from api.user.models import FollowRequest, Followers, User
+from asyncore import read
+from api.user.models import Followers, User
+from api.models import FollowRequest, Inbox, Post
 import uuid
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
@@ -16,13 +18,19 @@ class FollowersSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Followers
-        fields = ['id', 'type', 'followed', 'follower', 'created']
-        read_only_field = ['created']
+        fields = ['type', 'followed', 'follower']
+        read_only_field = ['created', 'id']
         
 class FollowRequestSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = FollowRequest
-        fields = ['id', 'type', 'actor', 'object', 'summary']
-        read_only_field = ['created']
+        fields = ['type', 'actor', 'object', 'summary']
+        read_only_field = ['created', 'inbox', 'id']
         
+        
+class InboxSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Inbox
+        fields = ['author']

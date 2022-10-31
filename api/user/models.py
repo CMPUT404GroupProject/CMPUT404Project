@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 import secrets
 import random
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+
 curId = ""
 def generate_id():
     length = 32
@@ -88,11 +89,4 @@ class Followers(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
     created = models.DateTimeField(default=datetime.now, blank=True)
     
-
-class FollowRequest(models.Model):
-    id = models.CharField(max_length=200, primary_key=True)
-    type = models.CharField(max_length=50, default="Follow")
-    actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="actor")
-    object = models.ForeignKey(User, on_delete=models.CASCADE, related_name="object")
-    summary = models.CharField(max_length=500, default=f"You have a follow request")
-    created = models.DateTimeField(default=datetime.now, blank=True)
+    
