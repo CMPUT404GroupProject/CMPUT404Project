@@ -8,4 +8,4 @@ class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        return Comment.objects.all()
+        return Comment.objects.filter(author_id = self.kwargs.get('id'))
