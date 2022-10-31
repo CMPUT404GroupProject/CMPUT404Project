@@ -164,7 +164,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                 </div>:
                                 null
                             }
-                            <div className="post-comments">{count} Comments...</div>
+                            <div onClick={openCommentModal} className="post-comments">{count} Comments...</div>
                             <div className="post-interact">
                                 {editSwitch ? 
                                     <button onClick={() => setEditMode(true)} className="post-edit-button">Edit Post</button> : null
