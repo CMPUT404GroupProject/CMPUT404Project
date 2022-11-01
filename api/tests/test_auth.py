@@ -52,8 +52,3 @@ class AuthenticationTests(TestCase):
         response = self.client.post('/api/auth/login/', data=data)
         self.assertEqual(response.status_code, 401)
         
-class UserTests(TestCase):
-    def test_api_user_endpoint(self):
-        # Try to get list of users
-        response = self.client.get('/api/user/')
-        self.assertEqual(response.status_code, 200)
