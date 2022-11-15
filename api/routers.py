@@ -4,6 +4,7 @@ from api.auth.viewsets import LoginViewSet, RegistrationViewSet, RefreshViewSet
 # from api.post.viewsets import PostViewSet
 from api.post.viewsets.viewsets import CreatePostViewSet, UpdatePostViewSet
 from api import views
+from .views import PostView, CommentView
 
 routes = SimpleRouter()
 # AUTHENTICATION
@@ -34,8 +35,8 @@ routes.register(r'authors', UserViewSet, basename='user')
 routes.register(r'api/user', UserViewSet, basename='user')
 
 # POSTS
-routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)', UpdatePostViewSet, basename = 'post')
-routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts', CreatePostViewSet, basename = 'post')
+#routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)', UpdatePostViewSet, basename = 'post')
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts', views.PostView, basename = 'post')
 
 # Comments
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)/comments', views.CommentView, basename = 'comment')
