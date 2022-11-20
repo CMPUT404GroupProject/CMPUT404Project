@@ -35,6 +35,8 @@ class PostView(viewsets.ModelViewSet):
             request.data['id'] = newPostId
         # Set comments to the request url plus the new post id
         request.data['comments'] = request.build_absolute_uri() + newPostId + "/comments/"
+        # Add new field type with default post
+        request.data['type'] = "post"
 
         return super().create(request, *args, **kwargs)
 
