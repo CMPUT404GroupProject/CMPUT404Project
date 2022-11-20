@@ -2,10 +2,11 @@ import FriendSidebar from "../components/FriendSidebar";
 import PostCard from "../components/PostCard";
 import PostSingular from "../components/PostSingular";
 import UserSidebar from "../components/UserSidebar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import PostPopup from "../components/PostPopup";
 import axios from "axios";
-
+import GlobalContext from "./../context/GlobalContext";
+import CommentModal from "./../components/CommentModal";
 import {UserResponse} from "../utils/types";
 import {RootState} from "../store";
 import {useSelector} from "react-redux";
@@ -19,6 +20,7 @@ interface LocationState {
 
 
 const Profile = () => {
+    const {showCommentModal} = useContext(GlobalContext);
 
   // This is for the button that does the popup work
   const [postPopupClicked, setPostPopup] = useState(false);
@@ -102,6 +104,7 @@ const Profile = () => {
 
   return (
     <div className="content">
+        {showCommentModal && <CommentModal/>}
       {(postPopupClicked) ? <PostPopup onChange={handleChange}/> : null}
 
         <div className="sidebar-left">

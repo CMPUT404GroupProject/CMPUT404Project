@@ -27,7 +27,7 @@ class CreatePostViewSet(viewsets.ModelViewSet):
         return querySet
 
 class UpdatePostViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'put', 'post', 'delete']
+    http_method_names = ['get', 'put', 'post', 'delete', 'patch']
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -54,8 +54,6 @@ class UpdatePostViewSet(viewsets.ModelViewSet):
         return Response(status=204)
     
     def put(self, request, *args, **kwargs):
-        
-
         id = kwargs['postID']
         author = User.objects.get(id = kwargs['id'])
         type = request.data["type"]
