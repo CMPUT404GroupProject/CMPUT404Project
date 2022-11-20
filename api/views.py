@@ -28,10 +28,14 @@ class PostView(viewsets.ModelViewSet):
 
     # Add author id before posting if not specified
     def create(self, request, *args, **kwargs):
+        newPostId = generate_id()
         if request.data.get('author') is None:
             request.data['author'] = self.kwargs.get('id')
         if request.data.get('id') is None:
-            request.data['id'] = generate_id()
+            request.data['id'] = newPostId
+        # Set comments to the request url plus the new post id
+        request.data['comments'] = request.build_absolute_uri() + newPostId + "/comments/"
+
         return super().create(request, *args, **kwargs)
 
     """
