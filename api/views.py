@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import PostSerializer, CommentSerializer
-from .models import Post, Comment
+from .serializers import PostSerializer, CommentSerializer, LikeSerializer
+from .models import Post, Comment, Like
+from api.user.models import User
+from .pagination import LikedListPagination
+
 import secrets
 # Create your views here.
 def generate_id():
@@ -28,18 +31,17 @@ class PostView(viewsets.ModelViewSet):
 
     # Add author id before posting if not specified
     def create(self, request, *args, **kwargs):
+        newPostId = generate_id()
         if request.data.get('author') is None:
             request.data['author'] = self.kwargs.get('id')
         if request.data.get('id') is None:
-            request.data['id'] = generate_id()
-        return super().create(request, *args, **kwargs)
+            request.data['id'] = newPostId
+        # Set comments to the request url plus the new post id
+        request.data['comments'] = request.build_absolute_uri() + newPostId + "/comments/"
+        # Add new field type with default post
+        request.data['type'] = "post"
 
-    """
-    # Add author id before posting
-    def create(self, request, *args, **kwargs):
-        request.data['author'] = self.kwargs.get('id')
         return super().create(request, *args, **kwargs)
-    """
 
 class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
@@ -54,3 +56,67 @@ class CommentView(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         request.data['post'] = self.kwargs.get('postID')
         return super().create(request, *args, **kwargs)
+
+class LikePostView(viewsets.ModelViewSet):
+    serializer_class = LikeSerializer
+    queryset = Like.objects.all()
+
+    # Get only likes for this post
+    def get_queryset(self):
+        querySet = Like.objects.filter(post_id = self.kwargs.get('postID'))
+        return querySet
+
+    # Add post id before posting
+    def create(self, request, *args, **kwargs):
+        request.data['post'] = self.kwargs.get('postID')
+        likedObject = request.build_absolute_uri()
+        # remove likes/ from the end of the url
+        likedObject = likedObject[:-6]
+
+        request.data['object'] = likedObject
+        # Add new field with default context
+        request.data['context'] = "http://www.w3.org/ns/activitystreams"
+        # Add new field with default type
+        request.data['type'] = "Like"
+        # Get the displayname of the author
+        author = User.objects.get(id=request.data.get('author'))
+        request.data['summary'] = author.displayName + " Likes your post"
+        return super().create(request, *args, **kwargs)
+
+class LikeCommentView(viewsets.ModelViewSet):
+    serializer_class = LikeSerializer
+    queryset = Like.objects.all()
+
+    # Get only likes for this comment
+    def get_queryset(self):
+        querySet = Like.objects.filter(comment_id = self.kwargs.get('commentID'))
+        return querySet
+
+    # Add comment id before posting
+    def create(self, request, *args, **kwargs):
+        request.data['comment'] = self.kwargs.get('commentID')
+        likedObject = request.build_absolute_uri()
+        # remove likes/ from the end of the url
+        likedObject = likedObject[:-6]
+
+        request.data['object'] = likedObject
+        # Add new field with default context
+        request.data['context'] = "http://www.w3.org/ns/activitystreams"
+        # Add new field with default type
+        request.data['type'] = "Like"
+        # Get the displayname of the author
+        author = User.objects.get(id=request.data.get('author'))
+        request.data['summary'] = author.displayName + " Likes your comment"
+        return super().create(request, *args, **kwargs)
+
+# View to show liked posts and comments for a author
+class LikedView(viewsets.ModelViewSet):
+    pagination_class = LikedListPagination
+    serializer_class = LikeSerializer
+    queryset = Like.objects.all()
+
+    # Get only likes for this author
+    def get_queryset(self):
+        querySet = Like.objects.filter(author_id = self.kwargs.get('id'))
+        return querySet
+    
