@@ -81,7 +81,6 @@ class PostTests(TestCase):
                 'content': 'test post', 
                 'author': '1', 
                 'comments': '[]', 
-                'published': '2019-04-01T00:00:00Z', 
                 'visibility': 'PUBLIC', 
                 'unlisted': False
             }
@@ -108,7 +107,8 @@ class PostTests(TestCase):
                 'comments': '[]', 
                 'published': '2019-04-01T00:00:00Z', 
                 'visibility': 'PUBLIC', 
-                'unlisted': False
+                'unlisted': False,
+                'id': '1'
             }
         self.client.post('/authors/1/posts/', data=data)
 
@@ -138,5 +138,4 @@ class PostTests(TestCase):
                 'unlisted': False,
                 'id': '1'
             }
-        self.client.get('/authors/1/posts/1/')
-    
+        self.client.get('/authors/1/posts/1/') 
