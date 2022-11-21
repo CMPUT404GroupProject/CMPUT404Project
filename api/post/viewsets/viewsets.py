@@ -1,7 +1,7 @@
 from http.client import HTTPResponse
 from rest_framework import viewsets
 from rest_framework.response import Response
-from api.models import Post, User
+from api.models import Post, User, Inbox
 from api.post.serializers.posts import CreatePostSerializer, PostSerializer, UpdatePostSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -67,8 +67,15 @@ class UpdatePostViewSet(viewsets.ModelViewSet):
         comments = request.data["comments"]
         visibility = request.data["visibility"]
 
-        Post.objects.create(author = author, type = type, title = title,
+        post = Post.objects.create(author = author, type = type, title = title,
         source = source, origin = origin, description = description, contentType = contentType,
         categories = categories, count = count, id = id, comments = comments, visibility = visibility)
+        
+        for author in User.objects.all():
+            if not Inbox.objects.filter(author=author):
+                Inbox.objects.create(author=author)
+            # Public posts
+            post.inbox.add(Inbox.objects.filter(author=author).first())
+            
         return Response(status=200)
     

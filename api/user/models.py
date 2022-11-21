@@ -1,9 +1,11 @@
+from email.policy import default
 from django.db import models
 from datetime import datetime
 from django.core.exceptions import ValidationError
 import secrets
 import random
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+
 curId = ""
 def generate_id():
     length = 32
@@ -83,6 +85,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Followers(models.Model):
     type = models.CharField(max_length=50)
     id = models.CharField(max_length=200, primary_key=True)
-    actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="actor")
-    object = models.ForeignKey(User, on_delete=models.CASCADE, related_name="object")
+    followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followed")
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
     created = models.DateTimeField(default=datetime.now, blank=True)
+    
+    
