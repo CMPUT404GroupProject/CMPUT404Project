@@ -71,7 +71,7 @@ class LikePostView(viewsets.ModelViewSet):
         likedObject = request.build_absolute_uri()
         # remove likes/ from the end of the url
         likedObject = likedObject[:-6]
-        
+
         request.data['object'] = likedObject
         # Add new field with default context
         request.data['context'] = "http://www.w3.org/ns/activitystreams"
@@ -88,10 +88,22 @@ class LikeCommentView(viewsets.ModelViewSet):
 
     # Get only likes for this comment
     def get_queryset(self):
-        querySet = Like.objects.filter(object_id = self.kwargs.get('commentID'))
+        querySet = Like.objects.filter(comment_id = self.kwargs.get('commentID'))
         return querySet
 
     # Add comment id before posting
     def create(self, request, *args, **kwargs):
-        request.data['object'] = self.kwargs.get('commentID')
+        request.data['comment'] = self.kwargs.get('commentID')
+        likedObject = request.build_absolute_uri()
+        # remove likes/ from the end of the url
+        likedObject = likedObject[:-6]
+
+        request.data['object'] = likedObject
+        # Add new field with default context
+        request.data['context'] = "http://www.w3.org/ns/activitystreams"
+        # Add new field with default type
+        request.data['type'] = "Like"
+        # Get the displayname of the author
+        author = User.objects.get(id=request.data.get('author'))
+        request.data['summary'] = author.displayName + " Likes your comment"
         return super().create(request, *args, **kwargs)

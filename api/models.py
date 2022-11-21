@@ -54,5 +54,6 @@ class Like(models.Model):
     summary = models.TextField()
     type = models.CharField(max_length = 50)
     author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'likes_author')
-    object = models.CharField(max_length = 200)
-    post = models.ForeignKey(Post, verbose_name= ("Post"), on_delete=models.CASCADE, related_name = 'like_post')
+    object = models.CharField(max_length = 1024)
+    post = models.ForeignKey(Post, verbose_name= ("Post"), on_delete=models.CASCADE, related_name = 'like_post', blank=True, null=True)
+    comment = models.ForeignKey(Comment, verbose_name= ("Comment"), on_delete=models.CASCADE, related_name = 'like_comment', blank=True, null=True)
