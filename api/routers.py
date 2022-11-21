@@ -47,6 +47,9 @@ routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)/likes'
 # Likes for comments
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)/comments/(?P<commentID>[0-9a-f-]+)/likes', views.LikeCommentView, basename = 'likecomment')
 
+# Liked posts and comments
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/liked', views.LikedView, basename = 'liked')
+
 # FOLLOWERS
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/followers/(?P<foreign_author_id>[0-9a-f-]+)', FollowersDetailedViewSet, basename = 'followers')
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/followers', FollowersViewSet, basename = 'followers')

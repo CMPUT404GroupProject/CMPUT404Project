@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from .models import Post, Comment, Like
 from api.user.models import User
+from .pagination import LikedListPagination
 
 import secrets
 # Create your views here.
@@ -107,3 +108,15 @@ class LikeCommentView(viewsets.ModelViewSet):
         author = User.objects.get(id=request.data.get('author'))
         request.data['summary'] = author.displayName + " Likes your comment"
         return super().create(request, *args, **kwargs)
+
+# View to show liked posts and comments for a author
+class LikedView(viewsets.ModelViewSet):
+    pagination_class = LikedListPagination
+    serializer_class = LikeSerializer
+    queryset = Like.objects.all()
+
+    # Get only likes for this author
+    def get_queryset(self):
+        querySet = Like.objects.filter(author_id = self.kwargs.get('id'))
+        return querySet
+    
