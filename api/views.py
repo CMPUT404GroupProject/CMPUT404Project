@@ -31,7 +31,6 @@ class PostView(viewsets.ModelViewSet):
 
     # Add author id before posting if not specified
     def create(self, request, *args, **kwargs):
-        request.data._mutable = True
         newPostId = generate_id()
         if request.data.get('author') is None:
             request.data['author'] = self.kwargs.get('id')

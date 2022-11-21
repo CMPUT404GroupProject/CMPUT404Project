@@ -31,7 +31,8 @@ class Post(models.Model):
     author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'post_author')
     # Can use postgres if categories should be an arrayfield
     categories = models.CharField(max_length = 50)
-    count = models.IntegerField()
+    # Count not required, default 0
+    count = models.IntegerField(default = 0)
     comments = models.CharField(max_length = 200, blank=True, null=True)
     #TODO not sure how comments and commentsSrc is supposed to work
     published = models.DateTimeField(default=datetime.now, blank=True, null=True)
