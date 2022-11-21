@@ -66,4 +66,3 @@ class Like(models.Model):
     object = models.CharField(max_length = 1024)
     post = models.ForeignKey(Post, verbose_name= ("Post"), on_delete=models.CASCADE, related_name = 'like_post', blank=True, null=True)
     comment = models.ForeignKey(Comment, verbose_name= ("Comment"), on_delete=models.CASCADE, related_name = 'like_comment', blank=True, null=True)
-    created = models.DateTimeField(default=datetime.now, blank=True, null=True)
