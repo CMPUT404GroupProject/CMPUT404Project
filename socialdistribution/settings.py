@@ -9,7 +9,11 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-import django_on_heroku
+import os
+if os.environ.get('GITHUB_ACTIONS') != 'true': 
+    import django_on_heroku
+    django_on_heroku.settings(locals())
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -143,6 +147,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000"
 ]
 
-django_on_heroku.settings(locals())
+
 
 USE_TZ = False
