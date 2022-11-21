@@ -144,3 +144,5 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 django_on_heroku.settings(locals())
+
+USE_TZ = False
