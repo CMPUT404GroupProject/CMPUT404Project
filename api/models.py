@@ -25,15 +25,16 @@ class Post(models.Model):
     source = models.CharField(max_length = 200)
     origin = models.CharField(max_length = 200)
     description = models.TextField()
-    contentType = models.CharField(max_length = 50)
+    contentType = models.CharField(max_length = 50, default = "text/plain", blank = True, null = True)
     author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'post_author')
     # Can use postgres if categories should be an arrayfield
     categories = models.CharField(max_length = 50)
-    count = models.IntegerField()
-    comments = models.CharField(max_length = 200)
+    # Count not required, default 0
+    count = models.IntegerField(default = 0)
+    comments = models.CharField(max_length = 200, blank=True, null=True)
     #TODO not sure how comments and commentsSrc is supposed to work
-    published = models.DateTimeField(default=datetime.now, blank=True)
-    visibility = models.CharField(max_length = 50)
+    published = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    visibility = models.CharField(max_length = 50, default = "PUBLIC", blank=True, null=True)
     unlisted = models.BooleanField(default = False)
     inbox = models.ManyToManyField(Inbox)   
 
@@ -49,6 +50,7 @@ class FollowRequest(models.Model):
 class Comment(models.Model):
     type = models.CharField(max_length = 50, default="comment")
     author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'comment_author')
+    post = models.ForeignKey(Post, verbose_name= ("Post"), on_delete=models.CASCADE, related_name = 'comment_post')
     comment = models.TextField()
     contentType = models.CharField(max_length = 50)
     published = models.DateTimeField(default=datetime.now, blank=True)
@@ -61,4 +63,6 @@ class Like(models.Model):
     summary = models.TextField()
     type = models.CharField(max_length = 50)
     author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'likes_author')
-    object = models.CharField(max_length = 200)
+    object = models.CharField(max_length = 1024)
+    post = models.ForeignKey(Post, verbose_name= ("Post"), on_delete=models.CASCADE, related_name = 'like_post', blank=True, null=True)
+    comment = models.ForeignKey(Comment, verbose_name= ("Comment"), on_delete=models.CASCADE, related_name = 'like_comment', blank=True, null=True)

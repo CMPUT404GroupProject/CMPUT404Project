@@ -34,13 +34,22 @@ routes.register(r'authors', UserViewSet, basename='user')
 routes.register(r'api/user', UserViewSet, basename='user')
 
 # POSTS
-routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)', UpdatePostViewSet, basename = 'post')
-routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts', CreatePostViewSet, basename = 'post')
+#routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)', UpdatePostViewSet, basename = 'post')
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts', views.PostView, basename = 'post')
 
 
 # Comments
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)/comments', views.CommentView, basename = 'comment')
 #routes.register(r'authors/(?P<id>[0-9a-f-]+)/comments', views.CommentView, basename = 'comment')
+
+# Likes for posts
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)/likes', views.LikePostView, basename = 'likepost')
+
+# Likes for comments
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)/comments/(?P<commentID>[0-9a-f-]+)/likes', views.LikeCommentView, basename = 'likecomment')
+
+# Liked posts and comments
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/liked', views.LikedView, basename = 'liked')
 
 # FOLLOWERS
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/followers/(?P<foreign_author_id>[0-9a-f-]+)', FollowersDetailedViewSet, basename = 'followers')
