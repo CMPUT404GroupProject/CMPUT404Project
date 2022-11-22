@@ -1,5 +1,5 @@
 from rest_framework.routers import SimpleRouter
-from api.user.viewsets import FollowersViewSet, UserViewSet, FollowersDetailedViewSet, InboxViewSet
+from api.user.viewsets import FollowersViewSet, UserViewSet, FollowersDetailedViewSet, InboxViewSet, UserDetailedViewSet
 from api.auth.viewsets import LoginViewSet, RegistrationViewSet, RefreshViewSet
 # from api.post.viewsets import PostViewSet
 from api.post.viewsets.viewsets import CreatePostViewSet, UpdatePostViewSet
@@ -13,7 +13,9 @@ routes.register(r'api/auth/refresh', RefreshViewSet, basename='auth-refresh')
 
 # SERVICE ENDPOINTS REQUIRED
 # /authors/
+routes.register(r'authors/(?P<id>[0-9a-f-]+)', UserDetailedViewSet, basename='user1')
 routes.register(r'authors', UserViewSet, basename='user')
+
 # /authors/{AUTHOR_ID}/
 # /authors/{AUTHOR_ID}/followers
 # /authors/{AUTHOR_ID}/followers/{FOREIGN_AUTHOR_ID}

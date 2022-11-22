@@ -30,8 +30,30 @@ class UserViewSet(viewsets.ModelViewSet):
 
         obj = User.objects.get(id=lookup_field_value)
         self.check_object_permissions(self.request, obj)
-
         return obj
+    
+class UserDetailedViewSet(viewsets.ModelViewSet):
+    pagination_class = AuthorListPagination
+    http_method_names = ['get', 'post', 'put', 'delete']
+    serializer_class = UserSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['updated']
+    ordering = ['-updated']
+    def get_queryset(self):
+        # Return the current user
+        return User.objects.filter(id=self.kwargs.get('id'))
+    
+    def create(self, request, *args, **kwargs): 
+        # Update the current user
+        user = User.objects.get(id=self.kwargs.get('id'))
+        data = request.data 
+        # Add id to the data
+        data['id'] = user.id
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(status=400)
     
 class FollowersViewSet(viewsets.ModelViewSet):
     pagination_class = FollowersListPagination
