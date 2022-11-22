@@ -65,7 +65,7 @@ const Profile = () => {
   // THIS WILL GET ALL THE POSTS FROM EACH AUTHOR
   useEffect(()=>{
       // THIS PART GETS THE POST LINK FOR EACH AUTHOR
-      const authors_link = `/authors/`
+      const authors_link = `${process.env.REACT_APP_API_URL}/authors/`
       axios.get(authors_link)
       .then((res) => {
           var required_list = res.data.items;

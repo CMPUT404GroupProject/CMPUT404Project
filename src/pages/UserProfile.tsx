@@ -52,7 +52,7 @@ const UserProfile = () => {
   const handleGithubUpdate = () => {
     // UPDATE GITHUB HERE
     axios
-        .put(`/authors/${userId}/`, { displayName: displayName, github: inputGithubLink })
+        .put(`${process.env.REACT_APP_API_URL}/authors/${userId}/`, { displayName: displayName, github: inputGithubLink })
         .then((res) => {        
             setGithubLink(inputGithubLink);
             setInputGithubLink("");
@@ -65,7 +65,7 @@ const UserProfile = () => {
   const handleDisplayNameUpdate = () => {
     // UPDATE Display Name HERE
     axios
-        .put(`/authors/${userId}/`, { displayName: inputDisplayName })
+        .put(`${process.env.REACT_APP_API_URL}/authors/${userId}/`, { displayName: inputDisplayName })
         .then((res) => {
             setDisplayName(inputDisplayName);
             setInputDisplayName("");
