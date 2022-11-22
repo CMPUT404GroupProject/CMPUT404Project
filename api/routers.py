@@ -55,5 +55,5 @@ urlpatterns = [
     path('authors/<str:id>/posts/<str:postID>/likes/', views.LikePostView.as_view({'get': 'list', 'post': 'create'})),
     path('authors/<str:id>/posts/<str:postID>/comments/<str:commentID>/likes/', views.LikeCommentView.as_view({'get': 'list', 'post': 'create'})),
     path('authors/<str:id>/liked/', views.LikedView.as_view({'get': 'list'})),
-    path('authors/<str:id>/inbox/', views.InboxView.as_view({'get': 'list'})),
+    path('authors/<str:id>/inbox/', views.InboxView.as_view({'get': 'list', 'post': 'create'})),
 ]

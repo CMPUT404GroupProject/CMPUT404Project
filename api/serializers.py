@@ -22,4 +22,4 @@ class LikeSerializer(serializers.ModelSerializer):
 class InboxSerializer(serializers.ModelSerializer):
     class Meta:
         model = Inbox
-        fields = ['author']
+        fields = ['author', 'item', 'type']

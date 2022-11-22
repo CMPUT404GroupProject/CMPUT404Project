@@ -23,7 +23,19 @@ class InboxListPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     
     def get_paginated_response(self, data):
+        # Remove all author from data ordered dict
+        #for item in data:
+            #item.pop('author')
+        # Get author id from url
+        authorID = self.request.build_absolute_uri()
+        # Remove /inbox/ from the end of the url
+        authorID = authorID[:-6]
+        # Items is whatever is inside the item field in data
+        items = []
+        for item in data:
+            items.append(item['item'])
         return Response({
             "type": "inbox",
-            "item": data
+            "author": authorID,
+            "items": items
         })

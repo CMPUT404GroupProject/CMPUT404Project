@@ -6,7 +6,10 @@ import secrets
 # Create your models here.
 
 class Inbox(models.Model):
-    author = models.OneToOneField(User, default="author", on_delete=models.CASCADE, primary_key=True)
+    type = "Inbox"
+    author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'inbox_author')
+    # Item is any single json object
+    item = models.JSONField(null=True)
 
 def generate_id():
     id = secrets.token_hex(32)
