@@ -70,6 +70,29 @@ class PostDetailedView(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(status=400)
     
+    # Override delete requests
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+    
+    # Delete the post
+    def destroy(self, request, *args, **kwargs):
+        post = Post.objects.get(id=self.kwargs.get('postID'))
+        post.delete()
+        return Response(status=204)
+    
+    # Override put requests
+    def put(self, request, *args, **kwargs):
+        newPostId = self.kwargs.get('postID')
+        request.data['id'] = newPostId
+        if request.data.get('author') is None:
+            request.data['author'] = self.kwargs.get('id')
+        # Set comments to the request url plus the new post id
+        request.data['comments'] = request.build_absolute_uri() + newPostId + "/comments/"
+        # Add new field type with default post
+        request.data['type'] = "post"
+
+        return super().create(request, *args, **kwargs)
+    
 
 class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
