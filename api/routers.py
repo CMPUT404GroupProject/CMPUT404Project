@@ -13,32 +13,13 @@ routes.register(r'api/auth/refresh', RefreshViewSet, basename='auth-refresh')
 
 # SERVICE ENDPOINTS REQUIRED
 # /authors/
-routes.register(r'authors/(?P<id>[0-9a-f-]+)', UserDetailedViewSet, basename='user1')
+routes.register(r'authors/(?P<id>[0-9a-f-])', UserDetailedViewSet, basename='user1')
 routes.register(r'authors', UserViewSet, basename='user')
-
-# /authors/{AUTHOR_ID}/
-# /authors/{AUTHOR_ID}/followers
-# /authors/{AUTHOR_ID}/followers/{FOREIGN_AUTHOR_ID}
-
-# /authors/{AUTHOR_ID}/posts/
-# /authors/{AUTHOR_ID}/posts/{POST_ID}
-
-# /authors/{AUTHOR_ID}/posts/{POST_ID}/image
-# /authors/{AUTHOR_ID}/posts/{POST_ID}/comments
-
-# service/authors/{AUTHOR_ID}/inbox/
-# /authors/{AUTHOR_ID}/posts/{POST_ID}/likes
-# /authors/{AUTHOR_ID}/posts/{POST_ID}/comments/{COMMENT_ID}/likes
-# /authors/{AUTHOR_ID}/liked
-
-
-# USER
-routes.register(r'api/user', UserViewSet, basename='user')
 
 # POSTS
 #routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)', UpdatePostViewSet, basename = 'post')
+routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)', views.PostDetailedView, basename = 'post1')
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts', views.PostView, basename = 'post')
-
 
 # Comments
 routes.register(r'authors/(?P<id>[0-9a-f-]+)/posts/(?P<postID>[0-9a-f-]+)/comments', views.CommentView, basename = 'comment')

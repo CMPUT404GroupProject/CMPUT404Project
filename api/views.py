@@ -4,6 +4,7 @@ from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from .models import Post, Comment, Like
 from api.user.models import User
 from .pagination import LikedListPagination
+from rest_framework.response import Response
 
 import secrets
 # Create your views here.
@@ -20,6 +21,7 @@ def generate_id():
 class PostView(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
+    http_method_names = ['get', 'post', 'put', 'delete']
     
     def get_serializer_context(self):
         return {'id': self.kwargs.get('id'),
@@ -42,6 +44,32 @@ class PostView(viewsets.ModelViewSet):
         request.data['type'] = "post"
 
         return super().create(request, *args, **kwargs)
+
+class PostDetailedView(viewsets.ModelViewSet):
+    # Allow using post request to update
+    http_method_names = ['get', 'post', 'put', 'delete']
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    def get_serializer_context(self):
+        return {'id': self.kwargs.get('id'),
+        'request': self.request}
+    
+    def get_queryset(self):
+        querySet = Post.objects.filter(id = self.kwargs.get('postID'))
+        return querySet
+    
+    def create(self, request, *args, **kwargs):         
+        # Update the current post
+        post = Post.objects.get(id=self.kwargs.get('postID'))
+        data = request.data 
+        # Add id to the data
+        data['id'] = post.id
+        serializer = PostSerializer(post, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(status=400)
+    
 
 class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
