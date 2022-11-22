@@ -21,3 +21,5 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+db.sqlite3
+socialdistribution/__pycache__/settings.cpython-310.pyc
