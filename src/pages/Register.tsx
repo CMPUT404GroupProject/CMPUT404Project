@@ -14,7 +14,7 @@ function Register() {
 
   const handleLogin = (github: string, password: string, displayName: string) => {
     axios
-      .post(`${process.env.REACT_APP_API_URL}/api/auth/register/`, { github, password, displayName})
+      .post(`/api/auth/register/`, { github, password, displayName})
       .then((res) => {
         console.log(res)
         setMessage("Account created successfully");
