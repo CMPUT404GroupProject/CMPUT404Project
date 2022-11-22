@@ -6,7 +6,7 @@ import secrets
 # Create your models here.
 
 class Inbox(models.Model):
-    author = models.OneToOneField(User, default="author", on_delete=models.CASCADE, primary_key=True) 
+    author = models.OneToOneField(User, default="author", on_delete=models.CASCADE, primary_key=True)
 
 def generate_id():
     id = secrets.token_hex(32)

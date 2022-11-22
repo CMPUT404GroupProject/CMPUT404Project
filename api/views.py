@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import PostSerializer, CommentSerializer, LikeSerializer
-from .models import Post, Comment, Like
+from .serializers import PostSerializer, CommentSerializer, LikeSerializer, InboxSerializer
+from .models import Post, Comment, Like, Inbox
 from api.user.models import User
-from .pagination import LikedListPagination
+from .pagination import LikedListPagination, InboxListPagination
 from rest_framework.response import Response
+from django.http import Http404
 
 import secrets
 # Create your views here.
@@ -49,14 +50,21 @@ class PostDetailedView(viewsets.ModelViewSet):
     # Allow using post request to update
     http_method_names = ['get', 'post', 'put', 'delete']
     serializer_class = PostSerializer
-    queryset = Post.objects.all()
-    def get_serializer_context(self):
-        return {'id': self.kwargs.get('id'),
-        'request': self.request}
+
+    def get_object(self):
+        try:
+            return Post.objects.get(id=self.kwargs.get('postID'))
+        except Post.DoesNotExist:
+            raise Http404
     
-    def get_queryset(self):
-        querySet = Post.objects.filter(id = self.kwargs.get('postID'))
-        return querySet
+    def get_serializer_context(self):
+        return {'id': self.kwargs.get('id'), 'request': self.request}
+
+    
+    def get(self, request, *args, **kwargs):
+        post = Post.objects.get(id=self.kwargs.get('postID'))
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
     
     def create(self, request, *args, **kwargs):         
         # Update the current post
@@ -97,6 +105,7 @@ class PostDetailedView(viewsets.ModelViewSet):
 class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
+    http_method_names = ['get', 'post', 'put', 'delete']
 
     # Get only comments for this post
     def get_queryset(self):
@@ -106,6 +115,38 @@ class CommentView(viewsets.ModelViewSet):
     # Add post id before posting
     def create(self, request, *args, **kwargs):
         request.data['post'] = self.kwargs.get('postID')
+        return super().create(request, *args, **kwargs)
+
+class CommentDetailedView(viewsets.ModelViewSet):
+    # Allow using post request to update
+    http_method_names = ['get', 'post', 'put', 'delete']
+    serializer_class = CommentSerializer
+
+    def get_object(self):
+        try:
+            return Comment.objects.get(id=self.kwargs.get('commentID'))
+        except Comment.DoesNotExist:
+            raise Http404
+
+    # Override delete requests
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+    
+    # Delete the comment
+    def destroy(self, request, *args, **kwargs):
+        comment = Comment.objects.get(id=self.kwargs.get('commentID'))
+        comment.delete()
+        return Response(status=204)
+
+    # Override put requests
+    def put(self, request, *args, **kwargs):
+        newCommentId = self.kwargs.get('commentID')
+        request.data['id'] = newCommentId
+        if request.data.get('author') is None:
+            request.data['author'] = self.kwargs.get('id')
+        # Add new field type with default post
+        request.data['type'] = "comment"
+
         return super().create(request, *args, **kwargs)
 
 class LikePostView(viewsets.ModelViewSet):
@@ -170,4 +211,20 @@ class LikedView(viewsets.ModelViewSet):
     def get_queryset(self):
         querySet = Like.objects.filter(author_id = self.kwargs.get('id'))
         return querySet
-    
+
+
+# View for author's inbox
+class InboxView(viewsets.ModelViewSet):
+    pagination_class = InboxListPagination
+    serializer_class = InboxSerializer
+    queryset = Inbox.objects.all()
+
+    # Get only inbox items for this author
+    def get_queryset(self):
+        querySet = Inbox.objects.filter(author_id = self.kwargs.get('id'))
+        return querySet
+
+    # Add author id before posting
+    def create(self, request, *args, **kwargs):
+        request.data['author'] = self.kwargs.get('id')
+        return super().create(request, *args, **kwargs)

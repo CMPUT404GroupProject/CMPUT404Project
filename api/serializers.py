@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Comment
 from .models import Post
 from .models import Like
+from .models import Inbox
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,3 +18,8 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = ['context', 'summary', 'type', 'author', 'object', 'post', 'comment']
+
+class InboxSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inbox
+        fields = ['author']

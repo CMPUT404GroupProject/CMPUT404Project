@@ -33,6 +33,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return obj
     
 class UserDetailedViewSet(viewsets.ModelViewSet):
+    lookup_field = 'id'
     pagination_class = AuthorListPagination
     http_method_names = ['get', 'post', 'put', 'delete']
     serializer_class = UserSerializer
