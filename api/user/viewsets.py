@@ -5,6 +5,7 @@ from api.models import FollowRequest, Inbox
 from api.post.serializers.posts import PostSerializer
 from rest_framework import viewsets
 from django.core.exceptions import ValidationError
+from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 from django.http import Http404
@@ -12,12 +13,11 @@ import uuid
 from rest_framework.response import Response
 from api.user.pagination import AuthorListPagination, FollowersListPagination, InboxListPagination
 
-
+#@permission_classes([IsAuthenticated])
 class UserViewSet(viewsets.ModelViewSet):
     pagination_class = AuthorListPagination
     http_method_names = ['get', 'post', 'put', 'delete']
     serializer_class = UserSerializer
-    #permission_classes = (IsAuthenticated,)
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['updated']
     ordering = ['-updated']

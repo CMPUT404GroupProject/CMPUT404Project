@@ -1,11 +1,12 @@
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.viewsets import ViewSet
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from api.auth.serializers import LoginSerializer
-
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
 
 class LoginViewSet(ViewSet):
     serializer_class = LoginSerializer
@@ -21,5 +22,3 @@ class LoginViewSet(ViewSet):
             raise InvalidToken(e.args[0])
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
-
-

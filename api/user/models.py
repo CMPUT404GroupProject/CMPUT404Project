@@ -5,6 +5,10 @@ from django.core.exceptions import ValidationError
 import secrets
 import random
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
 curId = ""
 def generate_id():
@@ -22,7 +26,6 @@ def generate_id_int():
     return random.randint(0,10000)
 
 class UserManager(BaseUserManager):
-
     def create_user(self, displayName, github, password=None, profileImage="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", **kwargs):
         """Create and return a `User` with an email, phone number, username and password."""
         if displayName is None:
@@ -89,4 +92,8 @@ class Followers(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
     created = models.DateTimeField(default=datetime.now, blank=True)
     
-    
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
