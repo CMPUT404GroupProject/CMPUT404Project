@@ -29,7 +29,6 @@ routes.register(r'authors', UserViewSet, basename='user')
 # /authors/{AUTHOR_ID}/posts/{POST_ID}/comments/{COMMENT_ID}/likes
 # /authors/{AUTHOR_ID}/liked
 
-
 # USER
 routes.register(r'api/user', UserViewSet, basename='user')
 

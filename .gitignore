@@ -25,3 +25,6 @@ db.sqlite3
 socialdistribution/__pycache__/settings.cpython-310.pyc
 socialdistribution/__pycache__/settings.cpython-310.pyc
 *.pyc
+*.pyc
+socialdistribution/__pycache__/settings.cpython-310.pyc
+api/__pycache__/routers.cpython-310.pyc
