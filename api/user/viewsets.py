@@ -45,7 +45,7 @@ class UserDetailedViewSet(viewsets.ModelViewSet):
         try:
             user = User.objects.get(id=self.kwargs.get('id'))
             # modify id field
-            user.id = user.host + "author/" + user.id
+            user.id = user.host + "authors/" + user.id
             return user
         except User.DoesNotExist:
             raise Http404
