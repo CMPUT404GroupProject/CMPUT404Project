@@ -9,6 +9,8 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+from ..config import *
+
 
 curId = ""
 def generate_id():
@@ -62,7 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     type = models.CharField(max_length=32, default="author")
     id = models.CharField(max_length=128, primary_key=True, default=generate_id)
     url = models.CharField(max_length=255, default = "")
-    host = models.CharField(max_length=255, default= "http://127.0.0.1:8000/")
+    host = models.CharField(max_length=255, default=conf_host)
     displayName = models.CharField(db_index=True, max_length=255, unique=True)
     #email = models.EmailField(db_index=True, unique=True,  null=True, blank=True)
     github = models.URLField(db_index=True, unique=True,  null=True, blank=True)
@@ -81,7 +83,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.github}"
 
     def save(self, *args, **kwargs):
-        self.url = "http://127.0.0.1:8000/authors/" + str(self.id)
+        self.url = conf_host + "authors/" + str(self.id)
         return super(User, self).save(*args, **kwargs)
 
     
