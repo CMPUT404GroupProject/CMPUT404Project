@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import PostSerializer, CommentSerializer, LikeSerializer, InboxSerializer
-from .models import Post, Comment, Like, Inbox
+from .serializers import PostSerializer, CommentSerializer, LikeSerializer, InboxSerializer, FollowRequestSerializer, FollowerSerializer
+from .models import Post, Comment, Like, Inbox, FollowRequest, Follower
 from api.user.models import User
-from .pagination import LikedListPagination, InboxListPagination, PostListPagination, CommentListPagination
+from .pagination import LikedListPagination, InboxListPagination, PostListPagination, CommentListPagination, FollowerListPagination
 from rest_framework.response import Response
 from django.http import Http404
 from .config import *
+from api.user.serializers import UserSerializer
 
 import secrets
 # Create your views here.
@@ -305,3 +306,65 @@ class InboxView(viewsets.ModelViewSet):
         inbox = Inbox.objects.filter(author_id = self.kwargs.get('id'))
         inbox.delete()
         return Response(status=204)
+
+class FollowRequestView(viewsets.ModelViewSet):
+    serializer_class = FollowRequestSerializer
+    queryset = FollowRequest.objects.all()
+    
+    # Override create
+    def create(self, request, *args, **kwargs):
+        # Get the displayname of the actor
+        actor = User.objects.get(id=request.data.get('actor'))
+        # Get the displayname of the object
+        object = User.objects.get(id=request.data.get('object'))
+        # Check if request already exists with same actor and object
+        if FollowRequest.objects.filter(actor_id=request.data.get('actor'), object_id=request.data.get('object')).exists():
+            return Response(status=400)
+        request.data['summary'] = actor.displayName + " wants to follow " + object.displayName
+
+        # Create inbox item for object
+        inbox = Inbox.objects.create(
+            author = object,
+            item = request.data
+        )
+        # Save
+        return super().create(request, *args, **kwargs)
+
+class FollowerView(viewsets.ModelViewSet):
+    serializer_class = FollowerSerializer
+    queryset = Follower.objects.all()
+    pagination_class = FollowerListPagination
+    
+    
+    # Get only followers for this author
+    def get_queryset(self):
+        querySet = Follower.objects.filter(followed_id = self.kwargs.get('id'))
+        return querySet
+    
+class FollowerDetailedView(viewsets.ModelViewSet):
+    http_method_names = ['get', 'post', 'put', 'delete']
+    serializer_class = FollowerSerializer
+
+    # Get only followers for this author
+    def get_object(self):
+        querySet = Follower.objects.get(followed_id = self.kwargs.get('id'), follower_id = self.kwargs.get('foreign_author_id'))
+        return querySet
+    
+    # Override put
+    def put(self, request, *args, **kwargs):
+        # Create a new follower
+        
+        # Get new follower id from url
+        followerID = self.kwargs.get('foreign_author_id')
+        # Get followed id from url
+        followedID = self.kwargs.get('id')
+
+        # Create new follower
+        follower = Follower.objects.create(
+            follower_id = followerID,
+            followed_id = followedID
+        )
+        # Save
+        follower.save()
+        return Response(status=200)
+    

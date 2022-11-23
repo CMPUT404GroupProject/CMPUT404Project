@@ -39,9 +39,9 @@ class PostListPagination(PageNumberPagination):
             # Get the json of the author
             item['author'] = {
                 "type": "author",
-                "id": conf_host + "authors/" + author.id,
-                "url": conf_host + "authors/" + author.id,
-                "host": conf_host,
+                "id": author.host + "authors/" + author.id,
+                "url": author.host + "authors/" + author.id,
+                "host": author.host,
                 "displayName": author.displayName,
                 "github": author.github,
                 "profileImage": author.profileImage
@@ -68,9 +68,9 @@ class CommentListPagination(PageNumberPagination):
             # Get the json of the author
             item['author'] = {
                 "type": "author",
-                "id": conf_host + "authors/" + author.id,
-                "url": conf_host + "authors/" + author.id,
-                "host": conf_host,
+                "id": author.host + "authors/" + author.id,
+                "url": author.host + "authors/" + author.id,
+                "host": author.host,
                 "displayName": author.displayName,
                 "github": author.github,
                 "profileImage": author.profileImage
@@ -114,4 +114,34 @@ class InboxListPagination(PageNumberPagination):
             "type": "inbox",
             "author": authorID,
             "items": items
+        })
+
+class FollowerListPagination(PageNumberPagination):
+    page = DEFAULT_PAGE
+    page_size = DEFAULT_PAGE_SIZE
+    page_size_query_param = 'page_size'
+    
+    def get_paginated_response(self, data):
+        # Create list of followers
+        followers = []
+        for item in data:
+            follower = {}
+            followerID = item['follower']
+            # Get the user with the follower id
+            followerUser = User.objects.get(id=followerID)
+            # Get the json of the follower
+            follower['type'] = "author"
+            follower['id'] = followerUser.host + "authors/" + followerUser.id
+            follower['url'] = followerUser.host + "authors/" + followerUser.id
+            follower['host'] = followerUser.host
+            follower['displayName'] = followerUser.displayName
+            follower['github'] = followerUser.github
+            follower['profileImage'] = followerUser.profileImage
+
+            followers.append(follower)
+
+
+        return Response({
+            "type": "followers",
+            "items": followers
         })

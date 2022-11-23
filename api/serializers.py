@@ -3,11 +3,23 @@ from .models import Comment
 from .models import Post
 from .models import Like
 from .models import Inbox
+from .models import FollowRequest
+from .models import Follower
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['type', 'title', 'id', 'source', 'origin', 'description', 'contentType', 'author', 'categories', 'count', 'comments', 'published', 'visibility', 'unlisted']
+
+class FollowRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FollowRequest
+        fields = ['type', 'actor', 'object', 'summary']
+
+class FollowerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Follower
+        fields = ['followed', 'follower']
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:

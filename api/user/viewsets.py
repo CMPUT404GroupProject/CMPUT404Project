@@ -1,6 +1,6 @@
 from xml.dom.expatbuilder import InternalSubsetExtractor
-from api.user.serializers import FollowRequestSerializer, FollowersSerializer, InboxSerializer, UserSerializer
-from api.user.models import User, Followers
+from api.user.serializers import FollowRequestSerializer, InboxSerializer, UserSerializer
+from api.user.models import User
 from api.models import FollowRequest, Inbox
 from api.post.serializers.posts import PostSerializer
 from rest_framework import viewsets
@@ -11,7 +11,7 @@ from rest_framework import filters
 from django.http import Http404
 import uuid
 from rest_framework.response import Response
-from api.user.pagination import AuthorListPagination, FollowersListPagination, InboxListPagination
+from api.user.pagination import AuthorListPagination, InboxListPagination
 from ..config import *
 
 #@permission_classes([IsAuthenticated])
@@ -61,7 +61,7 @@ class UserDetailedViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
         return Response(status=400)
-    
+"""
 class FollowersViewSet(viewsets.ModelViewSet):
     pagination_class = FollowersListPagination
     http_method_names = ['get', 'put', 'delete']
@@ -122,7 +122,7 @@ class FollowersDetailedViewSet(viewsets.ModelViewSet):
         follow_request = FollowRequest.objects.create(id=id, type=type, object=object, actor=actor, summary=summary, inbox=Inbox.objects.get(author=object))
                 
         return Response(status=200)
-
+"""
 
 class InboxViewSet(viewsets.ModelViewSet):
     pagination_class = InboxListPagination
