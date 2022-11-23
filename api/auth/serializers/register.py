@@ -7,7 +7,7 @@ from api.user.models import User
 
 class RegisterSerializer(UserSerializer):
     password = serializers.CharField(max_length=128, min_length=8, write_only=True, required=True)
-    github = serializers.URLField(required=True, write_only=True, max_length=128)
+    github = serializers.URLField(required=True, write_only=True, max_length=1024)
 
     class Meta:
         model = User
