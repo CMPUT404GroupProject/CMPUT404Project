@@ -5,6 +5,12 @@ from django.core.exceptions import ValidationError
 import secrets
 import random
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+from ..config import *
+
 
 curId = ""
 def generate_id():
@@ -22,7 +28,6 @@ def generate_id_int():
     return random.randint(0,10000)
 
 class UserManager(BaseUserManager):
-
     def create_user(self, displayName, github, password=None, profileImage="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", **kwargs):
         """Create and return a `User` with an email, phone number, username and password."""
         if displayName is None:
@@ -59,7 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     type = models.CharField(max_length=32, default="author")
     id = models.CharField(max_length=128, primary_key=True, default=generate_id)
     url = models.CharField(max_length=255, default = "")
-    host = models.CharField(max_length=255, default= "http://127.0.0.1:8000/")
+    host = models.CharField(max_length=255, default=conf_host)
     displayName = models.CharField(db_index=True, max_length=255, unique=True)
     #email = models.EmailField(db_index=True, unique=True,  null=True, blank=True)
     github = models.URLField(db_index=True, unique=True,  null=True, blank=True)
@@ -78,7 +83,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.github}"
 
     def save(self, *args, **kwargs):
-        self.url = "http://127.0.0.1:8000/authors/" + str(self.id)
+        self.url = conf_host + "authors/" + str(self.id)
         return super(User, self).save(*args, **kwargs)
 
     
@@ -89,4 +94,8 @@ class Followers(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
     created = models.DateTimeField(default=datetime.now, blank=True)
     
-    
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

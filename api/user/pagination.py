@@ -11,10 +11,15 @@ class AuthorListPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
 
     def get_paginated_response(self, data):
+        url = self.request.build_absolute_uri()
+        # Replace value of id with value of url
+        for item in data:
+            item['id'] = url + item['id']
         return Response({
             "type": "authors",
             "items": data
         })
+    
         
 class FollowersListPagination(PageNumberPagination):
     page = DEFAULT_PAGE
