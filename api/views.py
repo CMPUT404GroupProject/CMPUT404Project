@@ -309,19 +309,28 @@ class InboxView(viewsets.ModelViewSet):
 
 class FollowRequestView(viewsets.ModelViewSet):
     serializer_class = FollowRequestSerializer
-    queryset = FollowRequest.objects.all()
+    # Get only follow requests for this author
+    def get_queryset(self):
+        querySet = FollowRequest.objects.filter(object_id = self.kwargs.get('id'))
+        return querySet
     
     # Override create
     def create(self, request, *args, **kwargs):
         # Get the displayname of the actor
         actor = User.objects.get(id=request.data.get('actor'))
         # Get the displayname of the object
-        object = User.objects.get(id=request.data.get('object'))
+        object = User.objects.get(id=self.kwargs.get('id'))
         # Check if request already exists with same actor and object
-        if FollowRequest.objects.filter(actor_id=request.data.get('actor'), object_id=request.data.get('object')).exists():
-            return Response(status=400)
+        if FollowRequest.objects.filter(actor_id=request.data.get('actor'), object_id=self.kwargs.get('id')).exists():
+            return Response(status=400, data="Follow request already exists")
+        # Check if actor and object are the same
+        if request.data.get('actor') == self.kwargs.get('id'):
+            return Response(status=400, data="Actor and object cannot be the same")
+        # Check if actor is already following object
+        if Follower.objects.filter(follower_id=request.data.get('actor'), followed_id=self.kwargs.get('id')).exists():
+            return Response(status=400, data="Actor is already following object")
         request.data['summary'] = actor.displayName + " wants to follow " + object.displayName
-
+        request.data['object'] = self.kwargs.get('id')
         # Create inbox item for object
         inbox = Inbox.objects.create(
             author = object,
@@ -359,12 +368,16 @@ class FollowerDetailedView(viewsets.ModelViewSet):
         # Get followed id from url
         followedID = self.kwargs.get('id')
 
-        # Create new follower
-        follower = Follower.objects.create(
-            follower_id = followerID,
-            followed_id = followedID
-        )
-        # Save
-        follower.save()
-        return Response(status=200)
+        # Check that there is a follow request for this follower and followed
+        if FollowRequest.objects.filter(actor_id=followerID, object_id=followedID).exists():
+            # Create new follower
+            follower = Follower.objects.create(
+                follower_id = followerID,
+                followed_id = followedID
+            )
+            # Save
+            follower.save()
+            return Response(status=200)
+        else:
+            return Response(status=400, data="No follow request exists for this follower and followed")
     

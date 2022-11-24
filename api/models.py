@@ -44,7 +44,7 @@ class Post(models.Model):
 class FollowRequest(models.Model):
     type = "Follow"
     actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="actor")
-    object = models.ForeignKey(User, on_delete=models.CASCADE, related_name="object")
+    object = models.ForeignKey(User, on_delete=models.CASCADE, related_name="object", null=True, blank=True)
     summary = models.CharField(max_length=1024, default=f"You have a follow request")
 
 class Comment(models.Model):
