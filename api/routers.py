@@ -16,6 +16,7 @@ urlpatterns = [
     path('authors/<str:id>/followers/<str:foreign_author_id>/', views.FollowerDetailedView.as_view({'get': 'retrieve', 'delete': 'destroy'})),
     path('authors/<str:id>/posts/', views.PostView.as_view({'get': 'list', 'post': 'create'})),
     path('authors/<str:id>/posts/<str:postID>/', views.PostDetailedView.as_view({'get': 'retrieve', 'post': 'create', 'delete': 'destroy'})),
+    path('authors/<str:id>/posts/<str:postID>/image/', views.PostImageView.as_view({'get': 'getImg', 'post': 'createImg'})),
     path('authors/<str:id>/posts/<str:postID>/comments/', views.CommentView.as_view({'get': 'list', 'post': 'create'})),
     path('authors/<str:id>/posts/<str:postID>/comments/<str:commentID>/', views.CommentDetailedView.as_view({'get': 'retrieve'})),
     path('authors/<str:id>/posts/<str:postID>/comments/<str:commentID>/likes/', views.LikeCommentView.as_view({'get': 'list', 'post': 'create'})),

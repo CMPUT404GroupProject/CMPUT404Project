@@ -41,6 +41,10 @@ class Post(models.Model):
     unlisted = models.BooleanField(default = False)
     inbox = models.ManyToManyField(Inbox)   
 
+class PostImage(models.Model):
+    post = models.ForeignKey(Post, verbose_name= ("Post"), on_delete=models.CASCADE, related_name = 'post_image')
+    image = models.ImageField(upload_to = 'images/', blank = True, null = True)
+
 class FollowRequest(models.Model):
     type = "Follow"
     actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="actor")
