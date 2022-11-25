@@ -76,7 +76,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         description: string, contentType: string, author: string, categories: string, count: number,
         comments: string, published: string, visibility: string, unlisted: boolean) => {
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/' + post_id.toString() + '/'
-        axios.patch(post_link, {type, title, source, origin, description, contentType, author, categories, count, comments, visibility, unlisted})
+        axios.patch(post_link, {type, title, source, origin, description, contentType, author, categories, count, comments, visibility, unlisted}, {auth: {username:'argho', password:'12345678!'}})
 
         .then((res) => {
             console.log(res)
@@ -118,7 +118,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + userId.toString() + '/posts/'
         axios.post(post_link, {type: post_type, title: post_title, source: userId.toString(), origin: origin, description: post_description, 
             contentType: post_content_type, author: userId.toString(), categories: post_categories, 
-            count: count, comments: comments, visibility: visibility, unlisted: unlisted})
+            count: count, comments: comments, visibility: visibility, unlisted: unlisted}, {auth: {username:'argho', password:'12345678!'}})
         .then((res) => {
             console.log(res)
             setMessage("Post shared successfully");
@@ -133,7 +133,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         const post_link = post_id
         // @ts-ignore
         console.log(post_id)
-        axios.delete(post_link)
+        axios.delete(post_link, {auth: {username:'argho', password:'12345678!'}})
         .then((res) => {
             if (res.status == 204){
                 console.log("POST DELETED")
