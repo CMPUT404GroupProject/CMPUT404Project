@@ -27,10 +27,9 @@ interface OwnProps {
 }
 
 const PostSingular = ({post_type, post_title, post_id, source, origin, post_description, post_content_type, author, post_categories, count, comments, published, visibility, unlisted, editSwitch}: OwnProps) => {
-    // @ts-ignore
-    const [authorDisplayName, setAuthorDisplayName] = useState(author.displayName);
-    // @ts-ignore
-    const [authorGithub, setAuthorGithub] = useState(author.github);
+    
+    const [authorDisplayName, setAuthorDisplayName] = useState('None')
+    const [authorGithub, setAuthorGithub] = useState('None')
     const [message, setMessage] = useState("");
     const [editMode, setEditMode] = useState(false)
     const [loading, setLoading] = useState(false);
@@ -97,10 +96,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         setLoading(false)
     }
     function deletePost(){
-        // @ts-ignore
-        const post_link = post_id
-        // @ts-ignore
-        console.log(post_id)
+        const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/' + post_id + '/'
         axios.delete(post_link)
         .then((res) => {
             if (res.status == 204){
@@ -124,6 +120,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     }, [author])
 
     return (
+        
         <div>
             {(!deleted) ? 
                 <div>

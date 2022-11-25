@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import PostSerializer, CommentSerializer, LikeSerializer, InboxSerializer
-from .models import Post, Comment, Like, Inbox
+from .serializers import PostSerializer, PostImageSerializer, CommentSerializer, LikeSerializer, InboxSerializer, FollowRequestSerializer, FollowerSerializer, PostDetailedSerializer, CommentDetailedSerializer
+from .models import Post, Comment, Like, Inbox, FollowRequest, Follower, PostImage
 from api.user.models import User
-from .pagination import LikedListPagination, InboxListPagination, PostListPagination, CommentListPagination
+from .pagination import FollowRequestPagination, LikedListPagination, LikesListPagination, InboxListPagination, PostListPagination, CommentListPagination, FollowerListPagination
 from rest_framework.response import Response
 from django.http import Http404
 from .config import *
+from api.user.serializers import UserSerializer
 
 import secrets
 # Create your views here.
@@ -42,7 +43,9 @@ class PostView(viewsets.ModelViewSet):
         if request.data.get('id') is None:
             request.data['id'] = newPostId
         # Set comments to the request url plus the new post id
-        request.data['comments'] = request.build_absolute_uri() + newPostId + "/comments/"
+        url = request.build_absolute_uri() 
+        url = url.split('/authors/')[1]
+        request.data['comments'] = conf_host + 'authors/' + url[:-1] + "/" + newPostId + "/comments"
         # Add new field type with default post
         request.data['type'] = "post"
 
@@ -57,23 +60,28 @@ class PostView(viewsets.ModelViewSet):
             inbox.save()
 
         return super().create(request, *args, **kwargs)
-
+    
 class PostDetailedView(viewsets.ModelViewSet):
     # Allow using post request to update
     http_method_names = ['get', 'post', 'put', 'delete']
-    serializer_class = PostSerializer
+    serializer_class = PostDetailedSerializer
+    pagination_class = PostListPagination
 
     def get_object(self):
         # get full url
         url = self.request.build_absolute_uri()
+        url = url.split('/authors/')[1]
         try:
             post = Post.objects.get(id=self.kwargs.get('postID'))
+            
             # Modify id field
-            post.id = url[:-1]
-
+            post.id = conf_host + 'authors/' + url[:-1]
             return post
         except Post.DoesNotExist:
             raise Http404
+    
+    def get_queryset(self):
+        return super().get_queryset()
     
     def get_serializer_context(self):
         return {'id': self.kwargs.get('id'), 'request': self.request}
@@ -112,8 +120,10 @@ class PostDetailedView(viewsets.ModelViewSet):
         request.data['id'] = newPostId
         if request.data.get('author') is None:
             request.data['author'] = self.kwargs.get('id')
+        url = request.build_absolute_uri()
+        url = url.split('/authors/')[1]
         # Set comments to the request url plus the new post id
-        request.data['comments'] = request.build_absolute_uri() + "comments/"
+        request.data['comments'] =  conf_host + 'authors/' + url[:-1] + "/comments"
         # Add new field type with default post
         request.data['type'] = "post"
 
@@ -130,6 +140,32 @@ class PostDetailedView(viewsets.ModelViewSet):
 
         return super().create(request, *args, **kwargs)
     
+class PostImageView(viewsets.ModelViewSet):
+    model = PostImage
+    serializer_class = PostImageSerializer
+    # Get all images for a post
+    def get_queryset(self):
+        return PostImage.objects.filter(post_id=self.kwargs.get('postID'))
+    
+    def getImg(self, request, *args, **kwargs):
+        # Get images using postID
+        postImage = PostImage.objects.filter(post_id = self.kwargs.get('postID'))
+        serializer = PostImageSerializer(postImage, many=True)
+        return Response(serializer.data)
+    
+    def createImg(self, request, *args, **kwargs):
+
+        try:
+            # Create new image from 'image' in request
+            newImage = PostImage.objects.create(
+                image = request.data['image'],
+                post = Post.objects.get(id=self.kwargs.get('postID'))
+            )
+            # Save new image
+            newImage.save()
+            return Response(status=201)
+        except:
+            return Response(status=404)
 
 class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
@@ -155,18 +191,23 @@ class CommentView(viewsets.ModelViewSet):
         inbox.item['type'] = "comment"
         # Save inbox item
         inbox.save()
+
+        # Increment count of the post
+        post.count += 1
+        post.save()
+
         return super().create(request, *args, **kwargs)
 
 class CommentDetailedView(viewsets.ModelViewSet):
     # Allow using post request to update
     http_method_names = ['get', 'post', 'put', 'delete']
-    serializer_class = CommentSerializer
+    serializer_class = CommentDetailedSerializer
 
     def get_object(self):
         try:
             comment = Comment.objects.get(id=self.kwargs.get('commentID'))
             # Modify id field
-            comment.id = self.request.build_absolute_uri()
+            comment.id = self.request.build_absolute_uri()[:-1]
             return comment
         except Comment.DoesNotExist:
             raise Http404
@@ -189,13 +230,18 @@ class CommentDetailedView(viewsets.ModelViewSet):
             request.data['author'] = self.kwargs.get('id')
         # Add new field type with default post
         request.data['type'] = "comment"
-
+        # Increment count of the post
+        post = Post.objects.get(id=self.kwargs.get('postID'))
+        post.count += 1
+        post.save()
+        request.data['post'] = post.id
         return super().create(request, *args, **kwargs)
+    
 
 class LikePostView(viewsets.ModelViewSet):
     serializer_class = LikeSerializer
     queryset = Like.objects.all()
-    
+    pagination_class = LikesListPagination
     # Get only likes for this post
     def get_queryset(self):
         querySet = Like.objects.filter(post_id = self.kwargs.get('postID'))
@@ -232,6 +278,7 @@ class LikePostView(viewsets.ModelViewSet):
 class LikeCommentView(viewsets.ModelViewSet):
     serializer_class = LikeSerializer
     queryset = Like.objects.all()
+    pagination_class = LikesListPagination
 
     # Get only likes for this comment
     def get_queryset(self):
@@ -305,3 +352,81 @@ class InboxView(viewsets.ModelViewSet):
         inbox = Inbox.objects.filter(author_id = self.kwargs.get('id'))
         inbox.delete()
         return Response(status=204)
+
+class FollowRequestView(viewsets.ModelViewSet):
+    serializer_class = FollowRequestSerializer
+    pagination_class = FollowRequestPagination
+    # Get only follow requests for this author
+    def get_queryset(self):
+        querySet = FollowRequest.objects.filter(object_id = self.kwargs.get('id'))
+        return querySet
+    
+    # Override create
+    def create(self, request, *args, **kwargs):
+        # Get the displayname of the actor
+        actor = User.objects.get(id=request.data.get('actor'))
+        # Get the displayname of the object
+        object = User.objects.get(id=self.kwargs.get('id'))
+        # Check if request already exists with same actor and object
+        if FollowRequest.objects.filter(actor_id=request.data.get('actor'), object_id=self.kwargs.get('id')).exists():
+            return Response(status=400, data="Follow request already exists")
+        # Check if actor and object are the same
+        if request.data.get('actor') == self.kwargs.get('id'):
+            return Response(status=400, data="Actor and object cannot be the same")
+        # Check if actor is already following object
+        if Follower.objects.filter(follower_id=request.data.get('actor'), followed_id=self.kwargs.get('id')).exists():
+            return Response(status=400, data="Actor is already following object")
+        request.data['summary'] = actor.displayName + " wants to follow " + object.displayName
+        request.data['object'] = self.kwargs.get('id')
+        # Create inbox item for object
+        inbox = Inbox.objects.create(
+            author = object,
+            item = request.data
+        )
+        # Save
+        return super().create(request, *args, **kwargs)
+
+class FollowerView(viewsets.ModelViewSet):
+    serializer_class = FollowerSerializer
+    queryset = Follower.objects.all()
+    pagination_class = FollowerListPagination
+    
+    # Get only followers for this author
+    def get_queryset(self):
+        querySet = Follower.objects.filter(followed_id = self.kwargs.get('id'))
+        return querySet
+    
+class FollowerDetailedView(viewsets.ModelViewSet):
+    http_method_names = ['get', 'post', 'put', 'delete']
+    serializer_class = FollowerSerializer
+
+    # Get only followers for this author
+    def get_object(self):
+        try:
+            querySet = Follower.objects.get(followed_id = self.kwargs.get('id'), follower_id = self.kwargs.get('foreign_author_id'))
+            return querySet
+        except Follower.DoesNotExist:
+            raise Http404
+    
+    # Override put
+    def put(self, request, *args, **kwargs):
+        # Create a new follower
+        
+        # Get new follower id from url
+        followerID = self.kwargs.get('foreign_author_id')
+        # Get followed id from url
+        followedID = self.kwargs.get('id')
+
+        # Check that there is a follow request for this follower and followed
+        if FollowRequest.objects.filter(actor_id=followerID, object_id=followedID).exists():
+            # Create new follower
+            follower = Follower.objects.create(
+                follower_id = followerID,
+                followed_id = followedID
+            )
+            # Save
+            follower.save()
+            return Response(status=200)
+        else:
+            return Response(status=400, data="No follow request exists for this follower and followed")
+    

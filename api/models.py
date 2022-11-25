@@ -41,14 +41,15 @@ class Post(models.Model):
     unlisted = models.BooleanField(default = False)
     inbox = models.ManyToManyField(Inbox)   
 
+class PostImage(models.Model):
+    post = models.ForeignKey(Post, verbose_name= ("Post"), on_delete=models.CASCADE, related_name = 'post_image')
+    image = models.ImageField(upload_to = 'images/', blank = True, null = True)
+
 class FollowRequest(models.Model):
-    id = models.CharField(max_length=1024, primary_key=True)
-    type = models.CharField(max_length=1024, default="Follow")
+    type = "Follow"
     actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="actor")
-    object = models.ForeignKey(User, on_delete=models.CASCADE, related_name="object")
+    object = models.ForeignKey(User, on_delete=models.CASCADE, related_name="object", null=True, blank=True)
     summary = models.CharField(max_length=1024, default=f"You have a follow request")
-    created = models.DateTimeField(default=datetime.now, blank=True)
-    inbox = models.ForeignKey(Inbox, on_delete=models.CASCADE)
 
 class Comment(models.Model):
     type = models.CharField(max_length = 50, default="comment")
@@ -69,3 +70,7 @@ class Like(models.Model):
     object = models.CharField(max_length = 1024)
     post = models.ForeignKey(Post, verbose_name= ("Post"), on_delete=models.CASCADE, related_name = 'like_post', blank=True, null=True)
     comment = models.ForeignKey(Comment, verbose_name= ("Comment"), on_delete=models.CASCADE, related_name = 'like_comment', blank=True, null=True)
+
+class Follower(models.Model):
+    follower = models.ForeignKey(User, verbose_name= ("Follower"), on_delete=models.CASCADE, related_name = 'follower')
+    followed = models.ForeignKey(User, verbose_name= ("Followed"), on_delete=models.CASCADE, related_name = 'followed')
