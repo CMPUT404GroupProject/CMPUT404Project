@@ -39,6 +39,7 @@ const Profile = () => {
 
   // THIS IS TO GET CURRENT AUTHOR ID
   const account = useSelector((state: RootState) => state.auth.account);
+  const token = useSelector((state: RootState) => state.auth.token)
   // @ts-ignore
   const userId = account?.id;
   interface PostState {
@@ -105,7 +106,7 @@ const Profile = () => {
           description: string, contentType: string, content: string, author: string, categories: string, count: number,
           comments: string, published: string, visibility: string, unlisted: boolean}[] = [];
       authorPostLink.myArray.forEach((item) =>{
-          axios.get(item)
+          axios.get(item, {auth: {username:'argho', password:'12345678!'}})
           .then((res)=>{
               res.data.items.forEach((post: any)=>{
                   tempPostsArray.push(post);
