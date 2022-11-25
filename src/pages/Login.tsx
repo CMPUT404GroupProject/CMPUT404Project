@@ -14,7 +14,7 @@ function Login() {
 
   const handleLogin = (displayName: string, password: string) => {
     axios
-      .post(`${process.env.REACT_APP_API_URL}/api/auth/login/`, { displayName, password })
+      .post(`/api/auth/login/`, { displayName, password })
       .then((res) => {
         dispatch(
           authSlice.actions.setAuthTokens({
@@ -29,7 +29,6 @@ function Login() {
         });
       })
       .catch((err) => {
-        console.log(err)
         setMessage(err.response.data.detail.toString());
       });
   };

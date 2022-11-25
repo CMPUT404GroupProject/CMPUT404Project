@@ -34,8 +34,8 @@ const PostPopup = ({onChange}: OwnProps) => {
         description: string, contentType: string, author: string, categories: string, count: number,
         comments: string, published: string, visibility: string, unlisted: boolean) => {
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/'
-        console.log(post_link)
-        axios.post(post_link, {title, source, origin, description, categories})
+
+        axios.post(post_link, {type, title, source, origin, description, contentType, author, categories, count, comments, visibility, unlisted})
         .then((res) => {
             console.log(res)
             setMessage("Account created successfully");
