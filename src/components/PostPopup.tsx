@@ -188,7 +188,6 @@ const PostPopup = ({onChange}: OwnProps) => {
                         </button>
                     </div>
                 </form>
-                
             </div>
                 
         </div>
