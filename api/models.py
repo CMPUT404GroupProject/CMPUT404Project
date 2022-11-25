@@ -29,6 +29,7 @@ class Post(models.Model):
     origin = models.CharField(max_length = 1024)
     description = models.TextField()
     contentType = models.CharField(max_length = 1024, default = "text/plain", blank = True, null = True)
+    content = models.TextField(default = "", blank = True, null = True)
     author = models.ForeignKey(User, verbose_name= ("Author"), on_delete=models.CASCADE, related_name = 'post_author')
     # Can use postgres if categories should be an arrayfield
     categories = models.CharField(max_length = 1024)
