@@ -20,7 +20,7 @@ interface LocationState {
 
 
 const Profile = () => {
-  const {showCommentModal} = useContext(GlobalContext);
+    const {showCommentModal} = useContext(GlobalContext);
 
   // This is for the button that does the popup work
   const [postPopupClicked, setPostPopup] = useState(false);
@@ -41,7 +41,7 @@ const Profile = () => {
   const account = useSelector((state: RootState) => state.auth.account);
   // @ts-ignore
   const userId = account?.id;
-  console.log(userId)
+
   interface PostState {
       posts: {type: string, title: string, id:string, source: string, origin: string, 
           description: string, contentType: string, author: string, categories: string, count: number,
@@ -65,7 +65,7 @@ const Profile = () => {
   // THIS WILL GET ALL THE POSTS FROM EACH AUTHOR
   useEffect(()=>{
       // THIS PART GETS THE POST LINK FOR EACH AUTHOR
-      const authors_link = `${process.env.REACT_APP_API_URL}/authors/`
+      const authors_link = `/authors/`
       axios.get(authors_link)
       .then((res) => {
           var required_list = res.data.items;
@@ -93,9 +93,8 @@ const Profile = () => {
       authorPostLink.myArray.forEach((item) =>{
           axios.get(item)
           .then((res)=>{
-              res.data.items.forEach((post: any)=>{
+              res.data.forEach((post: any)=>{
                   tempPostsArray.push(post);
-                  console.log(post);
               })
               setPostArray({posts: tempPostsArray});
           })
@@ -123,10 +122,9 @@ const Profile = () => {
             </div>:
               <div className="main-content-middle">
                 {postArray.posts.map((item) =>
-                    // @ts-ignore
-                    {if(item.author.id.split('/')[4] === userId) {
+                    {if(item.author === userId) {
                         return <div>
-                                <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
+                                    <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
                                     post_content_type={item.contentType} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
                                     visibility={item.visibility} unlisted={item.unlisted} editSwitch={true}/>
                                 </div>
