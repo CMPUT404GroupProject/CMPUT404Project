@@ -13,13 +13,17 @@ function Register() {
   const history = useHistory();
 
   const handleLogin = (github: string, password: string, displayName: string) => {
+    const post_link = `${process.env.REACT_APP_API_URL}/api/auth/register/`
+    console.log(post_link)
+
     axios
-      .post(`/api/auth/register/`, { github, password, displayName})
+      .post(`${process.env.REACT_APP_API_URL}/api/auth/register/`, { github, displayName, password})
       .then((res) => {
         console.log(res)
         setMessage("Account created successfully");
       })
       .catch((err) => {
+        console.log(err)
         setMessage("Error creating account");
       });
   };

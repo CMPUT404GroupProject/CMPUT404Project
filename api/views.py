@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from django.http import Http404
 from .config import *
 from api.user.serializers import UserSerializer
+from datetime import datetime
 
 import secrets
 # Create your views here.
@@ -180,6 +181,9 @@ class CommentView(viewsets.ModelViewSet):
 
     # Add post id before posting
     def create(self, request, *args, **kwargs):
+        newCommentId = generate_id()
+        request.data['id'] = newCommentId
+        request.data['published'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
         request.data['post'] = self.kwargs.get('postID')
         # Create inbox item for author of the post
         post = Post.objects.get(id=self.kwargs.get('postID'))
@@ -378,6 +382,7 @@ class FollowRequestView(viewsets.ModelViewSet):
             return Response(status=400, data="Actor is already following object")
         request.data['summary'] = actor.displayName + " wants to follow " + object.displayName
         request.data['object'] = self.kwargs.get('id')
+        request.data['type'] = "Follow"
         # Create inbox item for object
         inbox = Inbox.objects.create(
             author = object,

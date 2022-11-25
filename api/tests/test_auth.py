@@ -1,7 +1,6 @@
 from django.test import TestCase
 
-# Create your tests here.
-
+# Test for registration and login
 class AuthenticationTests(TestCase):
     def test_login_get(self):
         # Try to get login, should return 405 since we only post to this endpoint

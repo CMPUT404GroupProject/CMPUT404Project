@@ -1,6 +1,7 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from api.user.models import User
+from api.models import FollowRequest, Inbox, Comment
 from .config import *
 
 
@@ -143,21 +144,58 @@ class InboxListPagination(PageNumberPagination):
         # Items is whatever is inside the item field in data
         items = []
         for item in data:
-            author = User.objects.get(id=item['author'])
-            # Get the json of the author
-            item['item']['author'] = {
-                "type": "author",
-                "id": author.host + "authors/" + author.id,
-                "url": author.host + "authors/" + author.id,
-                "host": author.host,
-                "displayName": author.displayName,
-                "github": author.github,
-                "profileImage": author.profileImage
-            }
-            # If type is post
-            if item['item']['type'] == "post":
-                # Get the url of the post
-                item['item']['id'] = item['item']['author']['id'] + "/posts/" + item['item']['id']
+            if item['item']['type'] == "Follow":
+                actor = User.objects.get(id=item['item']['actor'])
+                object = User.objects.get(id=item['item']['object'])
+                # Get the json of the actor
+                item['item']['actor'] = {
+                    "type": "author",
+                    "id": actor.host + "authors/" + actor.id,
+                    "url": actor.host + "authors/" + actor.id,
+                    "host": actor.host,
+                    "displayName": actor.displayName,
+                    "github": actor.github,
+                    "profileImage": actor.profileImage
+                }
+                # Get the json of the object
+                item['item']['object'] = {
+                    "type": "author",
+                    "id": object.host + "authors/" + object.id,
+                    "url": object.host + "authors/" + object.id,
+                    "host": object.host,
+                    "displayName": object.displayName,
+                    "github": object.github,
+                    "profileImage": object.profileImage
+                }
+            elif(item['item']['type'] == "comment"):
+                # Get the comment with the id
+                author = User.objects.get(id=item['item']['author'])
+                item['item']['id'] = author.host + "posts/" + item['item']['post'] + "/comments/" + item['item']['id']
+                item['item']['author'] = {
+                    "type": "author",
+                    "id": author.host + "authors/" + author.id,
+                    "url": author.host + "authors/" + author.id,
+                    "host": author.host,
+                    "displayName": author.displayName,
+                    "github": author.github,
+                    "profileImage": author.profileImage
+                }
+            else:
+                author = User.objects.get(id=item['author'])
+                # Get the json of the author
+                item['item']['author'] = {
+                    "type": "author",
+                    "id": author.host + "authors/" + author.id,
+                    "url": author.host + "authors/" + author.id,
+                    "host": author.host,
+                    "displayName": author.displayName,
+                    "github": author.github,
+                    "profileImage": author.profileImage
+                }
+                # If type is post
+                if item['item']['type'] == "post":
+                    # Get the url of the post
+                    item['item']['id'] = item['item']['author']['id'] + "/posts/" + item['item']['id']
             items.append(item['item'])
         return Response({
             "type": "inbox",
