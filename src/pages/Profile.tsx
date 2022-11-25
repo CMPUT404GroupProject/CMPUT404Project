@@ -41,10 +41,9 @@ const Profile = () => {
   const account = useSelector((state: RootState) => state.auth.account);
   // @ts-ignore
   const userId = account?.id;
-  console.log(userId)
   interface PostState {
       posts: {type: string, title: string, id:string, source: string, origin: string, 
-          description: string, contentType: string, author: string, categories: string, count: number,
+          description: string, contentType: string, content: string, author: string, categories: string, count: number,
           comments: string, published: string, visibility: string, unlisted: boolean}[];
   }
 
@@ -66,21 +65,36 @@ const Profile = () => {
   useEffect(()=>{
       // THIS PART GETS THE POST LINK FOR EACH AUTHOR
       const authors_link = `${process.env.REACT_APP_API_URL}/authors/`
-      axios.get(authors_link)
-      .then((res) => {
-          var required_list = res.data.items;
+      const authors_link_2 = `https://cmput404f22t17.herokuapp.com/authors/`
+
+
+
+      axios.all([axios.get(authors_link),
+                axios.get(authors_link_2, {auth: {username:'argho', password:'12345678!'}})])
+      .then(axios.spread((res, res2) => {
+          var required_list = res.data.items;   //These are my authors
+          var required_list_2 = res2.data.items;    //These are Team 17's authors
+
           required_list.forEach((item: any) => {
               var posts_link = item.url + '/posts/';
               postLinks.push(posts_link);
           })
+          required_list_2.forEach((item: any) => {
+            var posts_link_2 = item.url + 'posts/'
+            postLinks.push(posts_link_2);
+          })
+
+
+
           if (JSON.stringify(postLinks) != JSON.stringify(authorPostLink.myArray)){
               setPostLinks({myArray: [...postLinks]})
+              console.log(postLinks)
           }
           else {
               return;
           }
           setMessage("Retrieved authors successfully");
-      })
+      }))
       .catch((err) => {
           setMessage("Error retrieving authors");
       });
@@ -88,7 +102,7 @@ const Profile = () => {
 
   useEffect(()=>{
       let tempPostsArray: {type: string, title: string, id: string, source: string, origin: string, 
-          description: string, contentType: string, author: string, categories: string, count: number,
+          description: string, contentType: string, content: string, author: string, categories: string, count: number,
           comments: string, published: string, visibility: string, unlisted: boolean}[] = [];
       authorPostLink.myArray.forEach((item) =>{
           axios.get(item)
@@ -117,7 +131,7 @@ const Profile = () => {
             <div className="main-content-middle">
                 {postArray.posts.map((item) =>
                     <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
-                    post_content_type={item.contentType} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
+                    post_content_type={item.contentType} post_content={item.content} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
                     visibility={item.visibility} unlisted={item.unlisted} editSwitch={false} />
                 )}
             </div>:
@@ -127,7 +141,7 @@ const Profile = () => {
                     {if(item.author.id.split('/')[4] === userId) {
                         return <div>
                                 <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
-                                    post_content_type={item.contentType} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
+                                    post_content_type={item.contentType} post_content={item.content} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
                                     visibility={item.visibility} unlisted={item.unlisted} editSwitch={true}/>
                                 </div>
                     }}
