@@ -86,14 +86,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.url = conf_host + "authors/" + str(self.id)
         return super(User, self).save(*args, **kwargs)
 
-"""    
+    
 class Followers(models.Model):
     type = models.CharField(max_length=50)
     id = models.CharField(max_length=1024, primary_key=True)
     followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followed")
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
     created = models.DateTimeField(default=datetime.now, blank=True)
-"""
+    
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):

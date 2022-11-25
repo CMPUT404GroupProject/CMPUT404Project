@@ -1,1 +1,1 @@
-conf_host = "https://socialdistribution-cmput404.herokuapp.com/"
+conf_host = "http://127.0.0.1:8000/"
