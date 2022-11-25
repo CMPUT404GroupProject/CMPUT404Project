@@ -31,11 +31,11 @@ const PostPopup = ({onChange}: OwnProps) => {
     const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
 
     const handlePostSubmit = (type: string, title: string, source: string, origin: string, 
-        description: string, contentType: string, author: string, categories: string, count: number,
+        description: string, contentType: string, content: string, author: string, categories: string, count: number,
         comments: string, published: string, visibility: string, unlisted: boolean) => {
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/'
         console.log(post_link)
-        axios.post(post_link, {title, source, origin, description, categories})
+        axios.post(post_link, {type, title, source, origin, description, contentType, content, categories})
         .then((res) => {
             console.log(res)
             setMessage("Account created successfully");
@@ -54,6 +54,7 @@ const PostPopup = ({onChange}: OwnProps) => {
           origin: userId,
           post_description: "",
           post_content_type: "",
+          content: "",
           author: userId,
           post_categories: "",
           count: 0,
@@ -65,7 +66,7 @@ const PostPopup = ({onChange}: OwnProps) => {
         onSubmit: (values) => {
           setLoading(true);
         //   console.log("submitPressed");
-          handlePostSubmit(values.post_type, values.post_title, values.source, values.origin, values.post_description, values.post_content_type, values.author, values.post_categories, values.count, values.comments, values.published, values.visibility, values.unlisted);
+          handlePostSubmit(values.post_type, values.post_title, values.source, values.origin, values.post_description, values.post_content_type, values.content, values.author, values.post_categories, values.count, values.comments, values.published, values.visibility, values.unlisted);
           onChange("Null");
         },
       });
@@ -116,6 +117,21 @@ const PostPopup = ({onChange}: OwnProps) => {
                             placeholder="Enter Post Description"
                             name="post_description"
                             value={formik.values.post_description}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}   
+                        />
+                    </div>
+
+                    <div className="InputField">
+                        <div className="InputHeader">
+                            Post Content:
+                        </div>
+                        <input 
+                            id="content"
+                            type="text"
+                            placeholder="Enter Post Content"
+                            name="content"
+                            value={formik.values.content}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}   
                         />

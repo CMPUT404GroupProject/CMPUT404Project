@@ -6,6 +6,7 @@ import '../css/PostSingular.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
 import GlobalContext from "../context/GlobalContext";
+import { string } from "yup";
 
 
 interface OwnProps {
@@ -16,6 +17,7 @@ interface OwnProps {
     origin: string,
     post_description: string,
     post_content_type: string,
+    post_content: string,
     author: string,
     post_categories: string,
     count: number,
@@ -26,7 +28,7 @@ interface OwnProps {
     editSwitch: boolean,
 }
 
-const PostSingular = ({post_type, post_title, post_id, source, origin, post_description, post_content_type, author, post_categories, count, comments, published, visibility, unlisted, editSwitch}: OwnProps) => {
+const PostSingular = ({post_type, post_title, post_id, source, origin, post_description, post_content_type, post_content, author, post_categories, count, comments, published, visibility, unlisted, editSwitch}: OwnProps) => {
     // @ts-ignore
     const [authorDisplayName, setAuthorDisplayName] = useState(author.displayName);
     // @ts-ignore
@@ -38,6 +40,35 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     const account = useSelector((state: RootState) => state.auth.account);
     const {showCommentModal, setShowCommentModal} = useContext(GlobalContext);
     
+    //POSTS TEST
+    console.log("POST START")
+    console.log(post_type)
+    console.log(post_title)
+    console.log(post_id)
+    var foreign = false;
+    console.log("THIS IS SOURCE")
+    console.log(source)
+    console.log(origin)
+
+    if (post_id.includes("socialdistribution-cmput404") == false){
+        foreign = true;
+    }
+    
+    var postState = 'foreign' + foreign.toString()
+
+    console.log(post_description)
+    console.log(post_content_type)
+    console.log(author)
+    console.log(post_categories)
+
+    console.log("POST END")
+    //
+
+
+
+
+
+
     // @ts-ignore
     const userId = account?.id
     
@@ -46,6 +77,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         comments: string, published: string, visibility: string, unlisted: boolean) => {
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/' + post_id.toString() + '/'
         axios.patch(post_link, {type, title, source, origin, description, contentType, author, categories, count, comments, visibility, unlisted})
+
         .then((res) => {
             console.log(res)
             setMessage("Account created successfully");
@@ -128,7 +160,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
             {(!deleted) ? 
                 <div>
                     {!(editMode) ? 
-                        <div className="post-card">
+                        <div className={"post-card" + " " + postState} >
                             <div className="author-profile-picture">
                                 <img src="https://cdn.webfactorysite.co.uk/sr_695374_largeish.jpg" alt="profile-picture"></img>
                             </div>
@@ -150,10 +182,10 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                 </div>:
                                 null
                             }
-                            {(post_content_type == "image") ?
+                            {(post_content_type.includes("image")) ?
                                 <div className="post-image">
                                     <p>
-                                        <img src={post_description} />
+                                        <img src={post_content} />
                                     </p>
                                 </div>:
                                 null
