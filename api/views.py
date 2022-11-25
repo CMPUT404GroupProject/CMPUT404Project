@@ -9,6 +9,9 @@ from django.http import Http404
 from .config import *
 from api.user.serializers import UserSerializer
 from datetime import datetime
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 
 import secrets
 # Create your views here.
@@ -21,7 +24,7 @@ def generate_id():
             break
     """
     return id
-
+@permission_classes([IsAuthenticated])
 class PostView(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
