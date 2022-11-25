@@ -9,12 +9,12 @@ from api.user.serializers import UserSerializer
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['type', 'title', 'id', 'source', 'origin', 'description', 'contentType', 'author', 'categories', 'count', 'comments', 'published', 'visibility', 'unlisted']
+        fields = ['type', 'title', 'id', 'source', 'origin', 'description', 'contentType', 'content','author', 'categories', 'count', 'comments', 'published', 'visibility', 'unlisted']
 
 class PostDetailedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['type', 'title', 'id', 'source', 'origin', 'description', 'contentType', 'author', 'categories', 'count', 'comments', 'published', 'visibility', 'unlisted']
+        fields = ['type', 'title', 'id', 'source', 'origin', 'description', 'contentType', 'content', 'author', 'categories', 'count', 'comments', 'published', 'visibility', 'unlisted']
     
     def to_representation(self, instance):
         data = super().to_representation(instance)
