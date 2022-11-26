@@ -100,7 +100,6 @@ export default function CommentModal() {
         let currentUserUrl = cookies.get("currentUserUrl");
         let inboxLink = currentUserUrl + "/inbox/";
         let deleteRes = await axios.delete(inboxLink);
-        console.log(deleteRes);
         getInbox();
     }
     
