@@ -10,8 +10,11 @@ class PostTests(TestCase):
         body = response.json()
         # Get id of author
         id = body['user']['id']
-        # Try to get list of posts for that author
-        response = self.client.get('/authors/'+ id +'/posts/')
+        # Get token of author
+        token = body['token']
+        # Include token in header
+        # Try to get list of posts for that author, with token in header
+        response = self.client.get('/authors/'+ id +'/posts/', HTTP_AUTHORIZATION='Token ' + token)
         self.assertEqual(response.status_code, 200)
 
     def test_posts_get_non_existing(self):
@@ -23,7 +26,8 @@ class PostTests(TestCase):
         body = response.json()
         # Get id of author
         id = body['user']['id']
-        response = self.client.get('authors/'+ id +'/posts/1333/')
+        token = body['token']
+        response = self.client.get('authors/'+ id +'/posts/1333/', HTTP_AUTHORIZATION='Token ' + token)
         self.assertEqual(response.status_code, 404)
 
     def test_posts_create(self):
@@ -35,6 +39,7 @@ class PostTests(TestCase):
         body = response.json()
         # Get id of author
         id = body['user']['id']
+        token = body['token']
         # Create a post
         data = {
                 'categories':'ded', 
@@ -46,7 +51,7 @@ class PostTests(TestCase):
                 'visibility': 'PUBLIC', 
                 'unlisted': False
             }
-        response = self.client.post('/authors/'+ id +'/posts/', data=data, content_type='application/json')
+        response = self.client.post('/authors/'+ id +'/posts/', data=data, content_type='application/json', HTTP_AUTHORIZATION='Token ' + token)
         self.assertEqual(response.status_code, 201)
 
     def test_posts_put_create(self):
