@@ -4,12 +4,16 @@ import IconButton from '@mui/material/IconButton';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import GlobalContext from "./../context/GlobalContext";
 import Dropdown from 'react-dropdown';
+import Cookies from "universal-cookie/es6/Cookies";
+import axios from 'axios';
+
 export default function CommentModal() {
-    const {setShowCommentModal} = useContext(GlobalContext);
+    const {setShowCommentModal, currentPostLink} = useContext(GlobalContext);
     const [contentType, setContentType] = useState("text/plain");
     const [comment, setComment] = useState("");
     const [errMsg, setErrMsg] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
+    const cookies = new Cookies();
     function closeModal(){
         setShowCommentModal(false);
     }
@@ -23,10 +27,24 @@ export default function CommentModal() {
             setSuccessMsg("");
         } else {
             setErrMsg("");
-            console.log("comment", comment);
-            console.log("contentType", contentType);
-            setComment("");
-            setSuccessMsg("Comment sent successfully");
+            let postLink = currentPostLink + "/comments/";
+            let currentUserUrl = cookies.get("currentUserUrl");
+            let author = currentUserUrl.split("/")[4];
+            let data = {
+                "author": author,
+                "comment": comment,
+                "contentType": contentType,
+            }
+            axios
+                .post(postLink, data, {auth: {username:'argho', password:'12345678!'}})
+                .then((res) => {
+                    setSuccessMsg("Comment sent successfully");
+                    setErrMsg("");
+                })
+                .catch((err) => {
+                    setErrMsg("Failed to send comment");
+                    setSuccessMsg("");
+                });
         }
     }
   return (
@@ -83,7 +101,7 @@ export default function CommentModal() {
                 <br></br>
                 <input type="radio" value="text/markdown" name="contentType" /> text/markdown
                 <button type="submit"
-                    onClick={handleSend}
+                    onClick={handleSend} 
                     style={{margin: '10px', marginBottom: '5px', float: 'right'}}
                     className="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded text-white"    
                 >

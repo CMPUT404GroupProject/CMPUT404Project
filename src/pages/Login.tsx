@@ -5,12 +5,14 @@ import { useDispatch } from "react-redux";
 import authSlice from "../store/slices/auth";
 import axios from "axios";
 import { useHistory } from "react-router";
+import Cookies from "universal-cookie/es6/Cookies";
 
 function Login() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
+  const cookies = new Cookies();
 
   const handleLogin = (displayName: string, password: string) => {
     axios
@@ -27,6 +29,8 @@ function Login() {
         history.push("/", {
           userId: res.data.id
         });
+        cookies.set("token", res.data.access, { path: "/" });
+        cookies.set("currentUserUrl", res.data.user.url, { path: "/" });
       })
       .catch((err) => {
         console.log(err)

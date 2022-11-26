@@ -38,17 +38,22 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     const [loading, setLoading] = useState(false);
     const [deleted, setDeleted] = useState(false);
     const account = useSelector((state: RootState) => state.auth.account);
-    const {showCommentModal, setShowCommentModal} = useContext(GlobalContext);
+    const {
+        showCommentModal, 
+        setShowCommentModal,
+        currentPostLink,
+        setCurrentPostLink
+    } = useContext(GlobalContext);
     
     //POSTS TEST
-    console.log("POST START")
-    console.log(post_type)
-    console.log(post_title)
-    console.log(post_id)
+    //console.log("POST START")
+    //console.log(post_type)
+    //console.log(post_title)
+    //console.log(post_id)
     var foreign = false;
-    console.log("THIS IS SOURCE")
-    console.log(source)
-    console.log(origin)
+    //console.log("THIS IS SOURCE")
+    //console.log(source)
+    //console.log(origin)
 
     if (post_id.includes("socialdistribution-cmput404") == false){
         foreign = true;
@@ -56,12 +61,12 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     
     var postState = 'foreign' + foreign.toString()
 
-    console.log(post_description)
-    console.log(post_content_type)
-    console.log(author)
-    console.log(post_categories)
+    //console.log(post_description)
+    //console.log(post_content_type)
+    //console.log(author)
+    //console.log(post_categories)
 
-    console.log("POST END")
+    //console.log("POST END")
     //
 
 
@@ -112,6 +117,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
       });
 
     function openCommentModal() {
+        setCurrentPostLink(post_id);
         setShowCommentModal(true);
     }
     function sharePost(){

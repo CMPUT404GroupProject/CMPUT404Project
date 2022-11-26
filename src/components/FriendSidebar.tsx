@@ -1,6 +1,7 @@
 import AddFriend from "./AddFriend";
 import 'reactjs-popup/dist/index.css';
 import '../css/FriendSidebar.scss'
+import Inbox from "./Inbox";
 
 interface OwnProps {
     onChange: (newValue: any)=> void;
@@ -14,6 +15,10 @@ const FriendSidebar = ({onChange}: OwnProps) => {
             <button className="create-post-button" onClick={onChange}>
                 Create post
             </button>
+            <br></br>
+            <div className="friend-button">
+                <Inbox />
+            </div>
             <div className="friend-button">
                 <AddFriend></AddFriend>
             </div>
