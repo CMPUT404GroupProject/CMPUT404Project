@@ -7,6 +7,7 @@ import PostPopup from "../components/PostPopup";
 import axios from "axios";
 import GlobalContext from "./../context/GlobalContext";
 import CommentModal from "./../components/CommentModal";
+import InboxModal from "./../components/InboxModal";
 import {UserResponse} from "../utils/types";
 import {RootState} from "../store";
 import {useSelector} from "react-redux";
@@ -20,7 +21,7 @@ interface LocationState {
 
 
 const Profile = () => {
-  const {showCommentModal} = useContext(GlobalContext);
+  const {showCommentModal, showInboxModal} = useContext(GlobalContext);
 
   // This is for the button that does the popup work
   const [postPopupClicked, setPostPopup] = useState(false);
@@ -89,7 +90,7 @@ const Profile = () => {
 
           if (JSON.stringify(postLinks) != JSON.stringify(authorPostLink.myArray)){
               setPostLinks({myArray: [...postLinks]})
-              console.log(postLinks)
+              //console.log(postLinks)
           }
           else {
               return;
@@ -110,7 +111,7 @@ const Profile = () => {
           .then((res)=>{
               res.data.items.forEach((post: any)=>{
                   tempPostsArray.push(post);
-                  console.log(post);
+                  //console.log(post);
               })
               setPostArray({posts: tempPostsArray});
           })
@@ -121,6 +122,7 @@ const Profile = () => {
   return (
     <div className="content">
         {showCommentModal && <CommentModal/>}
+        {showInboxModal && <InboxModal/>}
       {(postPopupClicked) ? <PostPopup onChange={handleChange}/> : null}
 
         <div className="sidebar-left">
