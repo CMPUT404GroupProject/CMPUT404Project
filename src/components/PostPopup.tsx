@@ -30,12 +30,12 @@ const PostPopup = ({onChange}: OwnProps) => {
     const current = new Date()
     const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
 
-    const handlePostSubmit = (type: string, title: string, source: string, origin: string, 
+    const handlePostSubmit = (title: string, source: string, origin: string, 
         description: string, contentType: string, content: string, author: string, categories: string, count: number,
         comments: string, published: string, visibility: string, unlisted: boolean) => {
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/'
         console.log(post_link)
-        axios.post(post_link, {type, title, source, origin, description, contentType, content, categories}, {auth: {username:'argho', password:'12345678!'}})
+        axios.post(post_link, {title, source, origin, description, contentType, content, categories}, {auth: {username:'argho', password:'12345678!'}})
         .then((res) => {
             console.log(res)
             setMessage("Account created successfully");
@@ -48,7 +48,6 @@ const PostPopup = ({onChange}: OwnProps) => {
 
     const formik = useFormik({
         initialValues: {
-          post_type: "",
           post_title: "",
           source: userId,
           origin: userId,
@@ -66,7 +65,7 @@ const PostPopup = ({onChange}: OwnProps) => {
         onSubmit: (values) => {
           setLoading(true);
         //   console.log("submitPressed");
-          handlePostSubmit(values.post_type, values.post_title, values.source, values.origin, values.post_description, values.post_content_type, values.content, values.author, values.post_categories, values.count, values.comments, values.published, values.visibility, values.unlisted);
+          handlePostSubmit(values.post_title, values.source, values.origin, values.post_description, values.post_content_type, values.content, values.author, values.post_categories, values.count, values.comments, values.published, values.visibility, values.unlisted);
           onChange("Null");
         },
       });
@@ -75,22 +74,6 @@ const PostPopup = ({onChange}: OwnProps) => {
         <div className="popUpPost">
             <div className="popUpBox">
                 <form onSubmit={formik.handleSubmit}>
-                    
-                    {/* THIS IS FOR POST TYPE */}
-                    <div className="InputField">
-                        <div className="InputHeader">
-                            Post Type:
-                        </div>
-                        <input
-                            id="post_type" 
-                            type="text" 
-                            placeholder="Enter Post Type" 
-                            name="post_type" 
-                            value={formik.values.post_type} 
-                            onChange={formik.handleChange} 
-                            onBlur={formik.handleBlur}    
-                        />
-                    </div>
                     {/* THIS IS FOR POST TITLE */}
                     <div className="InputField">
                         <div className="InputHeader">
