@@ -67,23 +67,29 @@ const Profile = () => {
   useEffect(()=>{
       // THIS PART GETS THE POST LINK FOR EACH AUTHOR
       const authors_link = `${process.env.REACT_APP_API_URL}/authors/`
-      const authors_link_2 = `https://cmput404f22t17.herokuapp.com/authors/`
-
-
+      const authors_link_2 = `https://cmput404f22t17.herokuapp.com/authors/`    //These are authors from team 17
+      const authors_link_3 = `https://fallprojback.herokuapp.com/authors/`      //These are authors from team 5
+    
 
       axios.all([axios.get(authors_link),
-                axios.get(authors_link_2, {auth: {username:'argho', password:'12345678!'}})])
-      .then(axios.spread((res, res2) => {
+                axios.get(authors_link_2, {auth: {username:'argho', password:'12345678!'}}),
+                axios.get(authors_link_3)])
+      .then(axios.spread((res, res2, res3) => {
           var required_list = res.data.items;   //These are my authors
           var required_list_2 = res2.data.items;    //These are Team 17's authors
-
+          var required_list_3 = res3.data.items;
+          
           required_list.forEach((item: any) => {
-              var posts_link = item.url + '/posts/';
-              postLinks.push(posts_link);
+            var posts_link = item.url + '/posts/';
+            postLinks.push(posts_link);
           })
           required_list_2.forEach((item: any) => {
-            var posts_link_2 = item.url + 'posts/'
+            var posts_link_2 = item.url + 'posts/';
             postLinks.push(posts_link_2);
+          })
+          required_list_3.forEach((item: any) => {
+            var posts_link_3 = item.url + '/posts/';
+            postLinks.push(posts_link_3);
           })
 
 
@@ -107,14 +113,27 @@ const Profile = () => {
           description: string, contentType: string, content: string, author: string, categories: string, count: number,
           comments: string, published: string, visibility: string, unlisted: boolean}[] = [];
       authorPostLink.myArray.forEach((item) =>{
-          axios.get(item, {auth: {username:'argho', password:'12345678!'}})
-          .then((res)=>{
-              res.data.items.forEach((post: any)=>{
-                  tempPostsArray.push(post);
-                  //console.log(post);
-              })
-              setPostArray({posts: tempPostsArray});
-          })
+          console.log(item)
+          if (item.includes('socialdistribution-cmput404.herokuapp.com') || item.includes('cmput404f22t17.herokuapp.com')){
+            axios.get(item, {auth: {username:'argho', password:'12345678!'}})
+            .then((res)=>{
+                res.data.items.forEach((post: any)=>{
+                    tempPostsArray.push(post);
+                    //console.log(post);
+                })
+                setPostArray({posts: tempPostsArray});
+            })
+          }
+          else if(item.includes('fallprojback.herokuapp.com')){
+            axios.get(item)
+            .then((res)=>{
+                res.data.forEach((post: any)=>{
+                    tempPostsArray.push(post);
+                    //console.log(post);
+                })
+                setPostArray({posts: tempPostsArray});
+            })
+          }
       })
       
   }, [authorPostLink])
@@ -141,12 +160,15 @@ const Profile = () => {
               <div className="main-content-middle">
                 {postArray.posts.map((item) =>
                     // @ts-ignore
-                    {if(item.author.id.split('/')[4] === userId) {
-                        return <div>
+                    {if(item.author.id) {
+                        // @ts-ignore
+                        {if(item.author.id.split('/')[4] === userId){
+                            return <div>
                                 <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
                                     post_content_type={item.contentType} post_content={item.content} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
                                     visibility={item.visibility} unlisted={item.unlisted} editSwitch={true}/>
                                 </div>
+                        }}
                     }}
                 )}
             </div>

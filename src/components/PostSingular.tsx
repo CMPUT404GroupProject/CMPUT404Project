@@ -44,16 +44,8 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         currentPostLink,
         setCurrentPostLink
     } = useContext(GlobalContext);
-    
-    //POSTS TEST
-    //console.log("POST START")
-    //console.log(post_type)
-    //console.log(post_title)
-    //console.log(post_id)
+
     var foreign = false;
-    //console.log("THIS IS SOURCE")
-    //console.log(source)
-    //console.log(origin)
 
     if (post_id.includes("socialdistribution-cmput404") == false){
         foreign = true;
@@ -61,36 +53,25 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     
     var postState = 'foreign' + foreign.toString()
 
-    //console.log(post_description)
-    //console.log(post_content_type)
-    //console.log(author)
-    //console.log(post_categories)
-
-    //console.log("POST END")
-    //
-
-
-
-
-
-
     // @ts-ignore
     const userId = account?.id
     
     const handlePostSubmit = (type: string, title: string, source: string, origin: string, 
-        description: string, contentType: string, author: string, categories: string, count: number,
+        description: string, contentType: string, content:string, author: string, categories: string, count: number,
         comments: string, published: string, visibility: string, unlisted: boolean) => {
-        const post_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() + '/posts/' + post_id.toString() + '/'
-        axios.patch(post_link, {type, title, source, origin, description, contentType, author, categories, count, comments, visibility, unlisted}, {auth: {username:'argho', password:'12345678!'}})
+        const post_link = post_id.toString() + '/'
+        console.log(post_link)
+        axios.post(post_link, {type:type, id:userId.toString(), title:title, source:source, origin:origin, description:description, categories: categories, content: content}, {auth: {username:'argho', password:'12345678!'}})
 
         .then((res) => {
             console.log(res)
-            setMessage("Account created successfully");
+            setMessage("Post edited successfully");
           })
           .catch((err) => {
-            setMessage("Error creating account");
+            setMessage("Error editing post");
           });
         setLoading(false)
+        setEditMode(false)
     }
     
     const formik = useFormik({
@@ -101,6 +82,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
           origin: origin,
           post_description: "",
           post_content_type: "",
+          post_content: "",
           author: author,
           post_categories: "",
           count: 0,
@@ -112,7 +94,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         onSubmit: (values) => {
           setLoading(true);
         //   console.log("submitPressed");
-          handlePostSubmit(values.post_type, values.post_title, values.source, values.origin, values.post_description, values.post_content_type, values.author, values.post_categories, values.count, values.comments, values.published, values.visibility, values.unlisted);
+          handlePostSubmit(values.post_type, values.post_title, values.source, values.origin, values.post_description, values.post_content_type, values.post_content, values.author, values.post_categories, values.count, values.comments, values.published, values.visibility, values.unlisted);
         },
       });
 
@@ -121,7 +103,12 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         setShowCommentModal(true);
     }
     function sharePost(){
+        console.log(userId)
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + userId.toString() + '/posts/'
+        // BIG TEST
+        
+
+        // BIG TEST ENDS
         axios.post(post_link, {type: post_type, title: post_title, source: userId.toString(), origin: origin, description: post_description, 
             contentType: post_content_type, author: userId.toString(), categories: post_categories, 
             count: count, comments: comments, visibility: visibility, unlisted: unlisted}, {auth: {username:'argho', password:'12345678!'}})
@@ -130,6 +117,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
             setMessage("Post shared successfully");
           })
           .catch((err) => {
+            console.log(err);
             setMessage("Error sharing post");
           });
         setLoading(false)
