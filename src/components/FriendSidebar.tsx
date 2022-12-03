@@ -16,7 +16,7 @@ const FriendSidebar = ({onChange}: OwnProps) => {
                 Create post
             </button>
             <br></br>
-            <div className="friend-button">
+            <div className="inbox-button">
                 <Inbox />
             </div>
             <div className="friend-button">

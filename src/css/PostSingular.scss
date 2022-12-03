@@ -87,22 +87,50 @@
     display: grid;
     grid-template-rows: auto auto;
 
-    .author-name {
+    .header-row-1 {
         grid-column-start: 1;
         grid-row-start: 1;
-        color: white;
-        align-self: center;
-    }
-    .post-delete-button {
-        grid-column-start: 1;
-        grid-row-start: 1;
-        color: white;
-        background-color: rgb(172, 29, 21);
-        width: 7rem;
-        height: 3rem;
-        border-radius: 0.5rem;
-        justify-self: end;
-        margin: 1rem;
+        display: grid;
+        grid-template-columns: auto auto auto;
+        justify-content: space-between;
+
+        .author-name {
+            grid-column-start: 1;
+            grid-row-start: 1;
+            color: white;
+            align-self: center;
+        }
+        .header-buttons {
+            grid-column-start: 3;
+            grid-row-start: 1;
+            display: grid;
+            grid-template-columns: auto auto;
+            justify-content: space-between;
+
+            .post-edit-button {
+                grid-column-start: 1;
+                grid-row-start: 1;
+                color: white;
+                background-color: rgb(34, 127, 158);
+                width: 7rem;
+                height: 3rem;
+                border-radius: 0.5rem;
+                //justify-self: end;
+                margin-right: 1rem;
+            }
+            .post-delete-button {
+                grid-column-start: 2;
+                grid-row-start: 1;
+                color: white;
+                background-color: rgb(172, 29, 21);
+                width: 7rem;
+                height: 3rem;
+                border-radius: 0.5rem;
+                //justify-self: end;
+                //margin: 1rem;
+            }
+
+        }
     }
     .post-title {
         grid-column-start: 1;
@@ -130,63 +158,58 @@
         aspect-ratio: 3 / 2;
     }
 }
-.post-comments {
-    grid-column-start: 2;
-    grid-row-start: 4;
-    background-color: rgb(17, 24, 39);
-    padding: 0.75rem;
-    border-radius: 1rem;
-    color: white;
-    justify-self: end;
-    margin-right: 1rem;
-}
 .post-interact {
     grid-column-start: 2;
     grid-row-start: 5;
     display: grid;
-    grid-template-columns: auto auto auto auto auto;
+    grid-template-columns: auto auto auto auto;
     margin-top: 1rem;
+    justify-content: space-between;
 
-    .post-edit-button {
-        grid-column-start: 5;
-        grid-row-start: 1;
-        color: white;
-        background-color: rgb(34, 127, 158);
-        width: 7rem;
-        height: 3rem;
-        border-radius: 0.5rem;
-        justify-self: end;
-        margin: 1rem;
-    }
     .post-like-button {
-        grid-column-start: 2;
+        grid-column-start: 1;
         color: white;
         background-color: rgb(36, 124, 21);
-        width: 7rem;
+        width: 10rem;
         height: 3rem;
         border-radius: 0.5rem;
-        place-self: end;
-        margin: 1rem;
+        //place-self: start;
+        //margin: 1rem;
+        margin-right: 1rem;
     }
     .post-comment-button {
-        grid-column-start: 3;
+        grid-column-start: 2;
         color: white;
         background-color: rgb(55, 65, 81);
-        width: 7rem;
+        width: 10rem;
         height: 3rem;
         border-radius: 0.5rem;
-        place-self: end;
-        margin: 1rem;
+        //place-self: start;
+        //margin: 1rem;
+        margin-right: 1rem;
     }
     .post-share-button {
-        grid-column-start: 4;
+        grid-column-start: 3;
         color: white;
         background-color: rgb(151, 108, 28);
-        width: 7rem;
+        width: 10rem;
         height: 3rem;
         border-radius: 0.5rem;
-        place-self: end;
-        margin: 1rem;
+        //place-self: start;
+        //margin: 1rem;
+        margin-right: 1rem;
+    }
+    .post-comments {
+        grid-column-start: 4;
+        background-color: rgb(17, 24, 39);
+        padding: 0.75rem;
+        border-radius: 1rem;
+        color: white;
+        justify-self: start;
+        // margin-top: 1rem;
+        // margin-right: 1rem;
+        height: 3rem;
+        width: 10rem;
     }
 }
 .like-count {

@@ -159,11 +159,18 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                 <img src="https://cdn.webfactorysite.co.uk/sr_695374_largeish.jpg" alt="profile-picture"></img>
                             </div>
                             <div className="post-header">
-                                <div className="author-name">{authorDisplayName}</div>
+                                <div className="header-row-1">
+                                    <div className="author-name">{authorDisplayName}</div>
+                                    <div className="header-buttons">
+                                        {editSwitch ? 
+                                            <button onClick={deletePost} className="post-delete-button">Delete Post</button> : null
+                                        }
+                                        {editSwitch ? 
+                                        <button onClick={() => setEditMode(true)} className="post-edit-button">Edit Post</button> : null
+                                        }
+                                    </div>
+                                </div>
                                 <div className="post-title">{post_title}</div>
-                                {editSwitch ? 
-                                    <button onClick={deletePost} className="post-delete-button">Delete Post</button> : null
-                                }
                             </div>
                             
                             {(post_content_type == "commonmark") ?
@@ -192,14 +199,12 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                 </div>:
                                 null
                             }
-                            <div className="post-comments">{count} Comments...</div>
+                            
                             <div className="post-interact">
-                                {editSwitch ? 
-                                    <button onClick={() => setEditMode(true)} className="post-edit-button">Edit Post</button> : null
-                                }
                                 <button className="post-like-button">0 Likes</button>
                                 <button onClick={openCommentModal} className="post-comment-button">Comment</button>
                                 <button onClick={sharePost} className="post-share-button">Share</button>
+                                <div className="post-comments">{count} Comments</div>
                             </div>
                         </div>:
                         <div className="formContainer">
