@@ -14,6 +14,9 @@ import DragHandleIcon from '@mui/icons-material/DragHandle';
 import GlobalContext from "./../context/GlobalContext";
 import Dropdown from 'react-dropdown';
 import Cookies from "universal-cookie/es6/Cookies";
+
+
+  
 import axios from 'axios';
 
 const columns = [
@@ -72,6 +75,11 @@ export default function CommentModal() {
                 author = inbox[i].author.displayName;
                 title = inbox[i].comment;
                 type = "Comment";
+            }else if (inbox[i].type === "like") {
+                console.log(inbox[i])
+                author = inbox[i].author.displayName;
+                title = inbox[i].summary;
+                type = "Like";
             }
             let inboxItemRow = {
                 id: uuid(),
