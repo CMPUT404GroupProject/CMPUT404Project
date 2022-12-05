@@ -7,7 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
 import GlobalContext from "../context/GlobalContext";
 import { string } from "yup";
-
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 interface OwnProps {
     post_type: string,
@@ -38,6 +39,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     const [loading, setLoading] = useState(false);
     const [deleted, setDeleted] = useState(false);
     const account = useSelector((state: RootState) => state.auth.account);
+    const [likeAlert, setLikeAlert] = useState(false);
     const {
         showCommentModal, 
         setShowCommentModal,
@@ -102,6 +104,21 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         setCurrentPostLink(post_id);
         setShowCommentModal(true);
     }
+
+    function likePost() {
+        // Log id of current author
+        console.log(userId);
+        let data = {
+            "author": userId
+        };
+        axios.post(post_id + "/likes/", data, {auth: {username:'argho', password:'12345678!'}})
+        .then((res) => {
+            setLikeAlert(true);
+        }
+        );
+
+    }
+
     function sharePost(){
         console.log(userId)
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + userId.toString() + '/posts/'
@@ -201,7 +218,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                             }
                             
                             <div className="post-interact">
-                                <button className="post-like-button">0 Likes</button>
+                                <button onClick={likePost} className="post-like-button">Like</button>
                                 <button onClick={openCommentModal} className="post-comment-button">Comment</button>
                                 <button onClick={sharePost} className="post-share-button">Share</button>
                                 <div className="post-comments">{count} Comments</div>
@@ -330,6 +347,11 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                 </div>:
                 null
             }
+        <Snackbar open={likeAlert} onClose={() => setLikeAlert(false)} autoHideDuration={3000} anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+          <MuiAlert variant="filled" severity="success" sx={{ width: '100%' }} onClose={() => setLikeAlert(false)}>
+            Liked!
+          </MuiAlert>
+        </Snackbar>
         </div>
     ) 
 }
