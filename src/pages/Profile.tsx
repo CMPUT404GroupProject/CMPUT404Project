@@ -8,6 +8,7 @@ import axios from "axios";
 import GlobalContext from "./../context/GlobalContext";
 import CommentModal from "./../components/CommentModal";
 import InboxModal from "./../components/InboxModal";
+import AddFriendModal from "./../components/AddFriendModal";
 import {UserResponse} from "../utils/types";
 import {RootState} from "../store";
 import {useSelector} from "react-redux";
@@ -21,7 +22,7 @@ interface LocationState {
 
 
 const Profile = () => {
-  const {showCommentModal, showInboxModal} = useContext(GlobalContext);
+  const {showCommentModal, showInboxModal, showAddFriendModal} = useContext(GlobalContext);
 
   // This is for the button that does the popup work
   const [postPopupClicked, setPostPopup] = useState(false);
@@ -142,6 +143,7 @@ const Profile = () => {
     <div className="content">
         {showCommentModal && <CommentModal/>}
         {showInboxModal && <InboxModal/>}
+        {showAddFriendModal && <AddFriendModal/>}
       {(postPopupClicked) ? <PostPopup onChange={handleChange}/> : null}
 
         <div className="sidebar-left">
