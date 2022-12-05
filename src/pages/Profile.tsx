@@ -70,16 +70,18 @@ const Profile = () => {
       const authors_link = `${process.env.REACT_APP_API_URL}/authors/`
       const authors_link_2 = `https://cmput404f22t17.herokuapp.com/authors/`    //These are authors from team 17
       const authors_link_3 = `https://fallprojback.herokuapp.com/authors/`      //These are authors from team 5
-    
+      const authors_link_4 = `https://c404-team8.herokuapp.com/api/authors/`
 
       axios.all([axios.get(authors_link),
-                axios.get(authors_link_2, {auth: {username:'argho', password:'12345678!'}}),
-                axios.get(authors_link_3)])
-      .then(axios.spread((res, res2, res3) => {
+                axios.get(authors_link_2, {auth: {username:'argho', password:'12345678!'}}),    //These are from team 17, the good team
+                axios.get(authors_link_3, {auth: {username:'admin', password:'admin'}}),    //These are from team 5, the bad team
+                axios.get(authors_link_4, {auth: {username:'node', password:'cmput404'}})])      
+      .then(axios.spread((res, res2, res3, res4) => {
           var required_list = res.data.items;   //These are my authors
           var required_list_2 = res2.data.items;    //These are Team 17's authors
-          var required_list_3 = res3.data.items;
-          
+          var required_list_3 = res3.data.items;    //These are Team 5's authors
+          var required_list_4 = res4.data.items;
+
           required_list.forEach((item: any) => {
             var posts_link = item.url + '/posts/';
             postLinks.push(posts_link);
@@ -92,12 +94,14 @@ const Profile = () => {
             var posts_link_3 = item.url + '/posts/';
             postLinks.push(posts_link_3);
           })
-
+          required_list_4.forEach((item: any) => {
+            var posts_link_4 = item.url + 'posts/';
+            postLinks.push(posts_link_4);
+          })
 
 
           if (JSON.stringify(postLinks) != JSON.stringify(authorPostLink.myArray)){
               setPostLinks({myArray: [...postLinks]})
-              //console.log(postLinks)
           }
           else {
               return;
@@ -114,10 +118,10 @@ const Profile = () => {
           description: string, contentType: string, content: string, author: string, categories: string, count: number,
           comments: string, published: string, visibility: string, unlisted: boolean}[] = [];
       authorPostLink.myArray.forEach((item) =>{
-          console.log(item)
-          if (item.includes('socialdistribution-cmput404.herokuapp.com') || item.includes('cmput404f22t17.herokuapp.com')){
+                if (item.includes('socialdistribution-cmput404.herokuapp.com') || item.includes('cmput404f22t17.herokuapp.com') || item.includes('c404-team8.herokuapp.com')){
             axios.get(item, {auth: {username:'argho', password:'12345678!'}})
             .then((res)=>{
+                console.log(item)
                 res.data.items.forEach((post: any)=>{
                     tempPostsArray.push(post);
                     //console.log(post);
@@ -126,11 +130,11 @@ const Profile = () => {
             })
           }
           else if(item.includes('fallprojback.herokuapp.com')){
-            axios.get(item)
+            axios.get(item, {auth: {username:'admin', password:'admin'}})
             .then((res)=>{
                 res.data.forEach((post: any)=>{
                     tempPostsArray.push(post);
-                    //console.log(post);
+                    // console.log(post);
                 })
                 setPostArray({posts: tempPostsArray});
             })

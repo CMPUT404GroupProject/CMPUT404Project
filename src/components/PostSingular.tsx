@@ -52,10 +52,18 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         setCurrentPostLink
     } = useContext(GlobalContext);
 
-    var foreign = false;
+    var foreign = 0;
 
-    if (post_id.includes("socialdistribution-cmput404") == false){
-        foreign = true;
+    if (post_id.includes("cmput404f22t17.herokuapp.com") == true){
+        foreign = 1;
+    }
+
+    else if (post_id.includes("fallprojback.herokuapp.com") == true){
+        foreign = 2;
+    }
+
+    else if (post_id.includes("c404-team8.herokuapp.com") == true){
+        foreign = 3;
     }
     
     var postState = 'foreign' + foreign.toString()
@@ -66,11 +74,9 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         description: string, contentType: string, content:string, author: string, categories: string, count: number,
         comments: string, published: string, visibility: string, unlisted: boolean) => {
         const post_link = post_id.toString() + '/'
-        console.log(post_link)
         axios.post(post_link, {type:type, id:userId.toString(), title:title, source:source, origin:origin, description:description, categories: categories, content: content}, {auth: {username:'argho', password:'12345678!'}})
 
         .then((res) => {
-            console.log(res)
             setMessage("Post edited successfully");
           })
           .catch((err) => {
@@ -111,7 +117,6 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
 
     function likePost() {
         // Log id of current author
-        console.log(userId);
         let data = {
             "author": userId
         };
@@ -124,7 +129,6 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
     }
 
     function sharePost(){
-        console.log(userId)
         const post_link = `${process.env.REACT_APP_API_URL}/authors/` + userId.toString() + '/posts/'
         // BIG TEST
         
@@ -134,11 +138,9 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
             contentType: post_content_type, author: userId.toString(), categories: post_categories, 
             count: count, comments: comments, visibility: visibility, unlisted: unlisted}, {auth: {username:'argho', password:'12345678!'}})
         .then((res) => {
-            console.log(res)
             setMessage("Post shared successfully");
           })
           .catch((err) => {
-            console.log(err);
             setMessage("Error sharing post");
           });
         setLoading(false)
@@ -147,7 +149,6 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         // @ts-ignore
         const post_link = post_id
         // @ts-ignore
-        console.log(post_id)
         axios.delete(post_link, {auth: {username:'argho', password:'12345678!'}})
         .then((res) => {
             if (res.status == 204){
@@ -194,14 +195,20 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                         }
                                     </div>
                                 </div>
-                                <div className="post-title">{post_title}</div>
+                                <div className="post-title"> - {post_title}</div>
                             </div>
                             
+                            
+                            <div className="post-description">
+                                <p>
+                                    - {post_description}
+                                </p>
+                            </div>
                             {(post_content_type == "commonmark") ?
-                                <div className="post-description">
+                                <div className="post-commonmark">
                                     <p>
                                         <ReactMarkdown>
-                                            {post_description}
+                                            {post_content}
                                         </ReactMarkdown>
                                     </p>
                                 </div>:
@@ -215,14 +222,17 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                 </div>:
                                 null
                             }
-                            {(post_content_type == "text/plain") ?
-                                <div className="post-description">
+                            {(post_content_type.includes("text")) ?
+                                <div className="post-text">
                                     <p>
-                                        {post_description}
+                                        {post_content}
                                     </p>
                                 </div>:
                                 null
                             }
+
+
+                            
                             
                             <div className="post-interact">
                                 <button onClick={likePost} className="post-like-button">Like</button>

@@ -38,6 +38,7 @@ const PostPopup = ({onChange}: OwnProps) => {
         axios.post(post_link, {title, source, origin, description, contentType, content, categories}, {auth: {username:'argho', password:'12345678!'}})
         .then((res) => {
             console.log(res)
+            window.location.reload()
             setMessage("Account created successfully");
           })
           .catch((err) => {
