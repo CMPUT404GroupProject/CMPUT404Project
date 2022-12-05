@@ -28,6 +28,8 @@ const UserProfile = () => {
   const [passwordSwitch, togglePasswordSwitch] = useState(false);
   const [inputDisplayName, setInputDisplayName] = useState("");
   const [displayName, setDisplayName] = useState(user.data?.displayName);
+  const [profileImage, setProfileImage] = useState(user.data?.profileImage);
+  const [inputProfileImage, setInputProfileImage] = useState("");
   const [inputGithubLink, setInputGithubLink] = useState("");
   const [githubLink, setGithubLink] = useState(user.data?.github);
 
@@ -38,6 +40,10 @@ const UserProfile = () => {
   useEffect(() => {
     setGithubLink(user.data?.github);
     }, [user.data?.github]);
+
+    useEffect(() => {
+    setProfileImage(user.data?.profileImage);
+    }, [user.data?.profileImage]);
 
   const handleLogout = () => {
     dispatch(authSlice.actions.setLogout());
@@ -52,7 +58,7 @@ const UserProfile = () => {
   const handleGithubUpdate = () => {
     // UPDATE GITHUB HERE
     axios
-        .put(`/authors/${userId}/`, { displayName: displayName, github: inputGithubLink })
+        .post(`/authors/${userId}/`, { displayName: displayName, github: inputGithubLink })
         .then((res) => {        
             setGithubLink(inputGithubLink);
             setInputGithubLink("");
@@ -65,7 +71,7 @@ const UserProfile = () => {
   const handleDisplayNameUpdate = () => {
     // UPDATE Display Name HERE
     axios
-        .put(`/authors/${userId}/`, { displayName: inputDisplayName })
+        .post(`/authors/${userId}/`, { displayName: inputDisplayName })
         .then((res) => {
             setDisplayName(inputDisplayName);
             setInputDisplayName("");
@@ -75,14 +81,34 @@ const UserProfile = () => {
             console.log(err);
         });
   }
-
+  const handleProfileImageUpdate = () => {
+    // UPDATE PROFILE IMAGE HERE
+        togglePasswordSwitch(false);
+        axios
+        .post(`/authors/${userId}/`, { profileImage: inputProfileImage })
+        .then((res) => {
+            setProfileImage(inputProfileImage);
+            setInputProfileImage("");
+            togglePasswordSwitch(false);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
   return (
     <div className="ProfilePageContainer">
         <div className="LeftPanel">
             <div className="ProfilePhoto">
-                <img src={user.data?.profileImage}></img>
+                <img
+                    //Fit container
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    src={user.data?.profileImage}>
+                </img>
             </div>
-            <div className="ProfileName">
+            <div className="ProfileName"
+                // White text
+                style={{color: "white"}}
+            >
                 {displayName}
             </div>
         </div>
@@ -139,14 +165,20 @@ const UserProfile = () => {
             </div>
             <div className="PasswordContainer Container">   
                 <div className="PasswordTitle Title">
-                    Password
+                    Profile Image
                     <hr />
                 </div>
 
                 <div className="PasswordText Text">
                     {(passwordSwitch) ?
-                        <input placeholder="Enter new password" type="password"/>:
-                        <p> ********* </p>
+                        <input 
+                            placeholder="Link to image" 
+                            type="text"
+                            onChange={(e)=>setInputProfileImage(e.target.value)}/>:
+                        <p
+                        // Wrap if too long
+                        style={{wordWrap: "break-word"}}
+                        > {profileImage} </p>
                     }
                 </div>
                 {(!passwordSwitch) ?
@@ -154,7 +186,7 @@ const UserProfile = () => {
                         <button className="changePasswordSwitch Switch SwitchOff" onClick={()=> togglePasswordSwitch(true)}> <FaPencilAlt /> </button>
                     </div>:
                     <div className="updatePassword">
-                        <button className="updatePasswordSwitch Switch SwitchOn" onClick={handlePasswordUpdate}> Update Password </button>
+                        <button className="updatePasswordSwitch Switch SwitchOn" onClick={handleProfileImageUpdate}> Update Image </button>
                     </div>
                 }         
             </div>

@@ -16,15 +16,13 @@ const FriendSidebar = ({onChange}: OwnProps) => {
     // Get followers
     const cookies = new Cookies();
     const [friends, setFriends] = useState<any[]>([]);
+    
     useEffect(() => {
         let currentUserUrl = cookies.get("currentUserUrl");
         let url = currentUserUrl + '/followers/';
         axios.get(url)
             .then((res) => {
                 setFriends(res.data.items);
-                console.log("@@@@@@@")
-                console.log(res.data.items)
-                console.log("@@@@@@@")
             }
         )
     }, [])
@@ -46,7 +44,10 @@ const FriendSidebar = ({onChange}: OwnProps) => {
                     return (
                         <div className="friend-list-card">
                             <div className="friend-profile-picture">
-                                <img src="https://cdn.webfactorysite.co.uk/sr_695374_largeish.jpg" alt="profile-picture"></img>
+                                <img
+                                // Style
+                                style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                                src={friend['profileImage']} alt="profile-picture"></img>
                             </div>
                         <div className="friend-username">{friend.displayName}</div>
                         </div>
