@@ -20,10 +20,13 @@ const UserSidebar = ({onChange, postVisibility}: OwnProps) => {
     const userId = account?.id;
     const user = useSWR<UserResponse>(`/authors/${userId}/`, fetcher);
 
+
+
     return (
         <div className="profile-card bg-white">
             <div className="profile-picture">
-                <img src="https://cdn.webfactorysite.co.uk/sr_695374_largeish.jpg" alt="profile-picture"></img>
+                <img style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                src={user.data?.profileImage} alt="profile-picture"></img>
             </div>
             {
                 user.data ?

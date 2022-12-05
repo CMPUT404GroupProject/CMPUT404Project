@@ -30,8 +30,13 @@ interface OwnProps {
 }
 
 const PostSingular = ({post_type, post_title, post_id, source, origin, post_description, post_content_type, post_content, author, post_categories, count, comments, published, visibility, unlisted, editSwitch}: OwnProps) => {
+
+    // @ts-ignore
+    const [profileImage, setProfileImage] = useState(author?.profileImage)
     // @ts-ignore
     const [authorDisplayName, setAuthorDisplayName] = useState(author.displayName);
+
+
     // @ts-ignore
     const [authorGithub, setAuthorGithub] = useState(author.github);
     const [message, setMessage] = useState("");
@@ -65,7 +70,6 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
 
     // @ts-ignore
     const userId = account?.id
-    
     const handlePostSubmit = (type: string, title: string, source: string, origin: string, 
         description: string, contentType: string, content:string, author: string, categories: string, count: number,
         comments: string, published: string, visibility: string, unlisted: boolean) => {
@@ -174,7 +178,10 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                     {!(editMode) ? 
                         <div className={"post-card" + " " + postState} >
                             <div className="author-profile-picture">
-                                <img src="https://cdn.webfactorysite.co.uk/sr_695374_largeish.jpg" alt="profile-picture"></img>
+                                <img 
+                                //Fit style
+                                style={{width: "100%", height: "100%", objectFit: "cover"}}
+                                src={profileImage} alt="profile-picture"></img>
                             </div>
                             <div className="post-header">
                                 <div className="header-row-1">
