@@ -9,6 +9,7 @@ import GlobalContext from "../context/GlobalContext";
 import { string } from "yup";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import { profile } from "console";
 
 interface OwnProps {
     post_type: string,
@@ -158,6 +159,11 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
         })
     }
 
+    function replaceImage(error: any){
+        error.target.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+    }
+
+
     // We'll make a get request for the author id and get some stuff such as displayName and github URL that we will use for each of these posts
     useEffect(() =>{
         const required_link = `${process.env.REACT_APP_API_URL}/authors/` + author.toString() +'/'
@@ -177,11 +183,18 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                 <div>
                     {!(editMode) ? 
                         <div className={"post-card" + " " + postState} >
+                            {console.log(profileImage)}
                             <div className="author-profile-picture">
-                                <img 
-                                //Fit style
-                                style={{width: "100%", height: "100%", objectFit: "cover"}}
-                                src={profileImage} alt="profile-picture"></img>
+                                {(profileImage) ? 
+                                    <img 
+                                    //Fit style
+                                    style={{width: "100%", height: "100%", objectFit: "cover"}}
+                                    src={profileImage} alt="profile-picture"></img>:
+                                    <img 
+                                    //Fit style
+                                    style={{width: "100%", height: "100%", objectFit: "cover"}}
+                                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="profile-picture"></img>
+                                }
                             </div>
                             <div className="post-header">
                                 <div className="header-row-1">
@@ -204,12 +217,11 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                     - {post_description}
                                 </p>
                             </div>
-                            {(post_content_type == "commonmark") ?
+                            {console.log(post_content_type)}
+                            {(post_content_type.includes("markdown") || post_content_type.includes("commonmark")) ?
                                 <div className="post-commonmark">
                                     <p>
-                                        <ReactMarkdown>
-                                            {post_content}
-                                        </ReactMarkdown>
+                                        <ReactMarkdown>{post_content}</ReactMarkdown>
                                     </p>
                                 </div>:
                                 null
@@ -222,7 +234,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                 </div>:
                                 null
                             }
-                            {(post_content_type.includes("text")) ?
+                            {(post_content_type.includes("plain")) ?
                                 <div className="post-text">
                                     <p>
                                         {post_content}
