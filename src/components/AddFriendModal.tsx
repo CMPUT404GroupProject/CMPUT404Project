@@ -68,7 +68,6 @@ export default function AddFriendModal() {
     async function followUser(user: any) {
         let currentUserUrl = cookies.get("currentUserUrl");
         let currentUserId = currentUserUrl.split("/").pop();
-        console.log(currentUserId);
         let followUrl = user.url + "/follow_requests/";
         let data = {actor: currentUserId};
         axios.post(followUrl, data)
@@ -83,8 +82,8 @@ export default function AddFriendModal() {
         let currentUserUrl = cookies.get("currentUserUrl");
         // Get this /authors by removing the id
         let authorUrl = currentUserUrl.substring(0, currentUserUrl.lastIndexOf("/"));
+        console.log(authorUrl)
         let res = await axios.get(authorUrl)
-        console.log(res.data.items)
         let inbox = res.data.items;
         let inboxRows : any[] = [];
         for (let i = 0; i < inbox.length; i++) {
@@ -101,7 +100,6 @@ export default function AddFriendModal() {
             }
             inboxRows.push(inboxRow);
         }
-        console.log(inboxRows);
         setRows(inboxRows);
     }
     // When modal is opened, fetch user data

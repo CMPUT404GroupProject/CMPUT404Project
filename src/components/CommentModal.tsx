@@ -39,6 +39,7 @@ export default function CommentModal() {
                 .post(postLink, data, {auth: {username:'argho', password:'12345678!'}})
                 .then((res) => {
                     setSuccessMsg("Comment sent successfully");
+                    // window.location.reload()
                     setErrMsg("");
                 })
                 .catch((err) => {

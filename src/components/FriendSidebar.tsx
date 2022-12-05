@@ -22,9 +22,7 @@ const FriendSidebar = ({onChange}: OwnProps) => {
         axios.get(url)
             .then((res) => {
                 setFriends(res.data.items);
-                console.log("@@@@@@@")
                 console.log(res.data.items)
-                console.log("@@@@@@@")
             }
         )
     }, [])
