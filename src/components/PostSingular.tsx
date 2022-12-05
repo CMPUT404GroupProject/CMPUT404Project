@@ -136,7 +136,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
 
         // BIG TEST ENDS
         axios.post(post_link, {type: post_type, title: post_title, source: userId.toString(), origin: origin, description: post_description, 
-            contentType: post_content_type, author: userId.toString(), categories: post_categories, 
+            contentType: post_content_type, author: userId.toString(), categories: post_categories, content: post_content,
             count: count, comments: comments, visibility: visibility, unlisted: unlisted}, {auth: {username:'argho', password:'12345678!'}})
         .then((res) => {
             setMessage("Post shared successfully");
