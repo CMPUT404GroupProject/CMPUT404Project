@@ -9,12 +9,12 @@ export const LoginPage = () => {
     return (
         
         <div className="AppContainer">            
-          <div className="LogoContainer">
+          {/* <div className="LogoContainer">
               INSERT LOGO HERE
               <div className="AppName">
                 NAME
               </div>
-          </div>
+          </div> */}
           <div className="LoginBox">
             <button className="OptionButton LoginSwitchButton" onClick={() => {handleLogin(true)}}>
                 Login
