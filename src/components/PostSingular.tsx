@@ -300,6 +300,21 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                         onBlur={formik.handleBlur}   
                                     />
                                 </div>
+
+                                <div className="InputField">
+                                    <div className="InputHeader">
+                                        Post Content:
+                                    </div>
+                                    <input 
+                                        id="post_content"
+                                        type="text"
+                                        placeholder="Enter Post Content"
+                                        name="post_content"
+                                        value={formik.values.post_content}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}   
+                                    />
+                                </div>
         
                                 {/* THIS IS FOR POST CONTENT TYPE */}
                                 <div className="InputField">
