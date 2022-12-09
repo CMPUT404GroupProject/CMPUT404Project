@@ -17,6 +17,11 @@ Tutorials used for user authentication
     >> yarn install
     >> yarn start
 
+### Login Credentials
+<b>Username</b>: argho <br>
+<b>Password</b>: 12345678! <br> <br>
+Note: <em> If the login fails, please register a user with the credentials above as this user is necessary for the site to function properly. You can register and use any other user on the site but it is vital that this user exists in the database. </em>
+
 ### Features added post Demo
 
 - We have added frontend tests after the demo.
