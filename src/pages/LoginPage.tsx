@@ -10,19 +10,19 @@ export const LoginPage = () => {
         
         <div className="AppContainer">            
           <div className="LogoContainer">
-              INSERT LOGO HERE
-              <div className="AppName">
-                NAME
-              </div>
+          </div>
+          <div className="ButtonBar">
+            <div className="AppName">
+              social distribution
+            </div>
+            <button className="OptionButton" id="RegisterSwitchButton" onClick={() => {handleLogin(false)}}>
+              Register
+            </button>
+            <button className="OptionButton" id="LoginSwitchButton" onClick={() => {handleLogin(true)}}>
+              Login
+            </button>
           </div>
           <div className="LoginBox">
-            <button className="OptionButton LoginSwitchButton" onClick={() => {handleLogin(true)}}>
-                Login
-            </button>
-            <button className="OptionButton RegisterSwitchButton" onClick={() => {handleLogin(false)}}>
-                Register
-            </button>
-
             {(loginTrue) ?
                 <Login />:
                 <Register />

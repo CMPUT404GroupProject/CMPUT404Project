@@ -1,18 +1,25 @@
 
 .AppContainer {
   position: relative;
-  background-image: url('../images/homepage-background.jpg');
+  /* background-image: url('../images/homepage-background.jpg'); */
   background-size: cover;
   overflow: hidden;
-  /* background-color: blue; */
+  /* background-color: #282c34; */
   width: 100vw;
   height: 100vh;
 }
 
 .AppContainer .LoginBox{
   position: absolute;
-  right: 100px;
+  right: 175px;
+  font-weight: 100;
+}
 
+.AppContainer .ButtonBar{
+  background-color: #282c34;
+  width: 100%;
+  height: 6%;
+  justify-items: center;
 }
 
 .AppContainer .LoginContainer{
@@ -23,23 +30,14 @@
   min-height: 400px;
 }
 
-.AppContainer .LogoContainer{
-  height: 400px;
-  width: 400px;
-  border: 1px solid black;
-  position: absolute;
-  left: 150px;
-  top: 28vh;
-  background: white;
-}
 
-.AppContainer .AppName{
-  height: 50px;
-  border: 5px solid black;
-  margin-top: 400px;
-  text-align: center;
-  font-weight: 700;
-  background: white;
+.AppContainer .LogoContainer{
+  height: 100%;
+  width: 100%;
+  top: 6%;
+  position: absolute;
+  background-image: url('../images/sd-background.jpg');
+  background-size: inherit;
 }
 
 .AppContainer .LoginButton:hover{
@@ -52,9 +50,31 @@
   text-align: center;
 }
 
-.OptionButton {
-    font-size: 20px;
+.ButtonBar .OptionButton {
+    font-size: 18px;
+    height: 100%;
     width: 100px;
-    background: white;
-    border: 2px solid black;
+    font-weight: 100;
+    text-align: center;
+    color: white;
+}
+
+.ButtonBar #LoginSwitchButton.OptionButton{
+  background-color: green;
+  float: right;
+}
+
+.ButtonBar #RegisterSwitchButton.OptionButton{
+  background-color: red;
+  float: right;
+}
+
+.ButtonBar .AppName{
+  float: left;
+  color: white;
+  font-weight: 100;
+  height: 100%;
+  width: 300px;
+  text-align: center;
+  font-size: xx-large;
 }
