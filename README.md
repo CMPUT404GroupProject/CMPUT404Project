@@ -27,3 +27,11 @@ Tutorials used for user authentication
 ### Notes about AJAX usage
 
 - Our frontend to backend communication is done through axios, which is basically AJAX under the hood.
+
+### API Documentation
+
+- https://socialdistribution-cmput404.herokuapp.com/docs/
+
+### Notes about Connections
+
+- As mentioned in the Demo, one of the teams still hasn't fixed their schema so their posts (the posts in red background) will still appear to be broken.
