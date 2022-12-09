@@ -8,8 +8,8 @@ const PostCard = () => {
                 <img src="https://images.unsplash.com/photo-1505628346881-b72b27e84530" alt="profile-picture"></img>
             </div>
             <div className="post-header">
-                <div className="author-name">Author Name</div>
                 <div className="post-title">Post title</div>
+                <div className="author-name">Author Name</div>
             </div>
             <div className="post-description">
                 <p>

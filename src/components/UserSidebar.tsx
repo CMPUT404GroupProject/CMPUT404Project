@@ -1,4 +1,3 @@
-import Logout from "./Logout";
 import useSWR from 'swr';
 import {fetcher} from "../utils/axios";
 import {UserResponse} from "../utils/types";
@@ -45,10 +44,6 @@ const UserSidebar = ({onChange, postVisibility}: OwnProps) => {
                     See all posts
                 </button>
             }
-            
-            <div className="logout-button">
-                <Logout></Logout>
-            </div>
         </div>
     ) 
 }

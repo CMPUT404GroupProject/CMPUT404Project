@@ -7,13 +7,14 @@
     z-index: 2;
     width: 99vw;
     //height: 700px;
-    height: 100%;
+    height: auto;
     //top: 15vh;
     text-align: center;
 
     .popUpBox{
         margin: auto;
-        border: 5px solid; 
+        margin-top: 2%;
+        border: 3px solid; 
         width: 70rem;
         max-height: 100%;
         text-align: left;
@@ -22,7 +23,7 @@
         padding: 1rem;
 
         .InputField{
-            //margin-bottom: 10px;
+            margin-bottom: 0.5rem;
             //margin-left: 100px;
             //margin-top: 50px;
 
@@ -32,37 +33,37 @@
         }
         .submitPost{
             color: white;
-            margin-bottom: 5rem;
+            margin-bottom: 1rem;
         }
         #post_type { 
             width: 8rem;
             height: 2rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         #post_title {
             width: 100%;
             height: 2rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         #post_description {
             width: 100%;
-            height: 15rem;
-            margin-bottom: 1rem;
+            height: 12rem;
+            margin-bottom: 0.5rem;
         }
         #post_content_type {
             width: 8rem;
             height: 2rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         #post_categories {
             width: 20rem;
             height: 2rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         #visibility {
             width: 8rem;
             height: 2rem;
-            margin-bottom: 2rem;
+            margin-bottom: 0.5rem;
         }
         .create-post-button {
             background-color: rgb(36, 124, 21);

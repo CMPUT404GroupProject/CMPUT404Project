@@ -198,7 +198,7 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                             </div>
                             <div className="post-header">
                                 <div className="header-row-1">
-                                    <div className="author-name">{authorDisplayName}</div>
+                                    <div className="post-title">{post_title}</div>
                                     <div className="header-buttons">
                                         {editSwitch ? 
                                             <button onClick={deletePost} className="post-delete-button">Delete Post</button> : null
@@ -208,13 +208,13 @@ const PostSingular = ({post_type, post_title, post_id, source, origin, post_desc
                                         }
                                     </div>
                                 </div>
-                                <div className="post-title"> - {post_title}</div>
+                                <div className="author-name">- {authorDisplayName}</div>
                             </div>
                             
                             
                             <div className="post-description">
                                 <p>
-                                    - {post_description}
+                                    {post_description}
                                 </p>
                             </div>
                             {console.log(post_content_type)}
