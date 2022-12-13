@@ -15,6 +15,9 @@ import {useSelector} from "react-redux";
 import useSWR from 'swr';
 import {fetcher} from "../utils/axios";
 import '../css/Profile.scss'
+import {useDispatch} from "react-redux";
+import {useHistory} from "react-router";
+import authSlice from "../store/slices/auth";
 
 interface LocationState {
     userId: string;
@@ -22,6 +25,13 @@ interface LocationState {
 
 
 const Profile = () => {
+  const dispatch = useDispatch();
+  const history = useHistory(); 
+
+  const handleLogout = () => {
+    dispatch(authSlice.actions.setLogout());
+    history.push("/login");
+  };
   const {showCommentModal, showInboxModal, showAddFriendModal} = useContext(GlobalContext);
 
   // This is for the button that does the popup work
@@ -144,44 +154,53 @@ const Profile = () => {
   }, [authorPostLink])
 
   return (
-    <div className="content">
+    <div className="PageContainer">
         {showCommentModal && <CommentModal/>}
         {showInboxModal && <InboxModal/>}
         {showAddFriendModal && <AddFriendModal/>}
-      {(postPopupClicked) ? <PostPopup onChange={handleChange}/> : null}
-
-        <div className="sidebar-left">
-            <div className="user-sidebar-card">
-                <UserSidebar onChange={handlePostVisibility} postVisibility={allPosts}/>
+        {(postPopupClicked) ? <PostPopup onChange={handleChange}/> : null}
+        <div className="ButtonBar">
+            <div className="AppName">
+            social distribution
             </div>
+            <button className="OptionButton" id="LogoutOptionButton" onClick={handleLogout}>
+                Logout
+            </button>
         </div>
-        {(allPosts) ?
-            <div className="main-content-middle">
-                {postArray.posts.map((item) =>
-                    <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
-                    post_content_type={item.contentType} post_content={item.content} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
-                    visibility={item.visibility} unlisted={item.unlisted} editSwitch={false} />
-                )}
-            </div>:
-              <div className="main-content-middle">
-                {postArray.posts.map((item) =>
-                    // @ts-ignore
-                    {if(item.author.id) {
-                        // @ts-ignore
-                        {if(item.author.id.split('/')[4] === userId){
-                            return <div>
-                                <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
-                                    post_content_type={item.contentType} post_content={item.content} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
-                                    visibility={item.visibility} unlisted={item.unlisted} editSwitch={true}/>
-                                </div>
-                        }}
-                    }}
-                )}
+        <div className="content">
+            <div className="sidebar-left">
+                <div className="user-sidebar-card">
+                    <UserSidebar onChange={handlePostVisibility} postVisibility={allPosts}/>
+                </div>
             </div>
-        }        
-        <div className="sidebar-right">
-            <div className="friend-sidebar-card">
-                <FriendSidebar onChange={handleChange}/>
+            {(allPosts) ?
+                <div className="main-content-middle">
+                    {postArray.posts.map((item) =>
+                        <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
+                        post_content_type={item.contentType} post_content={item.content} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
+                        visibility={item.visibility} unlisted={item.unlisted} editSwitch={false} />
+                    )}
+                </div>:
+                <div className="main-content-middle">
+                    {postArray.posts.map((item) =>
+                        // @ts-ignore
+                        {if(item.author.id) {
+                            // @ts-ignore
+                            {if(item.author.id.split('/')[4] === userId){
+                                return <div>
+                                    <PostSingular post_type={item.type} post_title={item.title} post_id={item.id} source={item.source} origin={item.origin} post_description={item.description} 
+                                        post_content_type={item.contentType} post_content={item.content} author={item.author} post_categories={item.categories} count={item.count} comments={item.comments} published={item.published} 
+                                        visibility={item.visibility} unlisted={item.unlisted} editSwitch={true}/>
+                                    </div>
+                            }}
+                        }}
+                    )}
+                </div>
+            }        
+            <div className="sidebar-right">
+                <div className="friend-sidebar-card">
+                    <FriendSidebar onChange={handleChange}/>
+                </div>
             </div>
         </div>
     </div>

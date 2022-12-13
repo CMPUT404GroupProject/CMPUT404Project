@@ -18,7 +18,7 @@
 .AppContainer .ButtonBar{
   background-color: #282c34;
   width: 100%;
-  height: 6%;
+  height: 7%;
   justify-items: center;
 }
 
@@ -34,7 +34,7 @@
 .AppContainer .LogoContainer{
   height: 100%;
   width: 100%;
-  top: 6%;
+  top: 7%;
   position: absolute;
   background-image: url('../images/sd-background.jpg');
   background-size: inherit;
@@ -65,7 +65,7 @@
 }
 
 .ButtonBar #RegisterSwitchButton.OptionButton{
-  background-color: red;
+  background-color: firebrick;
   float: right;
 }
 

@@ -1,12 +1,11 @@
 .post-card {
     display: grid;
-    grid-template-columns: 9rem auto;
+    grid-template-columns: 9rem 25rem;
     grid-template-rows: auto auto auto auto auto;
     background-color: rgb(31, 41, 55);
-    border-radius: 1.5rem;
-    margin-top: 1rem;
-    margin-right: 1rem;
-    padding: 2rem;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
 .author-profile-picture {
     grid-column-start: 1;
@@ -16,7 +15,6 @@
     width: 6rem;
     overflow: hidden;
     place-self: center;
-    margin-right: 1rem;
 }
 .post-header {
     grid-column-start: 2;
@@ -24,23 +22,22 @@
     display: grid;
     grid-template-rows: auto auto;
 }
-.author-name {
-    grid-column-start: 1;
-    grid-row-start: 1;
-    color: white;
-    align-self: center;
-}
 .post-title {
     grid-column-start: 1;
-    grid-row-start: 2;
+    grid-row-start: 1;
     align-self: center;
     color: white;
+}
+.author-name {
+    grid-column-start: 1;
+    grid-row-start: 2;
+    color: white;
+    align-self: center;
 }
 .post-description {
     grid-column-start: 2;
     grid-row-start: 2;
     color: white;
-    margin-top: 0.5rem;
     margin-bottom: 0.5rem;
 }
 .post-image {
@@ -62,13 +59,13 @@
     border-radius: 1rem;
     color: white;
     justify-self: end;
-    margin-right: 3rem;
+    text-align: center;
 }
 .post-interact {
     grid-column-start: 2;
     grid-row-start: 5;
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: 8rem 8rem 8rem 8rem;
     margin-top: 1rem;
 }
 .like-count {
@@ -86,6 +83,7 @@
     border-radius: 0.5rem;
     place-self: center;
     margin: 1rem;
+    text-align: center;
 }
 .post-comment-button {
     grid-column-start: 3;
@@ -96,6 +94,7 @@
     border-radius: 0.5rem;
     place-self: center;
     margin: 1rem;
+    text-align: center;
 }
 .post-share-button {
     grid-column-start: 4;
@@ -106,4 +105,5 @@
     border-radius: 0.5rem;
     place-self: center;
     margin: 1rem;
+    text-align: center;
 }
